@@ -1,2 +1,10 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<script lang="ts">
+    let ciao: string = "ciao mondo";
+</script>
+
+
+<body>
+  <h1>Move your mouse or press any key</h1>
+  <div id="status">User is active</div>
+  <script src="script.js"></script>
+</body>
