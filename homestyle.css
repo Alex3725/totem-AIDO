@@ -2,10 +2,13 @@ body {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background: linear-gradient(120deg, 
-    rgba(169, 0, 0, 1) 0%, 
-    rgba(113, 50, 87, 1) 50%, 
-    rgba(58, 100, 173, 1) 100%);
+  background: linear-gradient(
+    to bottom,
+    #7b0012 0%,
+    #b3152a 30%,
+    #7a2258 60%,
+    #243a7a 100%
+  );
   background-repeat: no-repeat;   
   background-size: cover;        
   min-height: 100vh;               
@@ -16,11 +19,30 @@ body {
   height: 90vh;
   margin-top: 5vh;
   background-color: white;
-  border-radius: 190px;
+  border-radius: 10vw;
+}
+
+.logo {
+
+  position: relative;
+  top: 10vh;
+  
+  animation: suGiu 4s ease-in-out infinite;
+}
+
+@keyframes suGiu {
+  0%, 100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 3.5vh;
+  }
 }
 
 .clicca {
+  position: relative;
+  bottom: -20vh;
+
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-  font-size: 4rem;
-  translate: 0 60vh;
+  font-size: 15vw;
 }   
