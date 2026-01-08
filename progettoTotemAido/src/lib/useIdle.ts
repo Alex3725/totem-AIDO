@@ -1,33 +1,48 @@
-import { onMount } from 'svelte';
-import { writable } from 'svelte/store';
+import { onMount, onDestroy } from 'svelte';
+import { writable, get } from 'svelte/store';
 import { goto } from '$app/navigation';
+import { lastPage } from './stores/lastPage';
 
 export const status = writable("User is active");
 export const statusColor = writable("green");
 
-export function useIdle(idleTime: number = 600_000, idleRoute: string = '/idle') {
-  onMount(() => {
-    let timeout: number;
-    let isIdle = false;
+export function useIdle(
+  idleTime: number = 600_000,
+  idleRoute: string = '/stackPage',
+  graceTime: number = 0 // ⬅ tempo extra prima del ritorno
+) {
+  let timeout: number;
+  let returnTimeout: number;
+  let isIdle = false;
 
-    function setIdle() {
-      isIdle = true;
-      status.set("User is not active");
-      statusColor.set("red");
+  function setIdle() {
+    isIdle = true;
+    status.set("User is not active");
+    statusColor.set("red");
+    goto(idleRoute);
+  }
 
-      goto(idleRoute); // redirect alla pagina inattiva
-    }
+  function setActive() {
+    clearTimeout(timeout);
 
-    function setActive() {
-      if (isIdle) {
-        status.set("User is active");
-        statusColor.set("green");
-      }
+    if (isIdle) {
       isIdle = false;
-      if (timeout) clearTimeout(timeout);
-      timeout = window.setTimeout(setIdle, idleTime);
+      status.set("User is active");
+      statusColor.set("green");
+
+      clearTimeout(returnTimeout);
+      returnTimeout = window.setTimeout(() => {
+        const page = get(lastPage);
+        if (page && page !== idleRoute) {
+          goto(page);
+        }
+      }, graceTime);
     }
 
+    timeout = window.setTimeout(setIdle, idleTime);
+  }
+
+  onMount(() => {
     const events: (keyof DocumentEventMap)[] = [
       "mousemove",
       "keydown",
@@ -36,8 +51,13 @@ export function useIdle(idleTime: number = 600_000, idleRoute: string = '/idle')
       "click"
     ];
 
-    events.forEach(event => document.addEventListener(event, setActive));
-
+    events.forEach(e => document.addEventListener(e, setActive));
     setActive();
+
+    return () => {
+      events.forEach(e => document.removeEventListener(e, setActive));
+      clearTimeout(timeout);
+      clearTimeout(returnTimeout);
+    };
   });
 }

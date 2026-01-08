@@ -3,8 +3,7 @@
 </script>
 
 
-<body>
+<div class=" bg-white w-full h-full rounded-[10vw]  flex flex-col justify-center items-center">
   <h1>Move your mouse or press any key</h1>
-  <div id="status">User is active</div>
-  <script src="script.js"></script>
-</body>
+  <div>User is active</div>
+</div>
