@@ -1,14 +1,74 @@
 body {
-  font-family: sans-serif;
-  text-align: center;
-  padding: 2rem;
-
-  margin: 0 0;
+  margin: 0;
   padding: 0;
+  overflow: hidden;
+  background: linear-gradient(120deg, 
+    rgba(169, 0, 0, 1) 0%, 
+    rgba(113, 50, 87, 1) 50%, 
+    rgba(58, 100, 173, 1) 100%);
+  background-repeat: no-repeat;   
+  background-size: cover;        
+  min-height: 100vh;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;               
 }
 
-#status {
-  margin-top: 1.5rem;
-  font-size: 1.5rem;
-  color: green;
+.container{
+  width: 90vw;
+  height: 90vh;
+  margin-top: 5vh;
+  background-color: white;
+  border-radius: 190px;
+  position: absolute;
+  top: 1vh;
+  left: calc(50% - 45vw);
+  text-align: center; 
+}
+
+.opzione{
+  width: 80vw;
+  height: 63vh;
+  margin-top: 2vh;
+  background-color: #BB0101;
+  border-radius: 190px;
+  text-align: center;
+  color: white;
+}
+
+.opzione h2{
+  font-size: 12rem;
+  position: relative;
+  top: 4vh;
+}
+
+.opzione p{
+  font-size: 7rem;
+  position: relative;
+  top: 4vh;
+}
+
+.opzione div{
+  width: 60vw;
+  height: 10vh;
+  position: relative;
+  top: 3vh;
+  background-color: white;
+  border-radius: 58px;
+  text-align: center;
+  color: black;
+  box-shadow: 40px 35px 35px  black;
+}
+
+.opzione div h2{
+  position: relative;
+  top: 2vh;
+}
+
+#logoAIDO{
+  position: relative;
+  top: 50px;
+  width: 25%;
+}
+
+#menuScritta{
+  font-size: 10rem;
 }
