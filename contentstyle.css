@@ -26,24 +26,28 @@ body {
 
 .opzione{
   width: 80vw;
-  height: 63vh;
-  margin-top: 2vh;
+  height: 56vh;
   background-color: #BB0101;
   border-radius: 190px;
   text-align: center;
   color: white;
+  margin: 0;
 }
 
 .opzione h2{
-  font-size: 12rem;
+  font-size: 7vh;
   position: relative;
-  top: 4vh;
+  top: 1vh;
+  max-width: 50vh;
+  margin: 0 auto;
 }
 
 .opzione p{
-  font-size: 7rem;
+  font-size: 2vh;
   position: relative;
-  top: 4vh;
+  top: 2vh;
+  max-width: 80vh;
+  margin: 3vh auto;
 }
 
 .opzione div{
@@ -56,19 +60,28 @@ body {
   text-align: center;
   color: black;
   box-shadow: 40px 35px 35px  black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .opzione div h2{
-  position: relative;
-  top: 2vh;
+  font-size: 5vh;
 }
 
 #logoAIDO{
   position: relative;
-  top: 50px;
-  width: 25%;
+  top: 5vh;
+  width: 15vh;
+  margin-bottom: 4vh;
 }
 
 #menuScritta{
-  font-size: 10rem;
+  font-size: 4vh;
+}
+
+@media screen and (orientation: landscape) {
+  .container, .opzione{
+    border-radius: 20vh;
+  }
 }
