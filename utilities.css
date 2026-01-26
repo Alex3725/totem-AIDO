@@ -1,0 +1,24 @@
+/* file per le utilità esempio: chat IA */
+.chatAI {
+    display: flex;
+    position: absolute;
+    justify-content: center;
+    right: 2vh;
+    bottom: 1vh;
+}
+
+.chatAI img {
+    width: 8vh;
+    height: 8vh;
+    position: absolute;
+    right: calc(50% - 4vh);
+    bottom: calc(50% - 4vh);
+}
+
+.sfondoChat {
+    background-color: #5b7cbd;
+    box-shadow: 0 10px 100px 0 black;
+    border-radius: 100%;
+    width: 10vh;
+    height: 10vh;
+}
