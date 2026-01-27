@@ -2,17 +2,17 @@ body {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background: linear-gradient(120deg, 
-    rgba(169, 0, 0, 1) 0%, 
-    rgba(113, 50, 87, 1) 50%, 
-    rgba(58, 100, 173, 1) 100%);
-  background-repeat: no-repeat;   
-  background-size: cover;        
+  background: linear-gradient(120deg,
+      rgba(169, 0, 0, 1) 0%,
+      rgba(113, 50, 87, 1) 50%,
+      rgba(58, 100, 173, 1) 100%);
+  background-repeat: no-repeat;
+  background-size: cover;
   min-height: 100vh;
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;               
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
-.container{
+.container {
   width: 90vw;
   height: 90vh;
   margin-top: 5vh;
@@ -21,10 +21,10 @@ body {
   position: absolute;
   top: 1vh;
   left: calc(50% - 45vw);
-  text-align: center; 
+  text-align: center;
 }
 
-.opzione{
+.opzione {
   width: 80vw;
   height: 56vh;
   background-color: #BB0101;
@@ -34,7 +34,7 @@ body {
   margin: 0;
 }
 
-.opzione h2{
+.opzione h2 {
   font-size: 7vh;
   position: relative;
   top: 3vh;
@@ -42,7 +42,7 @@ body {
   margin: 0 auto;
 }
 
-.opzione p{
+.opzione p {
   font-size: 2vh;
   position: relative;
   top: 2vh;
@@ -50,7 +50,7 @@ body {
   margin: 3vh auto;
 }
 
-.opzione .btn{
+.opzione .btn {
   width: 60vw;
   height: 10vh;
   position: relative;
@@ -59,63 +59,100 @@ body {
   border-radius: 58px;
   text-align: center;
   color: black;
-  box-shadow: 40px 35px 35px  black;
+  box-shadow: 40px 35px 35px black;
   cursor: pointer;
 }
 
-.opzione div h2{
+.opzione div h2 {
   font-size: 5vh;
   top: 2vh;
 }
 
-#logoAIDO{
+#logoAIDO {
   position: relative;
   top: 5vh;
   width: 15vh;
   margin-bottom: 4vh;
 }
 
-#menuScritta{
+#menuScritta {
   font-size: 4vh;
 }
 
-.sx{
-  width: 10vh;
-  height: 10vh;
-  background: linear-gradient(90deg,rgba(91, 124, 189, 0) 0%, rgba(91, 124, 189, 0.10) 1%, rgba(91, 124, 189, 0.275) 25%,  rgba(91, 124, 189, 0.856) 50%, rgba(91, 124, 189, 1) 100%);
+.frecce {
+  position: relative;
+  min-height: 100vh;
+  pointer-events: none;
+}
+
+.dx {
+  width: 8vh;
+  height: 8vh;
+  background: linear-gradient(90deg, rgba(91, 124, 189, 0) 0%, rgba(91, 124, 189, 0.10) 1%, rgba(91, 124, 189, 0.275) 25%, rgba(91, 124, 189, 0.856) 50%, rgba(91, 124, 189, 1) 100%);
   border-radius: 100%;
   cursor: pointer;
   position: absolute;
-  top: calc(50% - 5vh);
+  top: 50%;
   right: 0;
-}
-
-.sx img{
-  width: 5vh;
-  height: 5vh;
-  position: relative;
-  top: calc(50% - 2.5vh);
-  justify-content: center;
+  margin-top: -4vh;
+  pointer-events:auto;
 }
 
 .dx img {
+  width: 4vh;
+  height: 4vh;
+  position: relative;
+  top: calc(50% - 2vh);
+  left: calc(50% - 2vh);
+}
+
+.sx {
+  width: 8vh;
+  height: 8vh;
+  background: linear-gradient(90deg, rgba(91, 124, 189, 0) 0%, rgba(91, 124, 189, 0.10) 1%, rgba(91, 124, 189, 0.275) 25%, rgba(91, 124, 189, 0.856) 50%, rgba(91, 124, 189, 1) 100%);
   transform: scaleX(-1);
-  background-color: black;
+  border-radius: 100%;
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  margin-top: -4vh;
+  pointer-events:auto;
+}
+
+.sx img {
+  width: 4vh;
+  height: 4vh;
+  position: relative;
+  top: calc(50% - 2vh);
+  left: calc(50% - 2vh);
 }
 
 @media screen and (orientation: landscape) {
-  .container, .opzione{
+
+  .container,
+  .opzione {
     border-radius: 20vh;
   }
-  .opzione h2{
+
+  .opzione h2 {
     top: 3vh;
   }
-  .opzione p{
-    top:3vh;
+
+  .opzione p {
+    top: 3vh;
     font-size: 3vh;
   }
-  .opzione div{
-    top:3vh;
+
+  .opzione div {
+    top: 3vh;
+  }
+
+  .sx{
+    left: 3vw;
+  }
+  .dx{
+    right: 3vw;
   }
 
 }
@@ -124,13 +161,15 @@ body {
 .contenuti {
   translate: 0 15vh;
 }
+
 .homebtn {
   width: 10vh;
   position: absolute;
   right: 3vw;
   top: 3vh;
 }
-.testohome{
+
+.testohome {
   text-decoration: none;
   color: black;
   text-align: center;
@@ -138,15 +177,17 @@ body {
   top: 10vh;
   cursor: pointer;
 }
+
 .backbtn {
   display: flex;
   width: 10vh;
   position: absolute;
   left: 3vw;
   top: 5vh;
-  cursor: pointer ;
+  cursor: pointer;
 }
-.testoback{
+
+.testoback {
   text-align: center;
   font-size: 1.8vh;
   top: 10vh;
