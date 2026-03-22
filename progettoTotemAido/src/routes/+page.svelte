@@ -1,10 +1,16 @@
 <script lang="ts">
-    let ciao: string = "ciao mondo";
+  import Carousel from '$lib/components/common/Carousel.svelte';
+  import { menuOptions } from '$lib/data/menu-options';
+
+  const pages = menuOptions.map((option) => ({
+    id: option.slug,
+    title: option.title,
+    subtitle: 'Pagina convertita da opzioniMenu',
+    content: option.description,
+    link: `/opzioni-menu/${option.slug}`
+  }));
 </script>
 
-
-<body>
-  <h1>Move your mouse or press any key</h1>
-  <div id="status">User is active</div>
-  <script src="script.js"></script>
-</body>
+<main class="h-screen w-full">
+  <Carousel {pages} autoRotate={false} />
+</main>

@@ -7,8 +7,8 @@
 
   import { status, statusColor, useIdle } from '$lib/useIdle';
 
-  // Idle dopo 10 minuti e redirect a /idle
-  useIdle(1000, '/idle');
+  // Idle dopo 5 minuti (300000ms) e redirect a /idle
+  useIdle(300000, '/idle');
 
 </script>
 

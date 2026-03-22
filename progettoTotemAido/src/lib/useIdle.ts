@@ -1,6 +1,7 @@
 import { onMount } from 'svelte';
 import { writable } from 'svelte/store';
 import { goto } from '$app/navigation';
+import { previousRoute } from './stores/navigation.store';
 
 export const status = writable("User is active");
 export const statusColor = writable("green");
@@ -9,13 +10,14 @@ export function useIdle(idleTime: number = 600_000, idleRoute: string = '/idle')
   onMount(() => {
     let timeout: number;
     let isIdle = false;
+    let currentRoute = '/';
 
     function setIdle() {
       isIdle = true;
       status.set("User is not active");
       statusColor.set("red");
-
-      goto(idleRoute); // redirect alla pagina inattiva
+      previousRoute.set(currentRoute);
+      goto(idleRoute);
     }
 
     function setActive() {
@@ -37,6 +39,10 @@ export function useIdle(idleTime: number = 600_000, idleRoute: string = '/idle')
     ];
 
     events.forEach(event => document.addEventListener(event, setActive));
+
+    if (typeof window !== 'undefined') {
+      currentRoute = window.location.pathname;
+    }
 
     setActive();
   });
