@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { scale } from 'svelte/transition';
+	import { cubicOut } from 'svelte/easing';
+	import { crossfade, fade, scale } from 'svelte/transition';
 	import type { MenuOption } from '$lib/data/menu-options';
 	import ExampleContent from './ExampleContent.svelte';
 
@@ -15,6 +16,18 @@
 
 	let isExpanded = $state(false);
 
+	const [send, receive] = crossfade({
+		duration: (distance) => Math.min(700, Math.max(340, distance * 0.9)),
+		easing: cubicOut,
+		fallback(node, _params, intro) {
+			return scale(node, {
+				duration: intro ? 460 : 220,
+				easing: cubicOut,
+				start: intro ? 0.74 : 1
+			});
+		}
+	});
+
 	function handleExpandClick() {
 		isExpanded = true;
 	}
@@ -24,76 +37,72 @@
 	}
 </script>
 
-<section class="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-gradient-to-r from-red-600 via-red-500 to-purple-600 px-0 py-0">
-	<div
-		class="pointer-events-none absolute left-0 top-0 h-72 w-72 -translate-x-1/3 -translate-y-1/3 rounded-full bg-white/5 blur-3xl"
-	></div>
+<section
+	class="relative min-h-screen overflow-hidden bg-[linear-gradient(120deg,rgba(169,0,0,1)_0%,rgba(113,50,87,1)_50%,rgba(58,100,173,1)_100%)]"
+>
+	<div class="pointer-events-none absolute -left-24 -top-20 h-72 w-72 rounded-full bg-white/10 blur-3xl"></div>
+	<div class="pointer-events-none absolute -bottom-16 right-0 h-80 w-80 rounded-full bg-blue-300/20 blur-3xl"></div>
 
 	{#if isExpanded}
 		<div
-			class="fixed inset-0 z-50 flex items-center justify-center overflow-hidden bg-gradient-to-r from-red-600 via-red-500 to-purple-600 px-4 py-8"
-			transition:scale={{ duration: 400, easing: (t) => t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t }}
+			class="fixed inset-0 z-50 flex items-center justify-center overflow-hidden bg-[linear-gradient(120deg,rgba(169,0,0,1)_0%,rgba(113,50,87,1)_50%,rgba(58,100,173,1)_100%)] px-4 py-8"
 		>
-			<ExampleContent {option} onClose={handleCollapse} {previousOption} {nextOption} />
+			<div
+				class="absolute inset-0 bg-black/20"
+				in:fade={{ duration: 240 }}
+				out:fade={{ duration: 160 }}
+			></div>
+
+			<div class="relative z-10 flex w-full justify-center" in:receive={{ key: `red-${option.slug}` }}>
+				<ExampleContent {option} onClose={handleCollapse} {previousOption} {nextOption} />
+			</div>
 		</div>
 	{:else}
-		<!-- Left Arrow -->
-		<a
-			href={`/opzioni-menu/${previousOption.slug}`}
-			aria-label={`Vai a ${previousOption.title}`}
-			class="absolute left-4 top-1/2 z-20 flex h-16 w-16 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-red-600 shadow-lg transition hover:bg-white hover:scale-110 sm:left-8"
-		>
-			<svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7" />
-			</svg>
-		</a>
+		<div class="relative z-10 mx-auto mt-[5vh] h-[90vh] w-[90vw] max-w-[1800px] rounded-[clamp(2.5rem,10vw,11rem)] bg-white px-4 pb-6 pt-4 text-center shadow-[0_24px_80px_rgba(0,0,0,0.45)] sm:px-8 sm:pt-6">
+			<img src="/img/logoAIDO.png" alt="Logo AIDO" class="mx-auto w-20 sm:w-24" />
+			<h2 class="mt-2 text-lg font-black tracking-wide text-slate-900 sm:text-2xl">MENÙ</h2>
 
-		<!-- Main Card -->
-		<article
-			class="relative z-10 w-full max-w-2xl rounded-full bg-white p-8 shadow-2xl transition-transform duration-300 hover:scale-105 sm:mx-auto sm:p-12 lg:rounded-3xl"
-		>
-			<!-- Header with Logo -->
-			<div class="mb-8 flex flex-col items-center">
-				<div class="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-red-600 to-red-700 shadow-lg">
-					<span class="text-lg font-black text-white">aido</span>
-				</div>
-				<h2 class="text-2xl font-black text-slate-900">MENÙ</h2>
-			</div>
-
-			<!-- Red Content Bubble -->
-			<div class="mx-auto mb-6 w-11/12 rounded-3xl bg-gradient-to-br from-red-600 to-red-700 px-6 py-12 text-center shadow-lg sm:px-8 sm:py-14">
-				<h1 class="mb-4 text-3xl font-black text-white sm:text-4xl">{option.title}</h1>
-
-				<p class="mb-8 text-lg leading-relaxed text-white/95 sm:text-xl">
+			<article
+				class="mx-auto mt-2 flex h-[68vh] w-full max-w-[80vw] flex-col items-center justify-center rounded-[clamp(2rem,9vw,11rem)] bg-[#bb0101] px-6 text-white shadow-[0_24px_50px_rgba(0,0,0,0.45)] sm:px-10"
+				out:send={{ key: `red-${option.slug}` }}
+			>
+				<h1 class="max-w-[14ch] text-4xl font-black leading-tight sm:text-6xl lg:text-7xl">{option.title}</h1>
+				<p class="mt-5 max-w-[70ch] text-base leading-relaxed text-white/95 sm:text-xl lg:text-2xl">
 					{option.description}
 				</p>
 
 				<button
 					type="button"
 					onclick={handleExpandClick}
-					class="inline-flex rounded-full bg-white px-8 py-4 text-lg font-black text-red-700 transition hover:bg-red-50 active:scale-95 shadow-md"
+					class="mt-8 inline-flex min-w-[16rem] items-center justify-center rounded-full bg-white px-8 py-4 text-lg font-black text-black shadow-[0_18px_30px_rgba(0,0,0,0.35)] transition hover:-translate-y-0.5 hover:shadow-[0_24px_40px_rgba(0,0,0,0.45)] active:translate-y-0"
 				>
 					{option.ctaLabel}
 				</button>
-			</div>
+			</article>
 
-			<!-- Navigation Footer -->
-			<div class="mt-8 flex flex-wrap items-center justify-between gap-2 px-2 text-xs text-slate-600 sm:text-sm">
-				<span>{previousOption.title}</span>
-				<span class="font-semibold">Sorgente: {option.sourceFile}</span>
-				<span>{nextOption.title}</span>
-			</div>
-		</article>
+			<button
+				type="button"
+				class="absolute bottom-3 right-3 flex h-14 w-14 items-center justify-center rounded-full bg-[#5b7cbd] shadow-[0_10px_42px_rgba(0,0,0,0.55)] transition hover:scale-105 sm:bottom-4 sm:right-5 sm:h-16 sm:w-16"
+				aria-label="Apri assistente AI"
+			>
+				<img src="/img/DONAtello_AI.png" alt="ChatBot AI" class="h-11 w-11 sm:h-12 sm:w-12" />
+			</button>
+		</div>
 
-		<!-- Right Arrow -->
+		<a
+			href={`/opzioni-menu/${previousOption.slug}`}
+			aria-label={`Vai a ${previousOption.title}`}
+			class="absolute left-0 top-1/2 z-20 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full bg-[linear-gradient(90deg,rgba(91,124,189,0)_0%,rgba(91,124,189,0.1)_1%,rgba(91,124,189,0.275)_25%,rgba(91,124,189,0.856)_50%,rgba(91,124,189,1)_100%)] transition hover:scale-110 sm:left-6 sm:h-16 sm:w-16"
+		>
+			<img src="/img/Freccia.png" alt="Freccia sinistra" class="h-8 w-8 -scale-x-100 sm:h-10 sm:w-10" />
+		</a>
+
 		<a
 			href={`/opzioni-menu/${nextOption.slug}`}
 			aria-label={`Vai a ${nextOption.title}`}
-			class="absolute right-4 top-1/2 z-20 flex h-16 w-16 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-red-600 shadow-lg transition hover:bg-white hover:scale-110 sm:right-8"
+			class="absolute right-0 top-1/2 z-20 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full bg-[linear-gradient(90deg,rgba(91,124,189,0)_0%,rgba(91,124,189,0.1)_1%,rgba(91,124,189,0.275)_25%,rgba(91,124,189,0.856)_50%,rgba(91,124,189,1)_100%)] transition hover:scale-110 sm:right-6 sm:h-16 sm:w-16"
 		>
-			<svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" />
-			</svg>
+			<img src="/img/Freccia.png" alt="Freccia destra" class="h-8 w-8 sm:h-10 sm:w-10" />
 		</a>
 	{/if}
 </section>

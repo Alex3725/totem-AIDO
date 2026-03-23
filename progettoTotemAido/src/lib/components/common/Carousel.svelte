@@ -6,6 +6,7 @@
 		id: string;
 		title: string;
 		subtitle?: string;
+		ctaLabel?: string;
 		icon?: string;
 		image?: string;
 		content?: string;
@@ -91,19 +92,26 @@
 </script>
 
 <div
-	class="relative h-full w-full overflow-hidden bg-gradient-to-br from-red-500 to-red-700"
+	class="relative h-full w-full overflow-hidden bg-gradient-to-br from-red-700 via-red-600 to-orange-500"
 	ontouchstart={handleTouchStart}
 	ontouchend={handleTouchEnd}
 >
+	<div class="pointer-events-none absolute inset-0">
+		<div class="absolute -left-32 -top-24 h-72 w-72 rounded-full bg-orange-300/20 blur-3xl"></div>
+		<div class="absolute -right-24 top-20 h-80 w-80 rounded-full bg-red-300/20 blur-3xl"></div>
+		<div class="absolute bottom-0 left-1/2 h-64 w-[32rem] -translate-x-1/2 rounded-full bg-black/15 blur-3xl"></div>
+	</div>
+
 	<div class="relative h-full w-full">
 		{#each pages as page, index (page.id)}
 			<div
-				class="absolute inset-0 transition-opacity duration-300 {index === currentIndex
-					? 'z-10 opacity-100'
-					: 'z-0 opacity-0'}"
+				class="absolute inset-0 px-6 pb-24 pt-10 transition-all duration-500 sm:px-10 sm:pt-14 {index ===
+				currentIndex
+					? 'z-10 translate-y-0 opacity-100'
+					: 'z-0 translate-y-4 opacity-0'}"
 			>
 				<div
-					class="flex h-full w-full cursor-pointer flex-col items-center justify-center p-8 text-center text-white transition-transform duration-200 hover:scale-105"
+					class="mx-auto flex h-full w-full max-w-5xl cursor-pointer items-center justify-center rounded-[2rem] border border-white/20 bg-white/10 p-8 text-center text-white shadow-2xl backdrop-blur-xl transition duration-300 hover:scale-[1.01] hover:bg-white/15 sm:p-12"
 					onclick={() => handlePageClick(page)}
 					role="button"
 					tabindex="0"
@@ -113,23 +121,21 @@
 						}
 					}}
 				>
-					{#if page.image}
-						<img src={page.image} alt={page.title} class="mb-6 max-h-64 rounded-lg object-cover" />
-					{:else if page.icon}
-						<div class="mb-6 text-8xl">{page.icon}</div>
-					{/if}
+					<p class="mb-5 inline-flex rounded-full border border-white/30 bg-black/15 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-white/90">
+						Menu AIDO
+					</p>
 
-					<h2 class="mb-4 text-5xl font-bold">{page.title}</h2>
+					<h2 class="mb-4 text-4xl font-black leading-tight sm:text-6xl">{page.title}</h2>
 					{#if page.subtitle}
-						<p class="text-2xl text-white/90">{page.subtitle}</p>
+						<p class="text-lg text-white/90 sm:text-2xl">{page.subtitle}</p>
 					{/if}
 					{#if page.content}
-						<p class="mt-4 max-w-4xl text-xl text-white/80">{page.content}</p>
+						<p class="mt-2 max-w-3xl text-base leading-relaxed text-white/85 sm:text-xl">{page.content}</p>
 					{/if}
 
 					{#if page.link || page.action}
-						<div class="mt-8 rounded-full bg-white/20 px-8 py-4 text-xl font-semibold backdrop-blur-sm">
-							Clicca per entrare ->
+						<div class="mt-8 rounded-full border border-white/35 bg-white/25 px-8 py-3 text-base font-bold tracking-wide text-white shadow-lg backdrop-blur-sm sm:text-lg">
+							{page.ctaLabel ?? 'Clicca per entrare'} ->
 						</div>
 					{/if}
 				</div>
@@ -140,7 +146,7 @@
 	{#if pages.length > 1}
 		<button
 			onclick={prevPage}
-			class="absolute left-4 top-1/2 z-20 -translate-y-1/2 rounded-full bg-white/20 p-4 text-white backdrop-blur-sm transition-all hover:scale-110 hover:bg-white/30"
+			class="absolute left-3 top-1/2 z-20 -translate-y-1/2 rounded-full border border-white/30 bg-black/20 p-3 text-white shadow-lg backdrop-blur-md transition-all hover:scale-110 hover:bg-black/35 sm:left-6 sm:p-4"
 			aria-label="Pagina precedente"
 		>
 			<svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -150,7 +156,7 @@
 
 		<button
 			onclick={nextPage}
-			class="absolute right-4 top-1/2 z-20 -translate-y-1/2 rounded-full bg-white/20 p-4 text-white backdrop-blur-sm transition-all hover:scale-110 hover:bg-white/30"
+			class="absolute right-3 top-1/2 z-20 -translate-y-1/2 rounded-full border border-white/30 bg-black/20 p-3 text-white shadow-lg backdrop-blur-md transition-all hover:scale-110 hover:bg-black/35 sm:right-6 sm:p-4"
 			aria-label="Pagina successiva"
 		>
 			<svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -160,13 +166,13 @@
 	{/if}
 
 	{#if pages.length > 1}
-		<div class="absolute bottom-8 left-1/2 z-20 flex -translate-x-1/2 gap-2">
+		<div class="absolute bottom-8 left-1/2 z-20 flex -translate-x-1/2 gap-2 rounded-full border border-white/25 bg-black/20 px-3 py-2 backdrop-blur-md">
 			{#each pages as _, index}
 				<button
 					onclick={() => goToPage(index)}
-					class="h-3 w-3 rounded-full transition-all {index === currentIndex
-						? 'scale-125 bg-white'
-						: 'bg-white/50 hover:bg-white/75'}"
+					class="h-2.5 rounded-full transition-all {index === currentIndex
+						? 'w-8 bg-white'
+						: 'w-2.5 bg-white/50 hover:bg-white/75'}"
 					aria-label={`Vai alla pagina ${index + 1}`}
 				></button>
 			{/each}

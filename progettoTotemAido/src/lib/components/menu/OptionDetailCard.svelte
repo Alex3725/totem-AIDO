@@ -53,8 +53,6 @@
 				<span>{previousOption.title}</span>
 			</a>
 
-			<div class="text-sm text-slate-500">Sorgente originale: {option.sourceFile}</div>
-
 			<a
 				href={`/opzioni-menu/${nextOption.slug}`}
 				class="inline-flex items-center gap-2 rounded-full border border-slate-300 px-4 py-2 font-semibold text-slate-700 transition hover:border-slate-500 hover:text-slate-900"
