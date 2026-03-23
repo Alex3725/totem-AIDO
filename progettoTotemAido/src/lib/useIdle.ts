@@ -1,29 +1,31 @@
 import { onMount } from 'svelte';
 import { writable } from 'svelte/store';
-import { goto } from '$app/navigation';
-import { previousRoute } from './stores/navigation.store';
 
 export const status = writable("User is active");
 export const statusColor = writable("green");
+export const isIdleMode = writable(false);
+export const idleOriginPath = writable('/');
 
-export function useIdle(idleTime: number = 600_000, idleRoute: string = '/idle') {
+export function useIdle(idleTime: number = 600_000) {
   onMount(() => {
-    let timeout: number;
+    let timeout = 0;
     let isIdle = false;
-    let currentRoute = '/';
 
     function setIdle() {
       isIdle = true;
+      const originPath = typeof window !== 'undefined' ? window.location.pathname : '/';
+
       status.set("User is not active");
       statusColor.set("red");
-      previousRoute.set(currentRoute);
-      goto(idleRoute);
+      idleOriginPath.set(originPath);
+      isIdleMode.set(true);
     }
 
     function setActive() {
       if (isIdle) {
         status.set("User is active");
         statusColor.set("green");
+        isIdleMode.set(false);
       }
       isIdle = false;
       if (timeout) clearTimeout(timeout);
@@ -40,10 +42,12 @@ export function useIdle(idleTime: number = 600_000, idleRoute: string = '/idle')
 
     events.forEach(event => document.addEventListener(event, setActive));
 
-    if (typeof window !== 'undefined') {
-      currentRoute = window.location.pathname;
-    }
-
     setActive();
+
+    return () => {
+      events.forEach(event => document.removeEventListener(event, setActive));
+      if (timeout) clearTimeout(timeout);
+      isIdleMode.set(false);
+    };
   });
 }
