@@ -13,8 +13,8 @@
 
 <style>
 	.totem-card {
-		width: min(94vw, calc(94dvh * 9 / 16));
-		height: min(94dvh, calc(94vw * 16 / 9));
+		width: 94vw;
+		height: min(80dvh, calc(94vw * 16 / 9));
 		border-radius: 2.2vmin;
 		padding: 1.1vmin;
 		background: #5b7cbd;
@@ -24,21 +24,14 @@
 		text-decoration: none;
 	}
 
-	@media (orientation: landscape) {
-		.totem-card {
-			width: min(88vw, calc(88dvh * 3 / 2));
-			height: min(88dvh, calc(88vw * 2 / 3));
-			border-radius: 4vmin;
-			padding: 1.05vmin;
-		}
-	}
-
 	.screen {
 		min-height: 100dvh;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		padding: 0;
+		padding-block: 10dvh;
+		padding-inline: 0;
+		box-sizing: border-box;
 		background: linear-gradient(120deg, rgba(169, 0, 0, 1) 0%, rgba(113, 50, 87, 1) 50%, rgba(58, 100, 173, 1) 100%);
 	}
 
@@ -74,11 +67,11 @@
 		}
 
 		.start-logo {
-			width: 58%;
+			width: 52%;
 		}
 
 		.start-title {
-			font-size: clamp(2.4rem, 4.6vw, 5rem);
+			font-size: clamp(2.1rem, 2.7vw, 3.2rem);
 		}
 	}
 </style>
