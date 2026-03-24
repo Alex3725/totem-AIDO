@@ -68,26 +68,38 @@
 	}
 
 	.totem-card {
-		width: min(100vw, calc(100dvh * 9 / 16));
-		height: min(100dvh, calc(100vw * 16 / 9));
-		border-radius: 2.2vmin;
-		padding: 1vmin;
+		width: min(94vw, calc(94dvh * 9 / 16));
+		height: min(94dvh, calc(94vw * 16 / 9));
+		border-radius: 2.1cqw;
+		padding: 0.95cqw;
 		background: var(--frame-blue);
+		container-type: size;
+	}
+
+	@media (orientation: landscape) {
+		.totem-card {
+			width: min(88vw, calc(88dvh * 3 / 2));
+			height: min(88dvh, calc(88vw * 2 / 3));
+			border-radius: 4vmin;
+			padding: 1.05vmin;
+		}
 	}
 
 	.totem-inner {
 		height: 100%;
-		border-radius: 24px;
-		border: 4px solid var(--frame-blue-border);
+		border-radius: 2.2cqw;
+		border: max(2px, 0.35cqw) solid var(--frame-blue-border);
 		background: #ffffff;
-		padding: 0.75rem;
+		padding: 1.25cqw;
 		display: flex;
 		flex-direction: column;
+		min-height: 0;
 	}
 
 	.totem-header {
-		height: 3.9rem;
-		border-radius: 16px;
+		height: 11.2cqh;
+		min-height: 5.6cqw;
+		border-radius: 1.5cqw;
 		background: var(--header-cream);
 		display: flex;
 		align-items: center;
@@ -95,18 +107,20 @@
 	}
 
 	.header-spacer {
-		width: 1.9rem;
+		width: 2.2cqw;
 	}
 
 	.logo {
-		width: 2.85rem;
-		height: 2.85rem;
+		width: 12.2cqw;
+		height: 12.2cqw;
+		max-width: 4.2rem;
+		max-height: 4.2rem;
 	}
 
 	.menu-title {
-		margin-top: 0.45rem;
+		margin-top: 1.45cqh;
 		text-align: center;
-		font-size: 2.15rem;
+		font-size: 7.2cqw;
 		font-weight: 900;
 		color: #111827;
 		line-height: 1;
@@ -114,7 +128,7 @@
 
 	.panel-stack {
 		position: relative;
-		margin-top: 0.55rem;
+		margin-top: 1.25cqh;
 		flex: 1;
 		min-height: 0;
 	}
@@ -122,9 +136,9 @@
 	.option-panel {
 		position: absolute;
 		inset: 0;
-		bottom: 2.1rem;
-		border-radius: 12px 12px 0 0;
-		padding: 0.9rem 0.9rem 1.05rem;
+		bottom: 4.05cqh;
+		border-radius: 1.45cqw 1.45cqw 0 0;
+		padding: 2.2cqh 2.75cqw 2.35cqh;
 		background: var(--panel-red);
 		display: flex;
 		flex-direction: column;
@@ -134,18 +148,18 @@
 	}
 
 	.option-panel h2 {
-		font-size: clamp(1.8rem, 4.8vw, 2.45rem);
+		font-size: 7.1cqw;
 		line-height: 1.02;
 		font-weight: 900;
-		margin: 0.25rem 0 0;
+		margin: 0;
 	}
 
 	.option-panel p {
-		font-size: clamp(1.1rem, 2.6vw, 1.4rem);
-		line-height: 1.36;
+		font-size: 3.45cqw;
+		line-height: 1.42;
 		font-weight: 700;
-		max-width: 95%;
-		margin: 0.95rem 0 0;
+		max-width: 90%;
+		margin: 3cqh 0 0;
 	}
 
 	.cta-button {
@@ -153,20 +167,20 @@
 		text-decoration: none;
 		background: #fff;
 		color: #121212;
-		font-size: clamp(1.55rem, 4vw, 2rem);
+		font-size: 4.7cqw;
 		font-weight: 900;
 		line-height: 1;
-		padding: 0.78rem 1.35rem;
-		border-radius: 12px;
-		box-shadow: 0 6px 8px rgba(0, 0, 0, 0.45);
+		padding: 1.6cqh 4.25cqw;
+		border-radius: 1.2cqw;
+		box-shadow: 0 0.55cqw 0.75cqw rgba(0, 0, 0, 0.45);
 	}
 
 	.nav-dot {
 		position: absolute;
 		top: 50%;
 		transform: translateY(-50%);
-		width: 2.9rem;
-		height: 2.9rem;
+		width: 7.2cqw;
+		height: 7.2cqw;
 		border-radius: 999px;
 		background: linear-gradient(90deg, rgba(91, 124, 189, 0) 0%, rgba(91, 124, 189, 0.1) 1%, rgba(91, 124, 189, 0.275) 25%, rgba(91, 124, 189, 0.856) 50%, rgba(91, 124, 189, 1) 100%);
 		display: inline-flex;
@@ -182,17 +196,17 @@
 	}
 
 	.nav-dot.left {
-		left: 0.2rem;
+		left: 0.5cqw;
 	}
 
 	.nav-dot.right {
-		right: 0.2rem;
+		right: 0.5cqw;
 	}
 
 	.arrow-left,
 	.arrow-right {
-		width: 1.45rem;
-		height: 1.45rem;
+		width: 3.75cqw;
+		height: 3.75cqw;
 	}
 
 	.arrow-left {
@@ -204,26 +218,26 @@
 		left: 0;
 		right: 0;
 		bottom: 0;
-		height: 2.1rem;
+		height: 4.05cqh;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		padding: 0;
-		border-radius: 0 0 12px 12px;
+		border-radius: 0 0 1.45cqw 1.45cqw;
 		background: var(--panel-red);
-		box-shadow: 0 8px 14px rgba(0, 0, 0, 0.2);
+		box-shadow: 0 0.7cqw 1.2cqw rgba(0, 0, 0, 0.2);
 	}
 
 	.dots {
 		display: flex;
 		justify-content: center;
-		gap: 0.32rem;
-		padding: 0.16rem 0;
+		gap: 0.8cqw;
+		padding: 0;
 	}
 
 	.dot {
-		width: 0.58rem;
-		height: 0.58rem;
+		width: 1.45cqw;
+		height: 1.45cqw;
 		border-radius: 999px;
 		background: #fff;
 	}
@@ -233,50 +247,37 @@
 	}
 
 	@media (orientation: landscape) and (min-width: 1100px) and (min-height: 650px) {
-		.totem-card {
-			width: 92vw;
-			height: 92dvh;
-			border-radius: 4.5vmin;
-			padding: 1.2vmin;
-		}
-
-		.totem-inner {
-			border-radius: 4vmin;
-			padding: 1.6vmin;
-		}
-
 		.totem-header {
-			height: 11%;
-			border-radius: 2.4vmin;
+			height: 11.2cqh;
+			border-radius: 1.5cqw;
 		}
 
 		.menu-title {
-			font-size: clamp(2.6rem, 4.8vw, 5rem);
+			font-size: 7.2cqw;
 		}
 
 		.option-panel {
-			border-radius: 2.2vmin;
-			padding: 1.4vmin 2.2vmin;
-			bottom: 4.2vmin;
-			border-radius: 2.2vmin 2.2vmin 0 0;
+			bottom: 4.05cqh;
+			border-radius: 1.45cqw 1.45cqw 0 0;
+			padding: 2.2cqh 2.75cqw 2.35cqh;
 		}
 
 		.dots-shell {
-			height: 4.2vmin;
-			border-radius: 0 0 2.2vmin 2.2vmin;
+			height: 4.05cqh;
+			border-radius: 0 0 1.45cqw 1.45cqw;
 		}
 
 		.option-panel h2 {
-			font-size: clamp(2.2rem, 4.2vw, 4.8rem);
+			font-size: 7.1cqw;
 		}
 
 		.option-panel p {
-			font-size: clamp(1.3rem, 2.2vw, 2.4rem);
+			font-size: 3.45cqw;
 		}
 
 		.cta-button {
-			font-size: clamp(1.4rem, 2.2vw, 2.6rem);
-			padding: 0.9vmin 2.4vmin;
+			font-size: 4.7cqw;
+			padding: 1.6cqh 4.25cqw;
 		}
 	}
 </style>

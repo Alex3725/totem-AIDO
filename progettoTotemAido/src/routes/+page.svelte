@@ -13,8 +13,8 @@
 
 <style>
 	.totem-card {
-		width: min(100vw, calc(100dvh * 9 / 16));
-		height: min(100dvh, calc(100vw * 16 / 9));
+		width: min(94vw, calc(94dvh * 9 / 16));
+		height: min(94dvh, calc(94vw * 16 / 9));
 		border-radius: 2.2vmin;
 		padding: 1.1vmin;
 		background: #5b7cbd;
@@ -22,6 +22,15 @@
 		align-items: center;
 		justify-content: center;
 		text-decoration: none;
+	}
+
+	@media (orientation: landscape) {
+		.totem-card {
+			width: min(88vw, calc(88dvh * 3 / 2));
+			height: min(88dvh, calc(88vw * 2 / 3));
+			border-radius: 4vmin;
+			padding: 1.05vmin;
+		}
 	}
 
 	.screen {
@@ -60,13 +69,6 @@
 	}
 
 	@media (orientation: landscape) and (min-width: 1100px) and (min-height: 650px) {
-		.totem-card {
-			width: 92vw;
-			height: 92dvh;
-			border-radius: 4.5vmin;
-			padding: 1.2vmin;
-		}
-
 		.totem-inner-start {
 			border-radius: 4vmin;
 		}

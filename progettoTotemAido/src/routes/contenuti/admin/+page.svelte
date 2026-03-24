@@ -58,32 +58,43 @@
 	}
 
 	.totem-card {
-		width: min(100vw, calc(100dvh * 9 / 16));
-		height: min(100dvh, calc(100vw * 16 / 9));
-		border-radius: 2.2vmin;
-		padding: 1vmin;
+		width: min(94vw, calc(94dvh * 9 / 16));
+		height: min(94dvh, calc(94vw * 16 / 9));
+		border-radius: 2.1cqw;
+		padding: 0.95cqw;
 		background: #5b7cbd;
+		container-type: size;
+	}
+
+	@media (orientation: landscape) {
+		.totem-card {
+			width: min(88vw, calc(88dvh * 3 / 2));
+			height: min(88dvh, calc(88vw * 2 / 3));
+			border-radius: 4vmin;
+			padding: 1.05vmin;
+		}
 	}
 
 	.totem-inner {
 		height: 100%;
-		border-radius: 24px;
+		border-radius: 2.2cqw;
 		background: #ffffff;
-		padding: 0.75rem;
+		padding: 1.25cqw;
 		display: flex;
 		flex-direction: column;
 		min-height: 0;
 	}
 
 	.totem-header {
-		height: 3.9rem;
-		border-radius: 16px;
+		height: 11.2cqh;
+		min-height: 5.6cqw;
+		border-radius: 1.5cqw;
 		background: #f6f6f6;
 		display: grid;
-		grid-template-columns: 2.2rem 1fr 2.2rem;
+		grid-template-columns: 6.2cqw 1fr 6.2cqw;
 		align-items: center;
-		padding: 0 0.4rem;
-		column-gap: 0.3rem;
+		padding: 0 1.1cqw;
+		column-gap: 0.8cqw;
 	}
 
 	.icon-wrap {
@@ -93,101 +104,106 @@
 	}
 
 	.icon {
-		width: 1.9rem;
-		height: 1.9rem;
+		width: 5.1cqw;
+		height: 5.1cqw;
+		max-width: 2.1rem;
+		max-height: 2.1rem;
 	}
 
 	.logo {
 		margin: 0 auto;
-		width: 2.75rem;
-		height: 2.75rem;
+		width: 12.2cqw;
+		height: 12.2cqw;
+		max-width: 4.2rem;
+		max-height: 4.2rem;
 	}
 
 	.title {
-		margin-top: 0.4rem;
+		margin-top: 1.45cqh;
 		text-align: center;
-		font-size: clamp(1.55rem, 4.2vw, 2rem);
+		font-size: 7.2cqw;
 		font-weight: 900;
 		color: #111827;
+		line-height: 1;
 	}
 
 	.content-panel {
-		margin-top: 0.55rem;
+		margin-top: 1.25cqh;
 		flex: 1;
 		min-height: 0;
-		border-radius: 12px;
-		padding: 0.9rem;
+		border-radius: 1.45cqw;
+		padding: 1.65cqw;
 		background: #d40000;
 		display: flex;
 		flex-direction: column;
-		gap: 0.7rem;
+		gap: 1.2cqh;
 		overflow: auto;
 		color: #fff;
 	}
 
 	.add-btn {
-		height: 2.15rem;
+		height: 5.2cqh;
 		border: 0;
 		border-radius: 999px;
 		background: #fff;
 		color: #111;
 		font-weight: 900;
-		font-size: 1rem;
+		font-size: 2.65cqw;
 	}
 
 	.filters-row {
 		display: grid;
 		grid-template-columns: 1fr auto;
-		gap: 0.35rem;
+		gap: 0.8cqw;
 	}
 
 	.search-box {
-		height: 2.05rem;
+		height: 5.2cqh;
 		background: #fff;
 		border-radius: 999px;
 		display: flex;
 		align-items: center;
-		padding: 0 0.55rem 0 0.7rem;
+		padding: 0 1.45cqw 0 1.85cqw;
 	}
 
 	.search-box input {
 		width: 100%;
 		border: 0;
 		outline: none;
-		font-size: 0.82rem;
+		font-size: 2.65cqw;
 		font-weight: 700;
 	}
 
 	.search-box img,
 	.filter-btn img {
-		width: 1.1rem;
-		height: 1.1rem;
+		width: 3.2cqw;
+		height: 3.2cqw;
 	}
 
 	.filter-btn {
-		height: 2.05rem;
+		height: 5.2cqh;
 		border: 0;
-		padding: 0 0.65rem;
+		padding: 0 1.6cqw;
 		border-radius: 999px;
 		display: inline-flex;
-		gap: 0.3rem;
+		gap: 0.8cqw;
 		align-items: center;
-		font-size: 0.82rem;
+		font-size: 2.55cqw;
 		font-weight: 800;
 		color: #111;
 		background: #fff;
 	}
 
 	.materials-section h3 {
-		margin: 0.2rem 0 0.35rem;
-		font-size: 1.45rem;
+		margin: 0.2cqh 0 0.8cqh;
+		font-size: 5cqw;
 		font-weight: 900;
 	}
 
 	.thumb-grid {
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
-		gap: 0.42rem;
+		gap: 0.9cqw;
 	}
 
 	.thumb-grid.single-row {
@@ -195,23 +211,16 @@
 	}
 
 	.thumb {
-		height: 4.35rem;
+		height: 9.5cqh;
 		background: #d9d9d9;
-		border-radius: 8px;
+		border-radius: 1.1cqw;
 	}
 
 	.thumb.wide {
-		height: 4.75rem;
+		height: 10.8cqh;
 	}
 
 	@media (orientation: landscape) and (min-width: 1100px) and (min-height: 650px) {
-		.totem-card {
-			width: 92vw;
-			height: 92dvh;
-			border-radius: 4.5vmin;
-			padding: 1.2vmin;
-		}
-
 		.totem-inner {
 			border-radius: 4vmin;
 			padding: 1.6vmin;
@@ -223,13 +232,7 @@
 		}
 
 		.title {
-			font-size: clamp(2.1rem, 3.8vw, 4rem);
-		}
-
-		.search-box,
-		.filter-btn,
-		.add-btn {
-			font-size: clamp(1rem, 1.3vw, 1.35rem);
+			font-size: 7.2cqw;
 		}
 	}
 </style>

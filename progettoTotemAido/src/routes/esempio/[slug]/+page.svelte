@@ -4,15 +4,9 @@
 	let { data }: PageProps = $props();
 </script>
 
-<main class="relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-red-700 via-red-600 to-orange-500 px-4 py-8">
-	<div
-		class="pointer-events-none absolute left-0 top-0 h-72 w-72 -translate-x-1/3 -translate-y-1/3 rounded-full bg-white/10 blur-3xl"
-	></div>
-	<div
-		class="pointer-events-none absolute bottom-0 right-0 h-96 w-96 translate-x-1/3 translate-y-1/3 rounded-full bg-orange-200/30 blur-3xl"
-	></div>
-
-	<section class="relative z-10 w-full max-w-3xl rounded-3xl bg-white/95 p-6 shadow-2xl sm:p-8 lg:p-10">
+<main class="screen">
+	<section class="totem-card">
+	<section class="example-shell">
 		<p class="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-red-700">Pagina esempio</p>
 		<h1 class="mb-4 text-3xl font-black text-slate-900 sm:text-5xl">{data.option.title}</h1>
 		<p class="mb-8 text-lg leading-relaxed text-slate-700 sm:text-xl">
@@ -43,4 +37,46 @@
 			</a>
 		</div>
 	</section>
+	</section>
 </main>
+
+<style>
+	.screen {
+		min-height: 100dvh;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0;
+		background: linear-gradient(120deg, rgba(169, 0, 0, 1) 0%, rgba(113, 50, 87, 1) 50%, rgba(58, 100, 173, 1) 100%);
+	}
+
+	.totem-card {
+		width: min(94vw, calc(94dvh * 9 / 16));
+		height: min(94dvh, calc(94vw * 16 / 9));
+		border-radius: 2.2vmin;
+		padding: 1vmin;
+		background: #5b7cbd;
+	}
+
+	.example-shell {
+		height: 100%;
+		border-radius: 24px;
+		background: rgb(255 255 255 / 0.95);
+		padding: 1.5rem;
+		overflow: auto;
+	}
+
+	@media (orientation: landscape) {
+		.totem-card {
+			width: min(88vw, calc(88dvh * 3 / 2));
+			height: min(88dvh, calc(88vw * 2 / 3));
+			border-radius: 4vmin;
+			padding: 1.05vmin;
+		}
+
+		.example-shell {
+			border-radius: 4vmin;
+			padding: 2rem;
+		}
+	}
+</style>
