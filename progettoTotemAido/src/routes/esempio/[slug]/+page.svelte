@@ -41,42 +41,5 @@
 </main>
 
 <style>
-	.screen {
-		min-height: 100dvh;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		padding: 0;
-		background: linear-gradient(120deg, rgba(169, 0, 0, 1) 0%, rgba(113, 50, 87, 1) 50%, rgba(58, 100, 173, 1) 100%);
-	}
-
-	.totem-card {
-		width: min(94vw, calc(94dvh * 9 / 16));
-		height: min(94dvh, calc(94vw * 16 / 9));
-		border-radius: 2.2vmin;
-		padding: 1vmin;
-		background: #5b7cbd;
-	}
-
-	.example-shell {
-		height: 100%;
-		border-radius: 24px;
-		background: rgb(255 255 255 / 0.95);
-		padding: 1.5rem;
-		overflow: auto;
-	}
-
-	@media (orientation: landscape) {
-		.totem-card {
-			width: min(88vw, calc(88dvh * 3 / 2));
-			height: min(88dvh, calc(88vw * 2 / 3));
-			border-radius: 4vmin;
-			padding: 1.05vmin;
-		}
-
-		.example-shell {
-			border-radius: 4vmin;
-			padding: 2rem;
-		}
-	}
+	@import './page.css';
 </style>
