@@ -1,19 +1,29 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { fly } from 'svelte/transition';
+	import { cubicOut } from 'svelte/easing';
 	import type { PageProps } from './$types';
-	import { menuOptions } from '$lib/data/menu-options';
+	import { menuOptions, type MenuOptionSlug } from '$lib/data/menu-options';
+	import MenuDots from '$lib/components/menu/MenuDots.svelte';
+	import MenuOptionPanel from '$lib/components/menu/MenuOptionPanel.svelte';
+	import { setMenuDotsSlug } from '$lib/stores/menu-dots.store';
 	import { consumeSwipeDirection, setSwipeDirection } from '$lib/stores/swipe-transition';
 
 	let { data }: PageProps = $props();
 
 	const introDirection = consumeSwipeDirection();
-	const pageSlideDistance = 170;
-	const pageSlideDuration = 380;
-	let activeDot = $derived(Math.max(1, menuOptions.findIndex((option) => option.slug === data.option.slug) + 1));
+	const pageSlideDistance = 190;
+	const pageSlideDuration = 520;
+	const wheelExitDuration = 420;
 	let touchStartX = $state(0);
 	let touchStartY = $state(0);
 	let shouldHandleSwipe = $state(true);
+	let exitDirection = $state<'left' | 'right' | 'none'>('none');
+	let isLeaving = $state(false);
+
+	$effect(() => {
+		setMenuDotsSlug(data.option.slug as MenuOptionSlug);
+	});
 
 	const donorSignupWays = [
 		{
@@ -50,6 +60,7 @@
 	});
 
 	function handleTouchStart(event: TouchEvent) {
+		if (isLeaving) return;
 		shouldHandleSwipe = true;
 		touchStartX = event.touches[0].clientX;
 		touchStartY = event.touches[0].clientY;
@@ -68,38 +79,58 @@
 
 		if (Math.abs(deltaX) < 70 || Math.abs(deltaX) <= Math.abs(deltaY)) return;
 
-		setSwipeDirection(deltaX < 0 ? 'left' : 'right');
-		await goto(deltaX < 0 ? `/opzioni-menu/${data.nextOption.slug}` : `/opzioni-menu/${data.previousOption.slug}`);
+		await navigateWithWheel(
+			deltaX < 0 ? 'left' : 'right',
+			deltaX < 0 ? `/opzioni-menu/${data.nextOption.slug}` : `/opzioni-menu/${data.previousOption.slug}`
+		);
+	}
+
+	function wait(ms: number) {
+		return new Promise((resolve) => setTimeout(resolve, ms));
+	}
+
+	async function navigateWithWheel(direction: 'left' | 'right', href: string) {
+		if (isLeaving) return;
+
+		isLeaving = true;
+		exitDirection = direction;
+
+		try {
+			if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+				setSwipeDirection(direction);
+				await goto(href);
+				return;
+			}
+
+			await wait(wheelExitDuration);
+			setSwipeDirection(direction);
+			await goto(href);
+		} finally {
+			isLeaving = false;
+			exitDirection = 'none';
+		}
 	}
 
 	async function navigateWithDirection(event: Event, direction: 'left' | 'right', href: string) {
 		event.preventDefault();
-		setSwipeDirection(direction);
-		await goto(href);
+		await navigateWithWheel(direction, href);
 	}
 
-	async function navigateToOption(event: Event, slug: string) {
+	async function navigateToOption(event: Event, slug: MenuOptionSlug) {
 		event.preventDefault();
 		const targetIndex = menuOptions.findIndex((option) => option.slug === slug);
 		const currentIndex = menuOptions.findIndex((option) => option.slug === data.option.slug);
 
 		if (targetIndex === -1 || targetIndex === currentIndex) return;
 
-		setSwipeDirection(targetIndex > currentIndex ? 'left' : 'right');
-		await goto(`/opzioni-menu/${slug}`);
+		await navigateWithWheel(targetIndex > currentIndex ? 'left' : 'right', `/opzioni-menu/${slug}`);
 	}
 
 </script>
 
-<main class="opzioni-menu-screen" ontouchstart={handleTouchStart} ontouchend={handleTouchEnd}>
-	<section
-		class="totem-card"
-		in:fly={{
-			x: introDirection === 'left' ? pageSlideDistance : introDirection === 'right' ? -pageSlideDistance : 0,
-			duration: pageSlideDuration,
-			opacity: 0.12
-		}}
-	>
+
+<main class="opzioni-menu-screen">
+	<section class="totem-card">
 		<div class="totem-inner">
 			<header class="totem-header">
 				<div class="header-spacer"></div>
@@ -109,66 +140,31 @@
 
 			<h1 class="menu-title">Menu</h1>
 
-			<div class="panel-stack">
-				<div class="option-panel">
-					<h2>{data.option.title}</h2>
-					<p>{data.option.description}</p>
-					{#if data.option.slug === 'faq'}
-						<div class="faq-image-shell">
-							<img
-								src="/img/nomi_frequenti.png"
-								alt="Esempio dei nomi piu frequenti"
-								class="faq-image"
-							/>
-						</div>
-					{:else if fixedPreviewItems.length > 0}
-						<div class="preview-grid">
-							{#each fixedPreviewItems as previewCard}
-										<div class="preview-card">
-											<h3>{previewCard.title}</h3>
-											<p>{previewCard.description}</p>
-										</div>
-							{/each}
-						</div>
-					{/if}
-					<a href={`/contenuti/${data.option.slug}`} class="cta-button">
-						{data.option.slug === 'processo-scelta' ? 'Consulta la mappa ATS' : data.option.ctaLabel}
-					</a>
+		<div class="panel-stack-wrap">
+			{#key data.option.slug}
+				<div
+					class={`panel-stack ${isLeaving && exitDirection === 'left' ? 'is-leaving-left' : isLeaving && exitDirection === 'right' ? 'is-leaving-right' : ''}`}
+					ontouchstart={handleTouchStart}
+					ontouchend={handleTouchEnd}
+					in:fly={{
+						x: introDirection === 'left' ? pageSlideDistance : introDirection === 'right' ? -pageSlideDistance : 0,
+						duration: pageSlideDuration,
+						easing: cubicOut,
+						opacity: 0.12
+					}}
+				>
+				<MenuOptionPanel
+					option={data.option}
+					previousOption={data.previousOption}
+					nextOption={data.nextOption}
+					{fixedPreviewItems}
+					onNavigateWithDirection={navigateWithDirection}
+				/>
 
-					<a
-						href={`/opzioni-menu/${data.previousOption.slug}`}
-						class="nav-dot left"
-						aria-label={`Vai a ${data.previousOption.title}`}
-						onclick={(event) =>
-							navigateWithDirection(event, 'right', `/opzioni-menu/${data.previousOption.slug}`)}
-					>
-						<img src="/img/Freccia.png" alt="Precedente" class="arrow-left" />
-					</a>
-					<a
-						href={`/opzioni-menu/${data.nextOption.slug}`}
-						class="nav-dot right"
-						aria-label={`Vai a ${data.nextOption.title}`}
-						onclick={(event) =>
-							navigateWithDirection(event, 'left', `/opzioni-menu/${data.nextOption.slug}`)}
-					>
-						<img src="/img/Freccia.png" alt="Successivo" class="arrow-right" />
-					</a>
 				</div>
-
-				<div class="dots-shell" aria-label="Navigazione carosello">
-					<div class="dots">
-						{#each menuOptions as option, index}
-							<a
-								href={`/opzioni-menu/${option.slug}`}
-								class={`dot ${index + 1 === activeDot ? 'active' : ''}`}
-								aria-label={`Vai a ${option.title}`}
-								aria-current={index + 1 === activeDot ? 'page' : undefined}
-								onclick={(event) => navigateToOption(event, option.slug)}
-							></a>
-						{/each}
-					</div>
-				</div>
-			</div>
+			{/key}
+			<MenuDots onNavigate={navigateToOption} />
+		</div>
 		</div>
 	</section>
 </main>

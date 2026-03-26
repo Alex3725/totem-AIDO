@@ -1,8 +1,12 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import { fly, fade } from 'svelte/transition';
+	import { cubicOut } from 'svelte/easing';
 	import type { PageProps } from './$types';
-	import { consumeSwipeDirection } from '$lib/stores/swipe-transition';
+	import { menuOptions } from '$lib/data/menu-options';
+	import TotemCardLayout from '$lib/components/common/TotemCardLayout.svelte';
+	import { consumeSwipeDirection, setSwipeDirection } from '$lib/stores/swipe-transition';
 
 	let { data }: PageProps = $props();
 
@@ -38,8 +42,11 @@
 		}
 	];
 	const introDirection = consumeSwipeDirection();
-	const pageSlideDistance = 170;
-	const pageSlideDuration = 380;
+	const pageSlideDistance = 190;
+	const pageSlideDuration = 430;
+	let touchStartX = $state(0);
+	let touchStartY = $state(0);
+	let shouldHandleSwipe = $state(true);
 
 	let diagramCanvas = $state<HTMLCanvasElement | null>(null);
 	let diagramContainer = $state<HTMLDivElement | null>(null);
@@ -301,6 +308,45 @@
 		activeMapInput = null;
 	}
 
+	function isInteractiveTarget(target: EventTarget | null) {
+		if (!(target instanceof Element)) return false;
+		return Boolean(
+			target.closest(
+				'a, button, input, textarea, select, summary, .map-page-wrap, .map-keyboard, .accordion-item'
+			)
+		);
+	}
+
+	function handleTouchStart(event: TouchEvent) {
+		shouldHandleSwipe = !isInteractiveTarget(event.target);
+		touchStartX = event.touches[0].clientX;
+		touchStartY = event.touches[0].clientY;
+	}
+
+	async function handleTouchEnd(event: TouchEvent) {
+		if (!shouldHandleSwipe || data.page.slug === 'processo-scelta') {
+			shouldHandleSwipe = true;
+			return;
+		}
+
+		const endX = event.changedTouches[0].clientX;
+		const endY = event.changedTouches[0].clientY;
+		const deltaX = endX - touchStartX;
+		const deltaY = endY - touchStartY;
+
+		if (Math.abs(deltaX) < 65 || Math.abs(deltaX) <= Math.abs(deltaY)) return;
+
+		const currentIndex = menuOptions.findIndex((option) => option.slug === data.page.slug);
+		if (currentIndex === -1) return;
+
+		const offset = deltaX < 0 ? 1 : -1;
+		const targetIndex = (currentIndex + offset + menuOptions.length) % menuOptions.length;
+		const targetSlug = menuOptions[targetIndex].slug;
+
+		setSwipeDirection(deltaX < 0 ? 'left' : 'right');
+		await goto(`/contenuti/${targetSlug}`);
+	}
+
 	onMount(() => {
 		if (data.page.slug === 'processo-scelta') {
 			void mountSocrataMap();
@@ -327,31 +373,24 @@
 	});
 
 	function toggleAccordionItem(item: string) {
-		openFaqItems = openFaqItems.includes(item)
-			? openFaqItems.filter((entry) => entry !== item)
-			: [...openFaqItems, item];
+		openFaqItems = openFaqItems.includes(item) ? [] : [item];
 	}
 </script>
 
-<main class="screen">
-	<section
-		class="totem-card"
-		in:fly={{
-			x: introDirection === 'left' ? pageSlideDistance : introDirection === 'right' ? -pageSlideDistance : 0,
-			duration: pageSlideDuration,
-			opacity: 0.12
-		}}
-	>
-		<div class="totem-inner">
-			<header class="totem-header">
-				<div class="header-spacer-right" aria-hidden="true"></div>
-				<img src="/img/logoAIDO.png" alt="Logo AIDO" class="logo" />
-				<div class="header-spacer-right" aria-hidden="true"></div>
-			</header>
+<TotemCardLayout title={data.page.title} mode="child" backHref={`/opzioni-menu/${data.page.slug}`}>
 
-			<h1 class="title">{data.page.title}</h1>
-
-			<div class="content-shell">
+			{#key data.page.slug}
+				<div
+					class="content-shell"
+					ontouchstart={handleTouchStart}
+					ontouchend={handleTouchEnd}
+					in:fly={{
+						x: introDirection === 'left' ? pageSlideDistance : introDirection === 'right' ? -pageSlideDistance : 0,
+						duration: pageSlideDuration,
+						easing: cubicOut,
+						opacity: 0.12
+					}}
+				>
 				<section class={`content-panel ${data.page.slug === 'processo-scelta' ? 'content-panel--map' : ''}`}>
 				{#if data.page.slug === 'processo-donazione'}
 					<h2 class="subtitle">Il percorso del dono</h2>
@@ -465,15 +504,9 @@
 				{/if}
 				</section>
 			</div>
+			{/key}
 
-			<nav class="bottom-actions" aria-label="Navigazione pagina">
-				<a href={`/opzioni-menu/${data.page.slug}`} class="bottom-action primary" aria-label="Torna indietro">
-					<img src="/img/Indietro_pulsante.png" alt="" class="bottom-action-icon back" />
-				</a>
-			</nav>
-		</div>
-	</section>
-</main>
+</TotemCardLayout>
 
 <style>
 	@import './page.css';

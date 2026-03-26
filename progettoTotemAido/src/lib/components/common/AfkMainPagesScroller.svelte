@@ -238,10 +238,8 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		padding: 0;
-		border-radius: 0 0 1.45cqw 1.45cqw;
-		background: var(--panel-red);
-		box-shadow: 0 0.7cqw 1.2cqw rgba(0, 0, 0, 0.2);
+		padding: 0.35cqh 0;
+		background: transparent;
 		z-index: 8;
 	}
 
@@ -249,7 +247,10 @@
 		display: flex;
 		justify-content: center;
 		gap: 0.8cqw;
-		padding: 0;
+		padding: 0.48cqh 1.4cqw;
+		border-radius: 999px;
+		background: var(--panel-red);
+		box-shadow: 0 0.35cqw 0.8cqw rgba(0, 0, 0, 0.22);
 	}
 
 	.dot {
@@ -281,7 +282,11 @@
 
 		.dots-shell {
 			height: 4.05cqh;
-			border-radius: 0 0 1.45cqw 1.45cqw;
+			padding: 0.35cqh 0;
+		}
+
+		.dots {
+			padding: 0.48cqh 1.4cqw;
 		}
 
 		.option-panel h2 {
