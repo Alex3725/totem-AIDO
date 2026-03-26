@@ -326,10 +326,6 @@
 		};
 	});
 
-	function noop() {
-		return;
-	}
-
 	function toggleAccordionItem(item: string) {
 		openFaqItems = openFaqItems.includes(item)
 			? openFaqItems.filter((entry) => entry !== item)
@@ -407,10 +403,14 @@
 					{/if}
 				{:else if data.page.slug === 'diventa-donatore'}
 					<h2 class="subtitle">Scansione il QR code per iscriverti all'AIDO</h2>
-					<div class="qr-placeholder">QR da inserire</div>
+					<div class="qr-main-shell">
+						<div class="qr-main-frame">
+							<img src="/img/DiventaDonatore-qr.png" alt="QR code per iscrizione AIDO" class="qr-main-image" />
+						</div>
+					</div>
 					<div class="store-row">
-						<button type="button" class="store-btn" onclick={noop} aria-label="Google Play">Google Play</button>
-						<button type="button" class="store-btn" onclick={noop} aria-label="App Store">App Store</button>
+						<a href="/contenuti/diventa-donatore/play-store" class="store-btn" aria-label="Google Play">Google Play</a>
+						<a href="/contenuti/diventa-donatore/apple-store" class="store-btn" aria-label="App Store">App Store</a>
 					</div>
 				{:else if data.page.slug === 'faq'}
 					<h2 class="subtitle">Faq</h2>
