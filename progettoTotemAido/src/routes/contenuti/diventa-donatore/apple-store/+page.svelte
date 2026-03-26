@@ -16,12 +16,11 @@
 				</div>
 			</div>
 
-			<div class="actions">
-				<a href="https://www.apple.com/app-store/" target="_blank" rel="noreferrer" class="action-btn">
-					Apri Apple Store
+			<nav class="bottom-actions" aria-label="Navigazione pagina">
+				<a href="/contenuti/diventa-donatore" class="bottom-action primary" aria-label="Torna indietro">
+					<img src="/img/Indietro_pulsante.png" alt="" class="bottom-action-icon back" />
 				</a>
-				<a href="/contenuti/diventa-donatore" class="action-btn action-btn-secondary">Indietro</a>
-			</div>
+			</nav>
 		</div>
 	</section>
 </main>
