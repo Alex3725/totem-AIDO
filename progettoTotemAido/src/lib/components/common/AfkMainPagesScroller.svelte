@@ -60,9 +60,9 @@
 	<section class="totem-card">
 		<div class="totem-inner">
 			<header class="totem-header">
-				<div class="header-spacer"></div>
-				<img src="/img/logoAIDO.png" alt="Logo AIDO" class="logo" />
-				<div class="header-spacer"></div>
+				<img src="/img/logo_marconi_nero.jpg" alt="Logo Marconi" class="logo partner" />
+				<img src="/img/logoAIDO.png" alt="Logo AIDO" class="logo aido-logo" />
+				<img src="/img/logo_papa_giovanni.png" alt="Logo Papa Giovanni" class="logo partner" />
 			</header>
 
 			<h1 class="menu-title">Menu</h1>
@@ -147,6 +147,8 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		gap: 1.2cqw;
+		padding: 0 1.2cqw;
 	}
 
 	.header-spacer {
@@ -154,10 +156,18 @@
 	}
 
 	.logo {
-		width: 12.2cqw;
-		height: 12.2cqw;
-		max-width: 4.2rem;
-		max-height: 4.2rem;
+		width: auto;
+		object-fit: contain;
+	}
+
+	.logo.partner {
+		height: min(7.8cqh, 4.3rem);
+		max-width: 15.5cqw;
+	}
+
+	.logo.aido-logo {
+		height: min(8.6cqh, 4.8rem);
+		max-width: 12.6cqw;
 	}
 
 	.menu-title {

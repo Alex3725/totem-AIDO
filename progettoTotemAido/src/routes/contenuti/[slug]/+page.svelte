@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
-	import { fly, fade } from 'svelte/transition';
-	import { cubicOut } from 'svelte/easing';
+	import { fly, fade, slide } from 'svelte/transition';
+	import { cubicInOut, cubicOut } from 'svelte/easing';
 	import type { PageProps } from './$types';
 	import { menuOptions } from '$lib/data/menu-options';
 	import TotemCardLayout from '$lib/components/common/TotemCardLayout.svelte';
@@ -109,9 +109,9 @@
 		if (data.page.slug !== 'processo-donazione' || !diagramCanvas) return;
 
 		try {
-			const pdfjsLib = await import('pdfjs-dist/legacy/build/pdf.mjs');
+			const pdfjsLib = await import('pdfjs-dist');
 			pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
-				'pdfjs-dist/legacy/build/pdf.worker.min.mjs',
+				'pdfjs-dist/build/pdf.worker.min.mjs',
 				import.meta.url
 			).toString();
 
@@ -465,7 +465,7 @@
 								<img src="/img/dropdown_pulsante.png" alt="" />
 							</button>
 							{#if openFaqItems.includes(item.question)}
-								<div class="accordion-body" transition:fade={{ duration: 220 }}>
+								<div class="accordion-body" transition:slide={{ duration: 260, easing: cubicInOut }}>
 									<p>{item.answer}</p>
 								</div>
 							{/if}

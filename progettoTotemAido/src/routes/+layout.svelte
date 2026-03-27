@@ -2,6 +2,7 @@
 	import './layout.css';
 	import favicon from '$lib/assets/favicon.svg';
 	import AssistFloatingButton from '$lib/components/common/AssistFloatingButton.svelte';
+	import { page } from '$app/stores';
 	let { children } = $props();
 	import { useIdle } from '$lib/useIdle';
 
@@ -13,4 +14,6 @@
 
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
 {@render children()}
-<AssistFloatingButton />
+{#if $page.url.pathname !== '/'}
+	<AssistFloatingButton />
+{/if}

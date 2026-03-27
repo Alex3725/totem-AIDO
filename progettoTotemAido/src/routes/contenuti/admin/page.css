@@ -36,7 +36,7 @@
 	}
 
 	.totem-header {
-		height: 11.2cqh;
+		height: 13.6cqh;
 		min-height: 5.6cqw;
 		border-radius: 1.5cqw;
 		background: #f6f6f6;
@@ -45,6 +45,13 @@
 		align-items: center;
 		padding: 0 1.1cqw;
 		column-gap: 0.8cqw;
+	}
+
+	.logo-strip {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 1.2cqw;
 	}
 
 	.icon-wrap {
@@ -61,11 +68,18 @@
 	}
 
 	.logo {
-		margin: 0 auto;
-		width: 12.2cqw;
-		height: 12.2cqw;
-		max-width: 4.2rem;
-		max-height: 4.2rem;
+		width: auto;
+		object-fit: contain;
+	}
+
+	.logo.partner {
+		height: min(7.8cqh, 4.3rem);
+		max-width: 12.8cqw;
+	}
+
+	.logo.aido-logo {
+		height: min(8.6cqh, 4.8rem);
+		max-width: 10.8cqw;
 	}
 
 	.title {

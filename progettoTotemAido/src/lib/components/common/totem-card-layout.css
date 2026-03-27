@@ -13,7 +13,7 @@
 }
 
 .totem-header {
-	@apply h-[11.2cqh] min-h-[5.6cqw] rounded-[1.5cqw] bg-[#f6f6f6] grid grid-cols-[7.8cqw_1fr_7.8cqw] items-center p-[0_1.1cqw] gap-x-[0.8cqw];
+	@apply h-[13.6cqh] min-h-[5.6cqw] rounded-[1.5cqw] bg-[#f6f6f6] flex items-center justify-center gap-[1.2cqw] px-[1.2cqw];
 }
 
 .header-spacer {
@@ -21,7 +21,15 @@
 }
 
 .logo {
-	@apply m-[0_auto] w-[12.2cqw] h-[12.2cqw] max-w-[4.2rem] max-h-[4.2rem];
+	@apply w-auto object-contain;
+}
+
+.logo.partner {
+	@apply h-[min(8.8cqh,4.4rem)] max-w-[15.5cqw];
+}
+
+.logo.aido-logo {
+	@apply h-[min(9.6cqh,5rem)] max-w-[12.6cqw];
 }
 
 .title {
@@ -70,7 +78,7 @@
 	}
 
 	.totem-header {
-		@apply h-[clamp(5.1rem,11cqh,6.1rem)];
+		@apply h-[clamp(5.5rem,12.2cqh,6.6rem)];
 	}
 
 	.title {
@@ -100,7 +108,7 @@
 	}
 
 	.totem-header {
-		@apply p-[0_0.7rem] gap-x-2;
+		@apply px-[0.7rem] gap-x-2;
 	}
 
 	.title {
