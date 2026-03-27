@@ -2,11 +2,11 @@
 	<section class="totem-card">
 		<div class="totem-inner">
 			<header class="totem-header">
-				<a href="/contenuti/scopri" aria-label="Torna indietro" class="icon-wrap">
+				<a href="/opzioni-menu/scopri" aria-label="Torna indietro" class="icon-wrap">
 					<img src="/img/Indietro_pulsante.png" alt="Indietro" class="icon" />
 				</a>
 				<div class="logo-strip" aria-label="Loghi partner">
-					<img src="/img/logo_marconi_nero.jpg" alt="Logo Marconi" class="logo partner" />
+					<img src="/img/logo_marconi_nero.png" alt="Logo Marconi" class="logo partner" />
 					<img src="/img/logoAIDO.png" alt="Logo AIDO" class="logo aido-logo" />
 					<img src="/img/logo_papa_giovanni.png" alt="Logo Papa Giovanni" class="logo partner" />
 				</div>

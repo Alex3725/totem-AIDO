@@ -60,7 +60,7 @@
 	<section class="totem-card">
 		<div class="totem-inner">
 			<header class="totem-header">
-				<img src="/img/logo_marconi_nero.jpg" alt="Logo Marconi" class="logo partner" />
+				<img src="/img/logo_marconi_nero.png" alt="Logo Marconi" class="logo partner" />
 				<img src="/img/logoAIDO.png" alt="Logo AIDO" class="logo aido-logo" />
 				<img src="/img/logo_papa_giovanni.png" alt="Logo Papa Giovanni" class="logo partner" />
 			</header>
