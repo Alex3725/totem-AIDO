@@ -6,7 +6,7 @@
 <TotemCardLayout title="Apple Store" mode="child" backHref="/contenuti/diventa-donatore">
 	<StoreQrSection
 		subtitle="Scansiona il QR code per aprire Apple Store"
-		imageSrc="/img/AppleStore-qr.png"
+		imageSrc="/img/AppleStore.png"
 		imageAlt="QR code Apple Store"
 	/>
 </TotemCardLayout>

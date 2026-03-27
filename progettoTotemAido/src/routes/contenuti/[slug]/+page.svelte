@@ -57,6 +57,7 @@
 	let mapSearchValue = $state('');
 	let activeMapInput = $state<HTMLInputElement | null>(null);
 	let mapKeyboardEnabled = $state(true);
+	let flyerPreviews = $state<Record<string, string>>({});
 
 	const keyboardRows = [
 		['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
@@ -176,6 +177,49 @@
 			diagramLoadError = '';
 		} catch (error) {
 			diagramLoadError = 'Anteprima non disponibile in questo momento.';
+		}
+	}
+
+	async function renderFlyerFirstPages() {
+		if (data.page.slug !== 'scopri') return;
+
+		try {
+			const pdfjsLib = await import('pdfjs-dist');
+			pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
+				'pdfjs-dist/build/pdf.worker.min.mjs',
+				import.meta.url
+			).toString();
+
+			const entries = await Promise.all(
+				pdfItems.slice(0, 3).map(async (item) => {
+					const pdf = await pdfjsLib.getDocument(item.href).promise;
+					const page = await pdf.getPage(1);
+					const baseViewport = page.getViewport({ scale: 1 });
+					const targetWidth = 280;
+					const scale = Math.max(0.35, targetWidth / baseViewport.width);
+					const viewport = page.getViewport({ scale });
+
+					const canvas = document.createElement('canvas');
+					const context = canvas.getContext('2d');
+					if (!context) return [item.href, ''] as const;
+
+					const dpr = window.devicePixelRatio || 1;
+					canvas.width = Math.floor(viewport.width * dpr);
+					canvas.height = Math.floor(viewport.height * dpr);
+					context.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+					await page.render({ canvas, canvasContext: context, viewport }).promise;
+					return [item.href, canvas.toDataURL('image/png')] as const;
+				})
+			);
+
+			const nextPreviews: Record<string, string> = {};
+			for (const [href, preview] of entries) {
+				if (preview) nextPreviews[href] = preview;
+			}
+			flyerPreviews = nextPreviews;
+		} catch (error) {
+			flyerPreviews = {};
 		}
 	}
 
@@ -353,6 +397,11 @@
 			return;
 		}
 
+		if (data.page.slug === 'scopri') {
+			void renderFlyerFirstPages();
+			return;
+		}
+
 		if (data.page.slug !== 'processo-donazione') return;
 
 		let resizeTimer: ReturnType<typeof setTimeout> | null = null;
@@ -444,7 +493,7 @@
 					<h2 class="subtitle">Scansione il QR code per iscriverti all'AIDO</h2>
 					<div class="qr-main-shell">
 						<div class="qr-main-frame">
-							<img src="/img/DiventaDonatore-qr.png" alt="QR code per iscrizione AIDO" class="qr-main-image" />
+							<img src="/img/DigitalAido.png" alt="QR code per iscrizione AIDO" class="qr-main-image" />
 						</div>
 					</div>
 					<div class="store-row">
@@ -488,7 +537,13 @@
 						<h3>Volantini</h3>
 						<div class="thumb-grid">
 							{#each pdfItems.slice(0, 3) as item}
-								<a href={item.href} target="_blank" rel="noreferrer" class="thumb" aria-label={item.label}></a>
+								<a href={item.href} target="_blank" rel="noreferrer" class="thumb" aria-label={item.label}>
+									{#if flyerPreviews[item.href]}
+										<img src={flyerPreviews[item.href]} alt="Anteprima prima pagina PDF" class="thumb-preview" />
+									{:else}
+										<span class="thumb-loading">Caricamento...</span>
+									{/if}
+								</a>
 							{/each}
 						</div>
 					</div>

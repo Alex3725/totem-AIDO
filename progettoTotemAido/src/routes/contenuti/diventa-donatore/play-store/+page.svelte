@@ -6,7 +6,7 @@
 <TotemCardLayout title="Google Play" mode="child" backHref="/contenuti/diventa-donatore">
 	<StoreQrSection
 		subtitle="Scansiona il QR code per aprire il Play Store"
-		imageSrc="/img/PlayStore-qr.png"
+		imageSrc="/img/PlayStore.png"
 		imageAlt="QR code Google Play"
 	/>
 </TotemCardLayout>

@@ -521,6 +521,25 @@
 		height: 11.5cqh;
 		background: #d9d9d9;
 		border-radius: 1.1cqw;
+		overflow: hidden;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		text-decoration: none;
+	}
+
+	.thumb-preview {
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
+		object-position: top center;
+		background: #fff;
+	}
+
+	.thumb-loading {
+		font-size: 2.1cqw;
+		font-weight: 700;
+		color: #4b5563;
 	}
 
 	.thumb.wide {

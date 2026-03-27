@@ -14,6 +14,6 @@
 
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
 {@render children()}
-{#if $page.url.pathname !== '/'}
+{#if $page.url.pathname !== '/' && $page.url.pathname !== '/chat-assistenza'}
 	<AssistFloatingButton />
 {/if}
