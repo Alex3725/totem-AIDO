@@ -18,14 +18,22 @@
 </script>
 
 <div class="option-panel">
-	<h2>{option.title}</h2>
-	<p>{option.description}</p>
+	{#if option.slug === 'processo-donazione'}
+		<img
+			src="/img/processoDonazioneSigma.png"
+			alt="Schema processo di donazione"
+			class="process-donation-full-image"
+		/>
+	{:else}
+		<h2>{option.title}</h2>
+		<p>{option.description}</p>
 
-	<MenuOptionMedia slug={option.slug} {fixedPreviewItems} />
+		<MenuOptionMedia slug={option.slug} {fixedPreviewItems} />
 
-	<a href={`/contenuti/${option.slug}`} class="cta-button">
-		{option.slug === 'processo-scelta' ? 'Consulta la mappa ATS' : option.ctaLabel}
-	</a>
+		<a href={`/contenuti/${option.slug}`} class="cta-button">
+			{option.slug === 'processo-scelta' ? 'Consulta la mappa ATS' : option.ctaLabel}
+		</a>
+	{/if}
 
 	<a
 		href={`/opzioni-menu/${previousOption.slug}`}

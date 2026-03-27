@@ -133,9 +133,9 @@
 	<section class="totem-card">
 		<div class="totem-inner">
 			<header class="totem-header">
-				<div class="header-spacer"></div>
+				<img src="/img/logo_marconi_nero.jpg" alt="Logo Marconi" class="logo" />
 				<img src="/img/logoAIDO.png" alt="Logo AIDO" class="logo" />
-				<div class="header-spacer"></div>
+				<img src="/img/logo_papa_giovanni.png" alt="Logo Papa Giovanni" class="logo" />
 			</header>
 
 			<h1 class="menu-title">Menu</h1>

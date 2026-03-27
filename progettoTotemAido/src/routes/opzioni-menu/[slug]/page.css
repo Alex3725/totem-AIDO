@@ -41,13 +41,15 @@
 }
 
 .opzioni-menu-screen .totem-header {
-	height: 11.2cqh;
+	height: 13.6cqh;
 	min-height: 5.6cqw;
 	border-radius: 1.5cqw;
 	background: var(--header-cream);
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	gap: 1.6cqw;
+	padding: 0 1.8cqw;
 }
 
 .opzioni-menu-screen .header-spacer {
@@ -55,10 +57,10 @@
 }
 
 .opzioni-menu-screen .logo {
-	width: 12.2cqw;
-	height: 12.2cqw;
-	max-width: 4.2rem;
-	max-height: 4.2rem;
+	width: auto;
+	height: min(10.4cqh, 5.3rem);
+	max-width: 15.5cqw;
+	object-fit: contain;
 }
 
 .opzioni-menu-screen .menu-title {
@@ -166,6 +168,18 @@
 	max-height: 31cqh;
 	object-fit: contain;
 	border-radius: 1.4cqw;
+}
+
+.opzioni-menu-screen :global(.process-donation-full-image) {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+	object-position: center;
+	z-index: 1;
+	padding: 1.2cqh 1.2cqw;
+	box-sizing: border-box;
 }
 
 .opzioni-menu-screen :global(.preview-card) {
