@@ -8,7 +8,7 @@
 	let currentIndex = $state(0);
 	let timer: ReturnType<typeof setInterval> | null = null;
 
-	const rotationInterval = 6500;
+	const rotationInterval = 100000;
 	const rewindInterval = 620;
 
 	function goNext() {
