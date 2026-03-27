@@ -23,22 +23,22 @@
 		{
 			question: 'Come mi iscrivo?',
 			answer:
-				'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec varius, nibh eget viverra luctus, massa lorem tincidunt nulla, a condimentum nunc ipsum nec est.'
+				'Puoi iscriverti ad AIDO online tramite il sito aido.it o tramite l\'app DigitalAIDO. In alternativa, puoi stampare il modulo cartaceo dal sito, compilarlo, firmarlo e spedirlo alla sede AIDO più vicina.'
 		},
 		{
 			question: 'Posso cambiare idea?',
 			answer:
-				'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer interdum, sapien vel posuere varius, nisl arcu cursus turpis, vitae ultrices lorem velit at mauris.'
+				'Sì, puoi revocare la tua iscrizione e il consenso alla donazione in qualsiasi momento. Basta scaricare il modulo di revoca dal sito, compilarlo e inviarlo tramite raccomandata A/R o PEC alla sede AIDO Nazionale.'
 		},
 		{
 			question: 'Dove trovo piu informazioni?',
 			answer:
-				'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent vitae neque commodo, volutpat odio sit amet, lacinia lorem.'
+				'Trovi tutte le informazioni necessarie sul sito aido.it o nella sede ASL vicina a te.'
 		},
 		{
 			question: 'Serve un documento?',
 			answer:
-				'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, lorem a tempus congue, justo arcu vehicula lectus, at efficitur dui nibh sed velit.'
+				'Sì: per l\'iscrizione digitale è necessario lo SPID o la Carta d\'Identità Elettronica (CIE). Per l\'iscrizione cartacea, invece, è sufficiente allegare una copia del proprio documento d\'identità al modulo firmato.'
 		}
 	];
 	const introDirection = consumeSwipeDirection();
