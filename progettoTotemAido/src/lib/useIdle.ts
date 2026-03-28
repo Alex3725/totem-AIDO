@@ -19,7 +19,7 @@ function getMenuIndexFromPath(pathname: string) {
 }
 
 export function useIdle(
-  idleTime: number = 600_000,
+  idleTime: number = 900_000,
   idleCarouselInterval: number = defaultIdleCarouselInterval
 ) {
   onMount(() => {

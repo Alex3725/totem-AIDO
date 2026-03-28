@@ -42,11 +42,6 @@
 			title: 'Materiali PDF',
 			description: 'Volantini informativi pronti da consultare.',
 			tag: 'Documenti'
-		},
-		{
-			title: 'Video Informativi',
-			description: 'Approfondimenti visivi sul mondo della donazione.',
-			tag: 'Media'
 		}
 	] as const;
 
@@ -69,8 +64,8 @@
 
 		const width = orbitRoot.clientWidth;
 		const height = orbitRoot.clientHeight;
-		orbitRadius = Math.max(120, Math.min(260, width * 0.34));
-		orbitSmallRadius = Math.max(12, Math.min(30, height * 0.1));
+		orbitRadius = Math.max(130, Math.min(300, width * 0.38));
+		orbitSmallRadius = Math.max(14, Math.min(34, height * 0.12));
 	}
 
 	function renderOrbitCards() {
@@ -195,31 +190,6 @@
 						{/each}
 					</div>
 				</div>
-
-				<div class="menu-orbit-controls">
-					<button
-						type="button"
-						class="menu-orbit-btn"
-						aria-label="Card precedente"
-						onclick={() => {
-							orbitPrev();
-							restartOrbitAutoplay();
-						}}
-					>
-						‹
-					</button>
-					<button
-						type="button"
-						class="menu-orbit-btn"
-						aria-label="Card successiva"
-						onclick={() => {
-							orbitNext();
-							restartOrbitAutoplay();
-						}}
-					>
-						›
-					</button>
-				</div>
 			</section>
 		{:else}
 			<MenuOptionMedia slug={option.slug} {fixedPreviewItems} />
@@ -265,8 +235,8 @@
 
 	.menu-orbit-stage {
 		position: relative;
-		width: min(86%, 60cqw);
-		height: 16.8cqh;
+		width: min(92%, 68cqw);
+		height: 19.6cqh;
 		margin-inline: auto;
 		touch-action: pan-y;
 	}
@@ -281,9 +251,9 @@
 		position: absolute;
 		left: 50%;
 		top: 50%;
-		width: clamp(10.8rem, 21.5cqw, 15rem);
-		min-height: 10.5cqh;
-		padding: 1.05cqh 0.95cqw 0.95cqh;
+		width: clamp(12.6rem, 25.5cqw, 18.2rem);
+		min-height: 12.6cqh;
+		padding: 1.25cqh 1.1cqw 1.1cqh;
 		border-radius: 1.35cqw;
 		background: #fff9f0;
 		border: 1px solid rgba(233, 196, 143, 0.95);
@@ -295,9 +265,9 @@
 
 	.menu-orbit-tag {
 		display: inline-flex;
-		padding: 0.2cqh 0.52cqw;
+		padding: 0.24cqh 0.62cqw;
 		border-radius: 999px;
-		font-size: 1.5cqw;
+		font-size: 1.65cqw;
 		font-weight: 800;
 		text-transform: uppercase;
 		background: rgba(179, 76, 30, 0.14);
@@ -305,43 +275,18 @@
 	}
 
 	.menu-orbit-card h3 {
-		margin: 0.42cqh 0 0.32cqh;
-		font-size: 2.1cqw;
+		margin: 0.5cqh 0 0.38cqh;
+		font-size: 2.35cqw;
 		line-height: 1.15;
 		color: #3d2a10;
 	}
 
 	.menu-orbit-card p {
 		margin: 0;
-		font-size: 1.58cqw;
+		font-size: 1.76cqw;
 		line-height: 1.28;
 		font-weight: 700;
 		color: #5f4632;
 		max-width: 100%;
-	}
-
-	.menu-orbit-controls {
-		display: flex;
-		justify-content: center;
-		gap: 1cqw;
-		margin-top: 0.7cqh;
-	}
-
-	.menu-orbit-btn {
-		width: 4.2cqw;
-		height: 4.2cqw;
-		min-width: 1.9rem;
-		min-height: 1.9rem;
-		border-radius: 999px;
-		border: 1px solid rgba(233, 196, 143, 0.95);
-		background: #fff7eb;
-		font-size: 2.5cqw;
-		line-height: 1;
-		color: #3d2a10;
-		cursor: pointer;
-	}
-
-	.menu-orbit-btn:active {
-		transform: scale(0.96);
 	}
 </style>

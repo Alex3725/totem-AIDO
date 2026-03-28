@@ -126,8 +126,8 @@
 .opzioni-menu-screen :global(.option-panel) {
 	position: absolute;
 	inset: 0;
-	bottom: 4.05cqh;
-	border-radius: 1.45cqw 1.45cqw 0 0;
+	bottom: 5.1cqh;
+	border-radius: 1.45cqw;
 	padding: 2.6cqh 3.2cqw 2.8cqh;
 	background: var(--panel-red);
 	display: flex;

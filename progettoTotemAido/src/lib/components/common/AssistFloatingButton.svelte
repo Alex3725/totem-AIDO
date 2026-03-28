@@ -7,8 +7,8 @@
 <style>
 	.assist-fab {
 		position: fixed;
-		right: clamp(2.2rem, 5vw, 4rem);
-		bottom: clamp(9.4dvh, 11.8dvh, 13.2dvh);
+		right: clamp(1.1rem, 2.2vw, 2rem);
+		bottom: clamp(5.6rem, 10.2vh, 7.2rem);
 		width: clamp(4rem, 7.2vw, 5.6rem);
 		aspect-ratio: 1;
 		display: inline-flex;
@@ -19,18 +19,28 @@
 		box-shadow: 0 0.65rem 1.35rem rgba(0, 0, 0, 0.24);
 		z-index: 999;
 		text-decoration: none;
-		transition: transform 160ms ease, box-shadow 160ms ease;
+		transition: none !important;
+		animation: none !important;
+		transform: none !important;
 	}
 
 	.assist-fab:hover,
 	.assist-fab:focus-visible {
-		transform: translateY(-1px) scale(1.01);
-		box-shadow: 0 0.85rem 1.6rem rgba(0, 0, 0, 0.28);
+		transition: none !important;
+		animation: none !important;
+		transform: none !important;
+		box-shadow: 0 0.65rem 1.35rem rgba(0, 0, 0, 0.24);
+	}
+
+	.assist-fab,
+	.assist-fab * {
+		transition: none !important;
+		animation: none !important;
 	}
 
 	.assist-fab:focus-visible {
-		outline: 3px solid #ffffff;
-		outline-offset: 3px;
+		outline: 0.18rem solid #ffffff;
+		outline-offset: 0.18rem;
 	}
 
 	.assist-icon-wrap {
@@ -49,16 +59,17 @@
 
 	@media (orientation: landscape) {
 		.assist-fab {
-			bottom: clamp(4.8dvh, 6.4dvh, 7.8dvh);
-			width: clamp(3.6rem, 6vw, 4.8rem);
+			right: clamp(1rem, 2vw, 1.8rem);
+			bottom: clamp(4.4rem, 8.6vh, 6rem);
+			width: clamp(3.7rem, 6.2vw, 4.9rem);
 		}
 	}
 
 	@media (max-width: 740px) {
 		.assist-fab {
-			right: 1.6rem;
-			bottom: clamp(8.9dvh, 10.8dvh, 12.6dvh);
-			width: clamp(3.9rem, 16vw, 4.9rem);
+			right: clamp(0.8rem, 3.6vw, 1.2rem);
+			bottom: clamp(5.1rem, 9.6vh, 6.8rem);
+			width: clamp(3.8rem, 15vw, 4.8rem);
 		}
 	}
 </style>

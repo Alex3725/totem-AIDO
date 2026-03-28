@@ -10,6 +10,9 @@
 </script>
 
 <div class="dots-shell" aria-label="Navigazione carosello">
+	<a href="/chat-assistenza" class="assist-dot" aria-label="Apri chat assistenza">
+		<img src="/img/DONAtello_AI.png" alt="Chat assistenza" class="assist-dot-icon" />
+	</a>
 	<div class="dots">
 		{#each menuOptions as option}
 			<a
@@ -25,6 +28,7 @@
 
 <style>
 	.dots-shell {
+		--assist-size: clamp(1.95rem, 4.6cqh, 2.65rem);
 		position: absolute;
 		left: 0;
 		right: 0;
@@ -36,6 +40,33 @@
 		padding: 0.35cqh 0;
 		background: transparent;
 		z-index: 24;
+	}
+
+	.assist-dot {
+		position: absolute;
+		right: 0.65cqw;
+		top: 50%;
+		transform: translateY(-50%);
+		width: var(--assist-size);
+		height: var(--assist-size);
+		min-width: var(--assist-size);
+		min-height: var(--assist-size);
+		border-radius: 999px;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		text-decoration: none;
+		background: #5b7cbd;
+		box-shadow: 0 0.2cqw 0.55cqw rgba(0, 0, 0, 0.25);
+		transition: none;
+		animation: none;
+	}
+
+	.assist-dot-icon {
+		display: block;
+		width: 78%;
+		height: 78%;
+		object-fit: contain;
 	}
 
 	.dots {
@@ -54,35 +85,23 @@
 		height: 1.8cqw;
 		border-radius: 999px;
 		background: #fff;
-		transition: opacity 180ms ease, transform 180ms ease, background 180ms ease;
+		transition: none;
 		box-shadow: 0 0.18cqw 0.35cqw rgba(0, 0, 0, 0.15);
 	}
 
 	.dot.active {
 		background: var(--active-dot, #2b7fff);
-		transform: scale(1.15);
-		animation: dot-pulse 1.8s ease-in-out infinite;
-	}
-
-	.dot:hover,
-	.dot:focus-visible {
-		transform: scale(1.1);
-	}
-
-	@keyframes dot-pulse {
-		0%,
-		100% {
-			box-shadow: 0 0 0 0 rgba(43, 127, 255, 0.28);
-		}
-
-		60% {
-			box-shadow: 0 0 0 0.55rem rgba(43, 127, 255, 0);
-		}
+		transform: none;
 	}
 
 	@media (max-width: 900px), (max-height: 700px) {
 		.dots-shell {
 			height: 2.8rem;
+			--assist-size: clamp(1.95rem, 4.6cqh, 2.65rem);
+		}
+
+		.assist-dot {
+			right: 0.45rem;
 		}
 
 		.dots {

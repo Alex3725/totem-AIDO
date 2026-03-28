@@ -13,7 +13,19 @@
 }
 
 .totem-header {
-	@apply h-[13.6cqh] min-h-[5.6cqw] rounded-[1.5cqw] bg-[#f6f6f6] flex items-center justify-center gap-[1.2cqw] px-[1.2cqw];
+	@apply h-[13.6cqh] min-h-[5.6cqw] rounded-[1.5cqw] bg-[#f6f6f6] flex items-center justify-center gap-[1.2cqw] px-[1.8cqw];
+}
+
+.totem-header.is-child {
+	@apply grid grid-cols-[1fr_auto_1fr] items-center justify-items-center;
+}
+
+.totem-header.is-child .logo:first-child {
+	@apply justify-self-start;
+}
+
+.totem-header.is-child .logo:last-child {
+	@apply justify-self-end;
 }
 
 .header-spacer {
@@ -25,11 +37,11 @@
 }
 
 .logo.partner {
-	@apply h-[min(8.8cqh,4.4rem)] max-w-[15.5cqw];
+	@apply h-[min(8.8cqh,4.7rem)] max-w-[14.5cqw];
 }
 
 .logo.aido-logo {
-	@apply h-[min(9.6cqh,5rem)] max-w-[12.6cqw];
+	@apply h-[min(10.2cqh,5.3rem)] max-w-[12.8cqw];
 }
 
 .title {
@@ -45,7 +57,8 @@
 }
 
 .bottom-actions {
-	@apply flex justify-center;
+	--assist-size: clamp(1.95rem, 4.6cqh, 2.65rem);
+	@apply relative flex justify-center;
 }
 
 .bottom-action {
@@ -62,6 +75,18 @@
 
 .bottom-action-icon.back {
 	@apply w-[6.1cqw] h-[6.1cqw];
+}
+
+.bottom-assist {
+	@apply absolute right-0 top-1/2 -translate-y-1/2 rounded-full inline-flex items-center justify-center no-underline bg-[#5b7cbd] shadow-[0_0.35cqw_0.9cqw_rgba(0,0,0,0.2)];
+	width: var(--assist-size);
+	height: var(--assist-size);
+	min-width: var(--assist-size);
+	min-height: var(--assist-size);
+}
+
+.bottom-assist-icon {
+	@apply w-[78%] h-[78%] object-contain;
 }
 
 @media (orientation: landscape) {
@@ -96,6 +121,12 @@
 	.bottom-action-icon.back {
 		@apply w-[1.85rem] h-[1.85rem];
 	}
+
+	.bottom-actions {
+		--assist-size: clamp(1.95rem, 4.6cqh, 2.65rem);
+	}
+
+	
 }
 
 @media (max-width: 900px), (max-height: 700px) {
@@ -126,4 +157,10 @@
 	.bottom-action-icon.back {
 		@apply w-[1.65rem] h-[1.65rem];
 	}
+
+	.bottom-actions {
+		--assist-size: clamp(1.95rem, 4.6cqh, 2.65rem);
+	}
+
+	
 }

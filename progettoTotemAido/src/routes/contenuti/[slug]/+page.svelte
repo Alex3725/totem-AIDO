@@ -1,12 +1,9 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
-	import { fly, fade, slide } from 'svelte/transition';
-	import { cubicInOut, cubicOut } from 'svelte/easing';
+	import { fade, slide } from 'svelte/transition';
+	import { cubicInOut } from 'svelte/easing';
 	import type { PageProps } from './$types';
-	import { menuOptions } from '$lib/data/menu-options';
 	import TotemCardLayout from '$lib/components/common/TotemCardLayout.svelte';
-	import { consumeSwipeDirection, setSwipeDirection } from '$lib/stores/swipe-transition';
 
 	let { data }: PageProps = $props();
 
@@ -41,13 +38,6 @@
 				'Sì: per l\'iscrizione digitale è necessario lo SPID o la Carta d\'Identità Elettronica (CIE). Per l\'iscrizione cartacea, invece, è sufficiente allegare una copia del proprio documento d\'identità al modulo firmato.'
 		}
 	];
-	const introDirection = consumeSwipeDirection();
-	const pageSlideDistance = 190;
-	const pageSlideDuration = 430;
-	let touchStartX = $state(0);
-	let touchStartY = $state(0);
-	let shouldHandleSwipe = $state(true);
-
 	let diagramCanvas = $state<HTMLCanvasElement | null>(null);
 	let diagramContainer = $state<HTMLDivElement | null>(null);
 	let diagramLoadError = $state('');
@@ -352,45 +342,6 @@
 		activeMapInput = null;
 	}
 
-	function isInteractiveTarget(target: EventTarget | null) {
-		if (!(target instanceof Element)) return false;
-		return Boolean(
-			target.closest(
-				'a, button, input, textarea, select, summary, .map-page-wrap, .map-keyboard, .accordion-item'
-			)
-		);
-	}
-
-	function handleTouchStart(event: TouchEvent) {
-		shouldHandleSwipe = !isInteractiveTarget(event.target);
-		touchStartX = event.touches[0].clientX;
-		touchStartY = event.touches[0].clientY;
-	}
-
-	async function handleTouchEnd(event: TouchEvent) {
-		if (!shouldHandleSwipe || data.page.slug === 'processo-scelta') {
-			shouldHandleSwipe = true;
-			return;
-		}
-
-		const endX = event.changedTouches[0].clientX;
-		const endY = event.changedTouches[0].clientY;
-		const deltaX = endX - touchStartX;
-		const deltaY = endY - touchStartY;
-
-		if (Math.abs(deltaX) < 65 || Math.abs(deltaX) <= Math.abs(deltaY)) return;
-
-		const currentIndex = menuOptions.findIndex((option) => option.slug === data.page.slug);
-		if (currentIndex === -1) return;
-
-		const offset = deltaX < 0 ? 1 : -1;
-		const targetIndex = (currentIndex + offset + menuOptions.length) % menuOptions.length;
-		const targetSlug = menuOptions[targetIndex].slug;
-
-		setSwipeDirection(deltaX < 0 ? 'left' : 'right');
-		await goto(`/contenuti/${targetSlug}`);
-	}
-
 	onMount(() => {
 		if (data.page.slug === 'processo-scelta') {
 			void mountSocrataMap();
@@ -431,14 +382,7 @@
 			{#key data.page.slug}
 				<div
 					class="content-shell"
-					ontouchstart={handleTouchStart}
-					ontouchend={handleTouchEnd}
-					in:fly={{
-						x: introDirection === 'left' ? pageSlideDistance : introDirection === 'right' ? -pageSlideDistance : 0,
-						duration: pageSlideDuration,
-						easing: cubicOut,
-						opacity: 0.12
-					}}
+					
 				>
 				<section class={`content-panel ${data.page.slug === 'processo-scelta' ? 'content-panel--map' : ''}`}>
 					{#if data.page.slug === 'processo-donazione'}
@@ -497,8 +441,12 @@
 							</div>
 						</div>
 						<div class="store-row">
-							<a href="/contenuti/diventa-donatore/play-store" class="store-btn" aria-label="Google Play">Google Play</a>
-							<a href="/contenuti/diventa-donatore/apple-store" class="store-btn" aria-label="App Store">App Store</a>
+							<a href="/contenuti/diventa-donatore/play-store" class="store-btn" aria-label="Google Play">
+								<img src="/img/GooglePlayButton.png" alt="Get it on Google Play" class="store-badge" />
+							</a>
+							<a href="/contenuti/diventa-donatore/apple-store" class="store-btn" aria-label="App Store">
+								<img src="/img/AppStoreButton.png" alt="Download on the App Store" class="store-badge" />
+							</a>
 						</div>
 					{:else if data.page.slug === 'faq'}
 						<h2 class="subtitle">Faq</h2>

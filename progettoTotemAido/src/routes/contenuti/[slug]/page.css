@@ -438,23 +438,34 @@
 	.store-row {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
-		gap: 1cqw;
-		margin-top: 0.35cqh;
+		gap: 1.1cqw;
+		margin-top: 0.45cqh;
 	}
 
 	.store-btn {
-		border: 0;
 		display: inline-flex;
 		justify-content: center;
 		align-items: center;
-		min-height: 8cqh;
-		border-radius: 1.5cqw;
-		font-size: 3.05cqw;
-		font-weight: 800;
+		min-height: 8.4cqh;
+		padding: 0.45cqh 0.55cqw;
+		border-radius: 1.35cqw;
 		text-decoration: none;
-		background: #111;
-		color: #fff;
-		box-shadow: 0 0.45cqw 0.95cqw rgba(0, 0, 0, 0.22);
+		background: rgba(255, 255, 255, 0.14);
+		border: 1px solid rgba(255, 255, 255, 0.25);
+		box-shadow: 0 0.45cqw 0.95cqw rgba(0, 0, 0, 0.2);
+		transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+	}
+
+	.store-btn:active {
+		transform: scale(0.985);
+	}
+
+	.store-badge {
+		display: block;
+		width: 100%;
+		height: auto;
+		max-height: 5.8cqh;
+		object-fit: contain;
 	}
 
 	.filters-row {
@@ -740,6 +751,14 @@
 		.filter-btn,
 		.search-box {
 			min-height: 3.2rem;
+		}
+
+		.store-btn {
+			padding: 0.32rem 0.42rem;
+		}
+
+		.store-badge {
+			max-height: 2.3rem;
 		}
 
 		.store-btn,

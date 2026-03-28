@@ -80,13 +80,6 @@
 				</button>
 			</article>
 
-			<button
-				type="button"
-				class="absolute bottom-3 right-3 flex h-14 w-14 items-center justify-center rounded-full bg-[#5b7cbd] shadow-[0_10px_42px_rgba(0,0,0,0.55)] transition hover:scale-105 sm:bottom-4 sm:right-5 sm:h-16 sm:w-16"
-				aria-label="Apri assistente AI"
-			>
-				<img src="/img/DONAtello_AI.png" alt="ChatBot AI" class="h-11 w-11 sm:h-12 sm:w-12" />
-			</button>
 		</div>
 
 		<a
