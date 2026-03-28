@@ -441,122 +441,126 @@
 					}}
 				>
 				<section class={`content-panel ${data.page.slug === 'processo-scelta' ? 'content-panel--map' : ''}`}>
-				{#if data.page.slug === 'processo-donazione'}
-					<h2 class="subtitle">Il percorso del dono</h2>
-					<div class="diagram-viewer">
-						<div class="diagram-canvas-wrap" bind:this={diagramContainer}>
-							<canvas bind:this={diagramCanvas} aria-label="Diagramma di flusso AIDO"></canvas>
-						</div>
-						{#if diagramLoadError}
-							<p class="diagram-error">{diagramLoadError}</p>
-							<a href="/files/PDF/DIAGRAMMA%20DI%20FLUSSO.pdf" target="_blank" rel="noreferrer" class="diagram-open-link"
-								>Apri PDF completo</a
-							>
-						{/if}
-					</div>
-				{:else if data.page.slug === 'processo-scelta'}
-					<h2 class="subtitle">{data.page.title}</h2>
-					<div class="map-page-card">
-						<p class="map-page-label">Consulta la mappa ATS</p>
-						<div
-							class="map-page-wrap"
-							bind:this={socrataHost}
-							role="button"
-							tabindex="0"
-							aria-label="Apri la ricerca della mappa ATS"
-							onclick={handleMapAreaClick}
-							onkeydown={handleMapAreaKeydown}
-						></div>
-					</div>
-					{#if showMapKeyboard}
-						<div class="map-keyboard" transition:fade={{ duration: 180 }}>
-							<div class="map-keyboard-top">
-								<div class="map-keyboard-display">{mapSearchValue || 'Digita comune o citta'}</div>
-								<button type="button" class="map-keyboard-close" onclick={closeMapKeyboard}>Chiudi</button>
+					{#if data.page.slug === 'processo-donazione'}
+						<h2 class="subtitle">Il percorso del dono</h2>
+						<div class="diagram-viewer">
+							<div class="diagram-canvas-wrap" bind:this={diagramContainer}>
+								<canvas bind:this={diagramCanvas} aria-label="Diagramma di flusso AIDO"></canvas>
 							</div>
-							{#each keyboardRows as row}
-								<div class={`map-keyboard-row ${row.length === 9 ? 'is-nine' : ''} ${row.length === 7 ? 'is-seven' : ''}`}>
-									{#each row as key}
-										<button type="button" class="map-key" onclick={() => appendKeyboardCharacter(key)}>{key}</button>
-									{/each}
-								</div>
-							{/each}
-							<div class="map-keyboard-row map-keyboard-row-wide">
-								<button type="button" class="map-key map-key-enter" onclick={submitMapSearch}>Invio</button>
-								<button type="button" class="map-key map-key-action" onclick={clearKeyboardSearch}>Cancella</button>
-								<button type="button" class="map-key map-key-space" onclick={addKeyboardSpace}>Spazio</button>
-								<button type="button" class="map-key map-key-action" onclick={deleteKeyboardCharacter}>Back</button>
-							</div>
-						</div>
-					{/if}
-				{:else if data.page.slug === 'diventa-donatore'}
-					<h2 class="subtitle">Scansione il QR code per iscriverti all'AIDO</h2>
-					<div class="qr-main-shell">
-						<div class="qr-main-frame">
-							<img src="/img/DigitalAido.png" alt="QR code per iscrizione AIDO" class="qr-main-image" />
-						</div>
-					</div>
-					<div class="store-row">
-						<a href="/contenuti/diventa-donatore/play-store" class="store-btn" aria-label="Google Play">Google Play</a>
-						<a href="/contenuti/diventa-donatore/apple-store" class="store-btn" aria-label="App Store">App Store</a>
-					</div>
-				{:else if data.page.slug === 'faq'}
-					<h2 class="subtitle">Faq</h2>
-					{#each faqItems as item}
-						<div class={`accordion-item ${openFaqItems.includes(item.question) ? 'is-open' : ''}`}>
-							<button
-								type="button"
-								class="dropdown-like"
-								aria-expanded={openFaqItems.includes(item.question)}
-								onclick={() => toggleAccordionItem(item.question)}
-							>
-								<span>{item.question}</span>
-								<img src="/img/dropdown_pulsante.png" alt="" />
-							</button>
-							{#if openFaqItems.includes(item.question)}
-								<div class="accordion-body" transition:slide={{ duration: 260, easing: cubicInOut }}>
-									<p>{item.answer}</p>
-								</div>
+							{#if diagramLoadError}
+								<p class="diagram-error">{diagramLoadError}</p>
+								<a href="/files/PDF/DIAGRAMMA%20DI%20FLUSSO.pdf" target="_blank" rel="noreferrer" class="diagram-open-link"
+									>Apri PDF completo</a
+								>
 							{/if}
 						</div>
-					{/each}
-				{:else}
-					<h2 class="subtitle">Catalogo</h2>
-					<div class="filters-row">
-						<label class="search-box">
-							<input type="search" placeholder="Ricerca" />
-							<img src="/img/LenteDiIngrandimento.png" alt="Cerca" />
-						</label>
-						<button type="button" class="filter-btn">
-							<span>Filtri</span>
-							<img src="/img/dropdown_pulsante.png" alt="Filtri" />
-						</button>
-					</div>
-
-					<div class="materials-section">
-						<h3>Volantini</h3>
-						<div class="thumb-grid">
-							{#each pdfItems.slice(0, 3) as item}
-								<a href={item.href} target="_blank" rel="noreferrer" class="thumb" aria-label={item.label}>
-									{#if flyerPreviews[item.href]}
-										<img src={flyerPreviews[item.href]} alt="Anteprima prima pagina PDF" class="thumb-preview" />
-									{:else}
-										<span class="thumb-loading">Caricamento...</span>
-									{/if}
-								</a>
-							{/each}
+					{:else if data.page.slug === 'processo-scelta'}
+						<h2 class="subtitle">{data.page.title}</h2>
+						<div class="map-page-card">
+							<p class="map-page-label">Consulta la mappa ATS</p>
+							<div
+								class="map-page-wrap"
+								bind:this={socrataHost}
+								role="button"
+								tabindex="0"
+								aria-label="Apri la ricerca della mappa ATS"
+								onclick={handleMapAreaClick}
+								onkeydown={handleMapAreaKeydown}
+							></div>
 						</div>
-					</div>
-
-					<div class="materials-section">
-						<h3>Video</h3>
-						<div class="thumb-grid single-row">
-							{#each videoItems as item}
-								<a href={item.href} target="_blank" rel="noreferrer" class="thumb wide" aria-label={item.label}></a>
-							{/each}
+						{#if showMapKeyboard}
+							<div class="map-keyboard" transition:fade={{ duration: 180 }}>
+								<div class="map-keyboard-top">
+									<div class="map-keyboard-display">{mapSearchValue || 'Digita comune o citta'}</div>
+									<button type="button" class="map-keyboard-close" onclick={closeMapKeyboard}>Chiudi</button>
+								</div>
+								{#each keyboardRows as row}
+									<div class={`map-keyboard-row ${row.length === 9 ? 'is-nine' : ''} ${row.length === 7 ? 'is-seven' : ''}`}>
+										{#each row as key}
+											<button type="button" class="map-key" onclick={() => appendKeyboardCharacter(key)}>{key}</button>
+										{/each}
+									</div>
+								{/each}
+								<div class="map-keyboard-row map-keyboard-row-wide">
+									<button type="button" class="map-key map-key-enter" onclick={submitMapSearch}>Invio</button>
+									<button type="button" class="map-key map-key-action" onclick={clearKeyboardSearch}>Cancella</button>
+									<button type="button" class="map-key map-key-space" onclick={addKeyboardSpace}>Spazio</button>
+									<button type="button" class="map-key map-key-action" onclick={deleteKeyboardCharacter}>Back</button>
+								</div>
+							</div>
+						{/if}
+					{:else if data.page.slug === 'diventa-donatore'}
+						<h2 class="subtitle">Scansione il QR code per iscriverti all'AIDO</h2>
+						<div class="qr-main-shell">
+							<div class="qr-main-frame">
+								<img src="/img/DigitalAido.png" alt="QR code per iscrizione AIDO" class="qr-main-image" />
+							</div>
 						</div>
-					</div>
-				{/if}
+						<div class="store-row">
+							<a href="/contenuti/diventa-donatore/play-store" class="store-btn" aria-label="Google Play">Google Play</a>
+							<a href="/contenuti/diventa-donatore/apple-store" class="store-btn" aria-label="App Store">App Store</a>
+						</div>
+					{:else if data.page.slug === 'faq'}
+						<h2 class="subtitle">Faq</h2>
+						{#each faqItems as item}
+							<div class={`accordion-item ${openFaqItems.includes(item.question) ? 'is-open' : ''}`}>
+								<button
+									type="button"
+									class="dropdown-like"
+									aria-expanded={openFaqItems.includes(item.question)}
+									onclick={() => toggleAccordionItem(item.question)}
+								>
+									<span>{item.question}</span>
+									<img src="/img/dropdown_pulsante.png" alt="" />
+								</button>
+								{#if openFaqItems.includes(item.question)}
+									<div class="accordion-body" transition:slide={{ duration: 260, easing: cubicInOut }}>
+										<p>{item.answer}</p>
+									</div>
+								{/if}
+							</div>
+						{/each}
+					{:else if data.page.slug === 'scopri'}
+						<h2 class="subtitle">Catalogo</h2>
+
+						<div class="filters-row">
+							<label class="search-box">
+								<input type="search" placeholder="Ricerca" />
+								<img src="/img/LenteDiIngrandimento.png" alt="Cerca" />
+							</label>
+							<button type="button" class="filter-btn">
+								<span>Filtri</span>
+								<img src="/img/dropdown_pulsante.png" alt="Filtri" />
+							</button>
+						</div>
+
+						<div class="materials-section">
+							<h3>Volantini</h3>
+							<div class="thumb-grid">
+								{#each pdfItems.slice(0, 3) as item}
+									<a href={item.href} target="_blank" rel="noreferrer" class="thumb" aria-label={item.label}>
+										{#if flyerPreviews[item.href]}
+											<img src={flyerPreviews[item.href]} alt="Anteprima prima pagina PDF" class="thumb-preview" />
+										{:else}
+											<span class="thumb-loading">Caricamento...</span>
+										{/if}
+									</a>
+								{/each}
+							</div>
+						</div>
+
+						<div class="materials-section">
+							<h3>Video</h3>
+							<div class="thumb-grid single-row">
+								{#each videoItems as item}
+									<a href={item.href} target="_blank" rel="noreferrer" class="thumb wide" aria-label={item.label}></a>
+								{/each}
+							</div>
+						</div>
+					{:else}
+						<h2 class="subtitle">{data.page.title}</h2>
+						<p class="diagram-error">Contenuto in aggiornamento.</p>
+					{/if}
 				</section>
 			</div>
 			{/key}
