@@ -1,0 +1,54 @@
+{
+	"/(auth)": [
+		"src/routes/+layout.ts"
+	],
+	"/(app)": [
+		"src/routes/+layout.ts"
+	],
+	"/": [
+		"src/routes/+layout.ts",
+		"src/routes/+layout.ts"
+	],
+	"/api/auth/login": [
+		"src/routes/api/auth/login/+server.ts"
+	],
+	"/api/auth/logout": [
+		"src/routes/api/auth/logout/+server.ts"
+	],
+	"/api/auth/refresh": [
+		"src/routes/api/auth/refresh/+server.ts"
+	],
+	"/api/documents": [
+		"src/routes/api/documents/+server.ts"
+	],
+	"/api/documents/download": [
+		"src/routes/api/documents/download/+server.ts"
+	],
+	"/api/documents/qr": [
+		"src/routes/api/documents/qr/+server.ts"
+	],
+	"/api/documents/[id]": [
+		"src/routes/api/documents/[id]/+server.ts"
+	],
+	"/(app)/carousel": [
+		"src/routes/+layout.ts"
+	],
+	"/(app)/carousel/chi-siamo": [
+		"src/routes/+layout.ts"
+	],
+	"/(app)/carousel/contatti": [
+		"src/routes/+layout.ts"
+	],
+	"/(app)/carousel/donazione": [
+		"src/routes/+layout.ts"
+	],
+	"/(app)/carousel/storie": [
+		"src/routes/+layout.ts"
+	],
+	"/(app)/documents": [
+		"src/routes/+layout.ts"
+	],
+	"/(auth)/login": [
+		"src/routes/+layout.ts"
+	]
+}
