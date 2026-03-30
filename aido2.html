@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIDO - Assistente Virtuale</title>
+    
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <!-- Babel per JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts (Inter) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Configurazione Tailwind personalizzata -->
+    <script>
+        tailwind.config = {
+            theme: {
+                fontFamily: {
+                    sans: ['Inter', 'sans-serif'],
+                },
+                extend: {
+                    colors: {
+                        aido: {
+                            red: '#e30613',     // Rosso tipico AIDO
+                            light: '#fff5f5',
+                        },
+                        medical: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                        }
+                    },
+                    animation: {
+                        'bounce-slow': 'bounce 1.5s infinite',
+                        'fade-in': 'fadeIn 0.5s ease-out forwards',
+                        'slide-up': 'slideUp 0.4s ease-out forwards',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Sfondo generale con gradiente sottile */
+        body {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+        }
+
+        /* Nascondi scrollbar per un look pulito ma mantieni funzionalità */
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Animazione puntini di caricamento */
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #9ca3af; /* Gray-400 */
+            border-radius: 50%;
+            display: inline-block;
+            animation: typing 1.4s infinite ease-in-out both;
+        }
+        
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        /* Stile personalizzato per l'input */
+        .glass-input {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body class="h-screen w-full flex items-center justify-center p-0 md:p-4 overflow-hidden">
+
+    <div id="root" class="w-full h-full max-w-5xl relative"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // --- Configurazione API ---
+        // --- All'interno del tag <script type="text/babel"> ---
+        const PYTHON_API_HOST = 'http://127.0.0.1:8080'; // Usa l'IP numerico
+        const CHAT_API_URL = `${PYTHON_API_HOST}/api/chat`;
+
+        // --- Componente: Header ---
+        const Header = () => (
+            <div className="bg-white/90 backdrop-blur-md shadow-sm border-b border-slate-100 p-4 flex items-center justify-between absolute top-0 w-full z-10 h-20 rounded-t-none md:rounded-t-3xl">
+                <div className="flex items-center space-x-4">
+                    <div>
+                        <img src="aido_logo.png" alt="Logo AIDO" width="25%"/>
+                    </div>
+                    <div>
+                        <h1 className="text-xl font-bold text-slate-800 tracking-tight">Info Point AIDO</h1>
+                        <p className="text-xs text-slate-500 font-medium uppercase tracking-wider">Assistente Virtuale</p>
+                    </div>
+                </div>
+                <div className="hidden md:block">
+                    <span className="px-3 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full border border-green-200">
+                        <i className="fa-solid fa-circle text-[8px] mr-1 align-middle"></i> Online
+                    </span>
+                </div>
+            </div>
+        );
+
+        // --- Componente: Indicatore di Pensiero ---
+        const ThinkingBubble = () => (
+            <div className="flex w-full mb-6 animate-fade-in">
+                <div className="w-8 h-8 rounded-full bg-slate-200 flex-shrink-0 flex items-center justify-center mr-3 mt-auto mb-1 overflow-hidden">
+                    <img src="bot_icona.png" alt="Icona Bot" className="w-full h-full object-cover" />
+                </div>
+                <div className="bg-white border border-slate-100 p-4 rounded-2xl rounded-tl-none shadow-sm flex items-center space-x-1 w-fit">
+                    <div className="typing-dot bg-medical-500"></div>
+                    <div className="typing-dot bg-medical-500"></div>
+                    <div className="typing-dot bg-medical-500"></div>
+                </div>
+            </div>
+        );
+
+        // --- Componente: Messaggio ---
+        const ChatMessage = ({ text, sender, isError }) => {
+            const isUser = sender === 'user';
+            return (
+                <div className={`flex w-full mb-6 animate-slide-up ${isUser ? 'justify-end' : 'justify-start'}`}>
+                    
+                    {/* Icona Bot (solo se sender è bot) */}
+                    {!isUser && (
+                        <div className="w-8 h-8 rounded-full bg-slate-200 flex-shrink-0 flex items-center justify-center mr-3 mt-auto mb-1 shadow-sm">
+                            <img src="bot_icona.png" alt="Icona Bot" className="w-full h-full object-cover" />
+                        </div>
+                    )}
+
+                    <div 
+                        className={`
+                            max-w-[85%] md:max-w-[70%] p-4 rounded-2xl shadow-sm text-[16px] leading-relaxed relative
+                            ${isUser 
+                                ? 'bg-gradient-to-br from-medical-600 to-medical-500 text-white rounded-tr-none shadow-medical-200' 
+                                : isError
+                                    ? 'bg-red-50 text-red-600 border border-red-100 rounded-tl-none'
+                                    : 'bg-white text-slate-700 border border-slate-100 rounded-tl-none'
+                            }
+                        `}
+                    >
+                        <div dangerouslySetInnerHTML={{ __html: text }} />
+                        
+                        {/* Timestamp finto per estetica */}
+                        <div className={`text-[10px] mt-2 text-right ${isUser ? 'text-blue-100' : 'text-slate-400'}`}>
+                            {new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                        </div>
+                    </div>
+
+                     {/* Icona Utente (solo se sender è user) */}
+                     {isUser && (
+                        <div className="w-8 h-8 rounded-full bg-medical-100 flex-shrink-0 flex items-center justify-center ml-3 mt-auto mb-1 shadow-sm border border-medical-200">
+                             <i className="fa-solid fa-user text-medical-600 text-xs"></i>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        // --- Componente Principale ---
+        const App = () => {
+            const [messages, setMessages] = useState([
+                { 
+                    id: 1, 
+                    text: "Ciao! 👋<br>Sono l'assistente virtuale AIDO.<br>Puoi chiedermi informazioni su <b>come diventare donatore</b>, sulla legislazione o sui trapianti.", 
+                    sender: 'bot' 
+                }
+            ]);
+            const [inputValue, setInputValue] = useState('');
+            const [isThinking, setIsThinking] = useState(false);
+            const messagesEndRef = useRef(null);
+
+            const scrollToBottom = () => {
+                messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+            };
+
+            useEffect(() => {
+                scrollToBottom();
+            }, [messages, isThinking]);
+
+            const handleSendMessage = async (e) => {
+                if (e) e.preventDefault();
+                if (!inputValue.trim() || isThinking) return;
+
+                const userText = inputValue.trim();
+                // Aggiungiamo l'istruzione per la lingua nel payload API, ma non nella UI
+                const textForApi = "(rispondi in italiano) " + userText;
+
+                setInputValue(''); // Pulisci input
+
+                // 1. Aggiungi messaggio utente
+                setMessages(prev => [...prev, { id: Date.now(), text: userText, sender: 'user' }]);
+                
+                // 2. Attiva stato "Thinking"
+                setIsThinking(true);
+
+                try {
+                    // Nota: Se non hai il backend Python attivo, questa fetch fallirà.
+                    // Ho aggiunto un timeout simulato nel catch per farti vedere l'animazione UI.
+                    
+                    const response = await fetch(CHAT_API_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ message: textForApi }),
+                    });
+
+                    if (!response.ok) throw new Error("Errore di connessione");
+
+                    const data = await response.json();
+                    const botText = data.text || "Non ho capito, puoi ripetere?";
+
+                    setMessages(prev => [...prev, { id: Date.now() + 1, text: botText, sender: 'bot' }]);
+
+                } catch (error) {
+                    console.error("Errore API (o server spento):", error);
+                    
+                    // FALLBACK SIMULATO PER DEMO UI (Rimuovere in produzione se necessario)
+                    // Simulo un ritardo di 1.5 secondi per mostrare l'animazione di pensiero
+                    await new Promise(r => setTimeout(r, 1500));
+                    
+                    setMessages(prev => [...prev, { 
+                        id: Date.now() + 1, 
+                        text: "⚠️ <b>Modalità Demo UI</b><br>Non riesco a contattare il server Python a <code>localhost:8080</code>.<br><br>Se stai solo testando l'interfaccia, funziona tutto! Se vuoi risposte reali, avvia il backend.", 
+                        sender: 'bot',
+                        isError: true // Flag opzionale per stile diverso
+                    }]);
+
+                } finally {
+                    setIsThinking(false);
+                }
+            };
+
+            return (
+                <div className="bg-white md:rounded-3xl shadow-2xl w-full h-full flex flex-col relative overflow-hidden border border-slate-200">
+                    
+                    {/* Header Fisso */}
+                    <Header />
+
+                    {/* Area Messaggi Scrollabile */}
+                    <div className="flex-1 overflow-y-auto p-4 pt-24 pb-28 scrollbar-hide bg-slate-50/50">
+                        {messages.map((msg) => (
+                            <ChatMessage key={msg.id} text={msg.text} sender={msg.sender} isError={msg.isError} />
+                        ))}
+                        
+                        {/* Animazione "Thinking" */}
+                        {isThinking && <ThinkingBubble />}
+                        
+                        {/* Elemento invisibile per scroll automatico */}
+                        <div ref={messagesEndRef} />
+                    </div>
+
+                    {/* Area Input Fissa in basso */}
+                    <div className="absolute bottom-0 left-0 w-full p-4 bg-gradient-to-t from-white via-white to-transparent pb-6 pt-10">
+                        <form 
+                            onSubmit={handleSendMessage}
+                            className="flex items-center gap-2 max-w-4xl mx-auto bg-white p-2 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-slate-100"
+                        >
+                            <input
+                                type="text"
+                                className="flex-1 bg-transparent px-6 py-3 outline-none text-slate-700 placeholder-slate-400"
+                                placeholder="Scrivi la tua domanda..."
+                                value={inputValue}
+                                onChange={(e) => setInputValue(e.target.value)}
+                                disabled={isThinking}
+                            />
+                            
+                            <button 
+                                type="submit" 
+                                disabled={!inputValue.trim() || isThinking}
+                                className={`
+                                    w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300
+                                    ${!inputValue.trim() || isThinking 
+                                        ? 'bg-slate-100 text-slate-400 cursor-not-allowed' 
+                                        : 'bg-medical-600 hover:bg-medical-700 text-white shadow-lg transform hover:scale-105 active:scale-95'
+                                    }
+                                `}
+                            >
+                                {isThinking ? (
+                                    <i className="fa-solid fa-spinner fa-spin"></i>
+                                ) : (
+                                    <i className="fa-solid fa-paper-plane"></i>
+                                )}
+                            </button>
+                        </form>
+                        
+                        <div className="text-center mt-2">
+                            <p className="text-[10px] text-slate-400">Powered by AI - Le risposte si basano su documenti ufficiali.</p>
+                            
+                            <p className="text-[10px] text-slate-400">Developed by Duhanxhiu Hegi & Gonzalez Emanuel</p>
+
+                        </div>
+                    </div>
+
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
