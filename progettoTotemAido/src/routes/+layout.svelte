@@ -4,9 +4,9 @@
 	let { children } = $props();
 	import { useIdle } from '$lib/useIdle';
 
-	// Timeout inattivita: per i test e' impostato a 10 secondi.
+	// Timeout inattivita': impostato a 4 minuti.
 	// Secondo parametro: velocita' auto-scroll del carosello in idle.
-	useIdle(10000, 3500);
+	useIdle(240000, 3500);
 
 </script>
 

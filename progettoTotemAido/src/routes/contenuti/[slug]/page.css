@@ -414,7 +414,7 @@
 	}
 
 	.qr-main-frame {
-		width: min(100%, 620px);
+		width: min(100%, 480px);
 		aspect-ratio: 1 / 1;
 		max-height: 100%;
 		border-radius: 1.2cqw;
@@ -767,9 +767,9 @@
 			font-size: clamp(0.95rem, 2.5vw, 1.15rem);
 		}
 
-		.qr-main-frame {
-			width: min(100%, 480px);
-		}
+	.qr-main-frame {
+		width: min(100%, 360px);
+	}
 
 		.search-box {
 			padding: 0 0.95rem 0 1rem;

@@ -57,7 +57,7 @@
 }
 
 .bottom-actions {
-	--assist-size: clamp(1.95rem, 4.6cqh, 2.65rem);
+	--assist-size: clamp(3.2rem, 7.5cqh, 4.8rem);
 	@apply relative flex justify-center;
 }
 
@@ -123,7 +123,7 @@
 	}
 
 	.bottom-actions {
-		--assist-size: clamp(1.95rem, 4.6cqh, 2.65rem);
+		--assist-size: clamp(3rem, 6.8cqh, 4.4rem);
 	}
 
 	
@@ -159,7 +159,7 @@
 	}
 
 	.bottom-actions {
-		--assist-size: clamp(1.95rem, 4.6cqh, 2.65rem);
+		--assist-size: clamp(2.8rem, 6.2cqh, 4.1rem);
 	}
 
 	

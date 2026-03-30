@@ -7,9 +7,9 @@
 <style>
 	.assist-fab {
 		position: fixed;
-		right: clamp(1.1rem, 2.2vw, 2rem);
-		bottom: clamp(5.6rem, 10.2vh, 7.2rem);
-		width: clamp(4rem, 7.2vw, 5.6rem);
+		left: clamp(0.6rem, 1.4vw, 1.2rem);
+		bottom: clamp(0.6rem, 1.4vw, 1.2rem);
+		width: clamp(7.5rem, 12.5vw, 10.5rem);
 		aspect-ratio: 1;
 		display: inline-flex;
 		align-items: center;
@@ -59,17 +59,17 @@
 
 	@media (orientation: landscape) {
 		.assist-fab {
-			right: clamp(1rem, 2vw, 1.8rem);
-			bottom: clamp(4.4rem, 8.6vh, 6rem);
-			width: clamp(3.7rem, 6.2vw, 4.9rem);
+			left: clamp(0.6rem, 1.4vw, 1.2rem);
+			bottom: clamp(0.6rem, 1.4vw, 1.2rem);
+			width: clamp(7rem, 11vw, 9.5rem);
 		}
 	}
 
 	@media (max-width: 740px) {
 		.assist-fab {
-			right: clamp(0.8rem, 3.6vw, 1.2rem);
-			bottom: clamp(5.1rem, 9.6vh, 6.8rem);
-			width: clamp(3.8rem, 15vw, 4.8rem);
+			left: clamp(0.5rem, 2.6vw, 1rem);
+			bottom: clamp(0.5rem, 2.6vw, 1rem);
+			width: clamp(6rem, 22vw, 8.5rem);
 		}
 	}
 </style>

@@ -3,7 +3,7 @@
 	import StoreQrSection from '$lib/components/contenuti/StoreQrSection.svelte';
 </script>
 
-<TotemCardLayout title="Apple Store" mode="child" backHref="/opzioni-menu/diventa-donatore">
+<TotemCardLayout title="Apple Store" mode="child" backHref="/contenuti/diventa-donatore">
 	<StoreQrSection
 		subtitle="Scansiona il QR code per aprire Apple Store"
 		imageSrc="/img/AppleStore.png"

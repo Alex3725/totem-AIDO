@@ -8,8 +8,8 @@
 	let currentIndex = $state(0);
 	let timer: ReturnType<typeof setInterval> | null = null;
 
-	const rotationInterval = 100000;
-	const rewindInterval = 620;
+	const rotationInterval = 10000;
+	const rewindInterval = 4500;
 
 	function goNext() {
 		currentIndex = (currentIndex + 1) % menuOptions.length;

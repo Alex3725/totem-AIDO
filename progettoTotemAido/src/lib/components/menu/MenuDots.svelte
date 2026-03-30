@@ -28,16 +28,16 @@
 
 <style>
 	.dots-shell {
-		--assist-size: clamp(1.95rem, 4.6cqh, 2.65rem);
+		--assist-size: clamp(3.2rem, 7.5cqh, 4.8rem);
 		position: absolute;
 		left: 0;
 		right: 0;
 		bottom: 0;
-		height: 4.05cqh;
+		height: 6.2cqh;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		padding: 0.35cqh 0;
+		padding: 0.55cqh 0;
 		background: transparent;
 		z-index: 24;
 	}
@@ -96,8 +96,8 @@
 
 	@media (max-width: 900px), (max-height: 700px) {
 		.dots-shell {
-			height: 2.8rem;
-			--assist-size: clamp(1.95rem, 4.6cqh, 2.65rem);
+			height: 3.8rem;
+			--assist-size: clamp(2.8rem, 6.2cqh, 4.1rem);
 		}
 
 		.assist-dot {
