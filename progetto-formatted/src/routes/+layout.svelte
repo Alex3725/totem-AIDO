@@ -25,9 +25,11 @@
 			class="h-full rounded-[2.2cqw] border-[max(2px,0.35cqw)] border-solid border-[#8db9ff]
 			       bg-white p-[1.25cqw] flex flex-col min-h-0 gap-[1.25cqh]"
 		>
-			<!-- HEADER — tre colonne -->
+			<!-- ═══════════════════════════
+			     HEADER — tre colonne allineate
+			     ═══════════════════════════ -->
 			<header
-				class="grid grid-cols-3 items-center
+				class="grid grid-cols-[1fr_auto_1fr] items-center
 				       h-[11.2cqh] min-h-[5.6cqw]
 				       rounded-[1.5cqw] bg-[#f6f6f6]
 				       px-[1.2cqw]"
@@ -46,7 +48,7 @@
 					<img
 						src="/img/logoAIDO.png"
 						alt="Logo AIDO"
-						class="h-[min(8.6cqh,4.8rem)] max-w-[12.6cqw] w-auto object-contain"
+						class="h-[min(14cqh,9rem)] max-w-[16cqw] w-auto object-contain"
 					/>
 				</div>
 
@@ -65,13 +67,16 @@
 				{@render children()}
 			</section>
 
-			<!-- FOOTER — tre colonne -->
-			<footer class="grid grid-cols-3 items-center min-h-[4.05cqh]">
-
-				<!-- Sinistra: vuota -->
+			<!-- ═══════════════════════════
+			     FOOTER — stessa grid dell'header
+			     ═══════════════════════════ -->
+			<footer
+				class="grid grid-cols-[1fr_auto_1fr] items-center min-h-[4.05cqh]"
+			>
+				<!-- Sinistra: vuota (allineata con logo Marconi) -->
 				<div></div>
 
-				<!-- Centro: freccia indietro su pagine figlie, MenuDots su pagine primarie -->
+				<!-- Centro: dots su pagine primarie, freccia su pagine figlie -->
 				<div class="flex items-center justify-center">
 					{#if isChildPage}
 						<a
@@ -93,7 +98,7 @@
 					{/if}
 				</div>
 
-				<!-- Destra: bottone DONAtello AI sempre visibile -->
+				<!-- Destra: DONAtello AI (allineato con logo Papa Giovanni) -->
 				<div class="flex items-center justify-end">
 					<a
 						href="/chat-assistenza"
@@ -110,7 +115,6 @@
 						/>
 					</a>
 				</div>
-
 			</footer>
 		</div>
 	</section>
