@@ -1,6 +1,7 @@
 <script lang="ts">
  import { afterNavigate, goto } from '$app/navigation';
  import type { Snippet } from 'svelte';
+ import { menuOptions } from '$lib/data/menu-options';
  import type { MenuOption } from '$lib/data/menu-options';
  import GhostSlide from './GhostSlide.svelte';
  import CarouselArrows from './CarouselArrows.svelte';
@@ -34,6 +35,11 @@
  const DRAG_THRESHOLD = 0.28; // fraction of width to trigger navigation
  const VELOCITY_THRESHOLD = 0.45; // px/ms for flick navigation
  const EDGE_RESISTANCE = 0.12; // elasticity when no adjacent page exists
+
+// ─── Looping support ----------------------------------------------------
+const loopedNextOption = $derived<MenuOption | null>(
+ nextOption ?? menuOptions[0] ?? null
+);
 
  // ─── Resize observer: keep containerWidth in sync ────────────────────
  $effect(() => {
@@ -78,7 +84,7 @@
   // Apply elastic resistance when swiping past the edge
   if (delta > 0 && !prevOption) {
    offset = delta * EDGE_RESISTANCE;
-  } else if (delta < 0 && !nextOption) {
+  } else if (delta < 0 && !loopedNextOption) {
    offset = delta * EDGE_RESISTANCE;
   } else {
    offset = delta;
@@ -99,7 +105,7 @@
 
   if (shouldNavigate && delta > 0 && prevOption) {
    triggerNavigation('prev');
-  } else if (shouldNavigate && delta < 0 && nextOption) {
+  } else if (shouldNavigate && delta < 0 && loopedNextOption) {
    triggerNavigation('next');
   } else {
    // Snap back to centre with spring animation
@@ -130,7 +136,7 @@
 
   // Wait for the CSS transition to finish, then actually navigate
   setTimeout(() => {
-   const option = direction === 'prev' ? prevOption : nextOption;
+   const option = direction === 'prev' ? prevOption : loopedNextOption;
    if (option) goto(`/opzioni-menu/${option.slug}`);
   }, 280);
  }
@@ -168,9 +174,9 @@
   They live OUTSIDE the clip container and the moving track.
   Result: they never translate during swipe.
  -->
- <CarouselArrows
+  <CarouselArrows
   {prevOption}
-  {nextOption}
+  nextOption={loopedNextOption}
   onPrev={() => triggerNavigation('prev')}
   onNext={() => triggerNavigation('next')}
   disabled={isAnimating}
@@ -210,8 +216,8 @@
 
    <!-- ③ Ghost Next (off-screen right) -->
    <div class="h-full flex-none" style="width: 33.333%">
-    {#if nextOption}
-     <GhostSlide option={nextOption} />
+    {#if loopedNextOption}
+     <GhostSlide option={loopedNextOption} />
     {/if}
    </div>
   </div>
