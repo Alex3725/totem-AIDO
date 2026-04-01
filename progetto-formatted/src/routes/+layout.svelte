@@ -93,7 +93,7 @@
     <!-- Sinistra: logo Marconi -->
     <div class="flex items-center justify-start">
      <img
-      src="/img/logo_marconi_nero.png"
+         src="/img/logo_marconi_nero.png"
       alt="Logo Marconi"
       class="h-[min(7.8cqh,4.3rem)] max-w-[15.5cqw] w-auto object-contain"
      />
