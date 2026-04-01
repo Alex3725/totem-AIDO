@@ -1,287 +1,980 @@
 <!DOCTYPE html>
 <html lang="it">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Sedi AIDO - Trova la tua sede</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;overflow:hidden;background:#f5f5f5;touch-action:manipulation}
-#header{background:#c0392b;color:#fff;padding:14px 20px;display:flex;align-items:center;gap:12px;flex-shrink:0}
-#header h1{font-size:20px;font-weight:600}
-#header span{font-size:12px;opacity:.8}
-#controls{background:#fff;padding:10px 14px;display:flex;gap:10px;align-items:center;border-bottom:1px solid #e0e0e0;flex-shrink:0}
-#search-box{flex:1;display:flex;align-items:center;background:#f7f7f7;border:1.5px solid #ddd;border-radius:8px;padding:0 10px;gap:6px;cursor:pointer;min-height:42px;transition:border-color .2s}
-#search-box:hover{border-color:#c0392b}
-#search-display{flex:1;font-size:15px;color:#222;min-height:24px;line-height:24px}
-#search-display.placeholder{color:#aaa}
-#search-clear{width:20px;height:20px;background:#ccc;border-radius:50%;display:none;align-items:center;justify-content:center;color:#fff;font-size:13px;cursor:pointer;flex-shrink:0}
-#search-clear.visible{display:flex}
-#count{font-size:13px;color:#666;white-space:nowrap}
-#container{display:flex;height:calc(100vh - 116px)}
-#map{flex:1;cursor:grab}
-#map:active{cursor:grabbing}
-#sidebar{width:300px;background:#fff;border-left:1px solid #e0e0e0;display:flex;flex-direction:column;overflow:hidden}
-#list{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
-.item{padding:14px 16px;border-bottom:1px solid #f0f0f0;cursor:pointer;transition:background .1s;user-select:none}
-.item:active{background:#fdecea}
-.item.active{background:#fff0f0;border-left:4px solid #c0392b;padding-left:12px}
-.item h3{font-size:14px;font-weight:600;color:#222;margin-bottom:3px}
-.item p{font-size:12px;color:#777;line-height:1.5}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Sedi AIDO - Trova la tua sede</title>
+  <style>
+    @import url("https://unpkg.com/leaflet@1.9.4/dist/leaflet.css");
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      -webkit-tap-highlight-color: transparent
+    }
 
-/* TASTIERA DIGITALE */
-#kb-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9000;display:none;align-items:flex-end}
-#kb-overlay.open{display:flex}
-#kb-panel{width:100%;background:#d1d5db;padding:8px 4px 12px;border-radius:16px 16px 0 0;user-select:none}
-#kb-header{display:flex;align-items:center;padding:0 8px 8px;gap:8px}
-#kb-input-display{flex:1;background:#fff;border-radius:8px;padding:10px 14px;font-size:18px;min-height:44px;color:#222;letter-spacing:.5px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;direction:ltr}
-#kb-input-display .cursor{display:inline-block;width:2px;height:20px;background:#c0392b;vertical-align:middle;animation:blink .8s infinite}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
-#kb-cancel{background:#fff;color:#c0392b;border:none;border-radius:8px;padding:8px 14px;font-size:14px;font-weight:600;cursor:pointer;flex-shrink:0}
-#kb-cancel:active{background:#fdecea}
-#kb-rows{display:flex;flex-direction:column;gap:5px}
-.kb-row{display:flex;gap:5px;justify-content:center}
-.kb-key{background:#fff;border:none;border-radius:8px;font-size:17px;font-weight:500;color:#222;height:48px;min-width:32px;flex:1;max-width:52px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 0 #9ca3af;transition:background .08s,transform .08s;-webkit-tap-highlight-color:transparent}
-.kb-key:active{background:#e5e7eb;transform:scale(.95)}
-.kb-key.dark{background:#adb5c2;color:#111;font-size:15px}
-.kb-key.dark:active{background:#9aa0ab}
-.kb-key.space{max-width:none;flex:3}
-.kb-key.wide{max-width:46px;flex:1}
-.kb-key.search-btn{background:#c0392b;color:#fff;font-size:14px;font-weight:700;max-width:none;flex:1.5}
-.kb-key.search-btn:active{background:#922b21}
-.kb-key.backspace{max-width:110px;flex:1.6;}
+    html,
+    body {
+      height: 100%;
+      overflow: hidden;
+      background: #f5f5f5;
+      touch-action: manipulation
+    }
 
-@media(max-width:620px){
-  #container{flex-direction:column;height:calc(100vh - 116px)}
-  #sidebar{width:100%;height:220px;border-left:none;border-top:1px solid #e0e0e0}
-  #map{flex:1}
-  .kb-key{height:44px;font-size:16px}
-}
-@media(min-width:900px){
-  #kb-panel{max-width:700px;margin:0 auto;border-radius:16px 16px 0 0}
-  .kb-key{height:52px;font-size:18px}
-}
-</style>
+    #header {
+      background: #c0392b;
+      color: #fff;
+      padding: 5px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0
+    }
+
+    #header h1 {
+      font-size: 20px;
+      font-weight: 600
+    }
+
+    #header span {
+      font-size: 12px;
+      opacity: .8
+    }
+
+    #controls {
+      background: #fff;
+      padding: 10px 14px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      border-bottom: 1px solid #e0e0e0;
+      flex-shrink: 0
+    }
+
+    #search-box {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      background: #f7f7f7;
+      border: 1.5px solid #ddd;
+      border-radius: 8px;
+      padding: 0 10px;
+      gap: 6px;
+      cursor: pointer;
+      min-height: 42px;
+      transition: border-color .2s
+    }
+
+    #search-box:hover {
+      border-color: #c0392b
+    }
+
+    #search-display {
+      flex: 1;
+      font-size: 15px;
+      color: #222;
+      min-height: 24px;
+      line-height: 24px
+    }
+
+    #search-display.placeholder {
+      color: #aaa
+    }
+
+    #search-clear {
+      width: 20px;
+      height: 20px;
+      background: #ccc;
+      border-radius: 50%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 13px;
+      cursor: pointer;
+      flex-shrink: 0
+    }
+
+    #search-clear.visible {
+      display: flex
+    }
+
+    #count {
+      font-size: 13px;
+      color: #666;
+      white-space: nowrap
+    }
+
+    #container {
+      display: flex;
+      height: calc(100vh - 116px)
+    }
+
+    #map {
+      flex: 1;
+      cursor: grab;
+      position: relative;
+    }
+
+    .leaflet-interactive.foreign-land-fog {
+      filter: blur(1.5px);
+      pointer-events: none;
+    }
+
+    .leaflet-interactive.foreign-land-blur {
+      filter: blur(6px);
+      pointer-events: none;
+    }
+
+    .leaflet-interactive.foreign-land-drift {
+      filter: blur(12px);
+      pointer-events: none;
+    }
+
+    #map:active {
+      cursor: grabbing
+    }
+
+    #sidebar {
+      width: 300px;
+      background: #fff;
+      border-left: 1px solid #e0e0e0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden
+    }
+
+    #list {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch
+    }
+
+    .item {
+      padding: 14px 16px;
+      border-bottom: 1px solid #f0f0f0;
+      cursor: pointer;
+      transition: background .1s;
+      user-select: none
+    }
+
+    .item:active {
+      background: #fdecea
+    }
+
+    .item.active {
+      background: #fff0f0;
+      border-left: 4px solid #c0392b;
+      padding-left: 12px
+    }
+
+    .item h3 {
+      font-size: 14px;
+      font-weight: 600;
+      color: #222;
+      margin-bottom: 3px
+    }
+
+    .item p {
+      font-size: 12px;
+      color: #777;
+      line-height: 1.5
+    }
+
+    #kb-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .45);
+      z-index: 9000;
+      display: none;
+      align-items: flex-end
+    }
+
+    #kb-overlay.open {
+      display: flex
+    }
+
+    #kb-panel {
+      width: 100%;
+      background: #d1d5db;
+      padding: 8px 4px 12px;
+      border-radius: 16px 16px 0 0;
+      user-select: none
+    }
+
+    #kb-header {
+      display: flex;
+      align-items: center;
+      padding: 0 8px 8px;
+      gap: 8px
+    }
+
+    #kb-input-display {
+      flex: 1;
+      background: #fff;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 18px;
+      min-height: 44px;
+      color: #222;
+      letter-spacing: .5px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      direction: ltr
+    }
+
+    #kb-input-display .cursor {
+      display: inline-block;
+      width: 2px;
+      height: 20px;
+      background: #c0392b;
+      vertical-align: middle;
+      animation: blink .8s infinite
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: 0
+      }
+    }
+
+    #kb-cancel {
+      background: #fff;
+      color: #c0392b;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      flex-shrink: 0
+    }
+
+    #kb-cancel:active {
+      background: #fdecea
+    }
+
+    #kb-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 5px
+    }
+
+    .kb-row {
+      display: flex;
+      gap: 5px;
+      justify-content: center
+    }
+
+    .kb-key {
+      background: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 17px;
+      font-weight: 500;
+      color: #222;
+      height: 48px;
+      min-width: 32px;
+      flex: 1;
+      max-width: 52px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 1px 0 #9ca3af;
+      transition: background .08s, transform .08s;
+      -webkit-tap-highlight-color: transparent
+    }
+
+    .kb-key:active {
+      background: #e5e7eb;
+      transform: scale(.95)
+    }
+
+    .kb-key.dark {
+      background: #adb5c2;
+      color: #111;
+      font-size: 15px
+    }
+
+    .kb-key.dark:active {
+      background: #9aa0ab
+    }
+
+    .kb-key.space {
+      max-width: none;
+      flex: 3
+    }
+
+    .kb-key.wide {
+      max-width: 46px;
+      flex: 1
+    }
+
+    .kb-key.search-btn {
+      background: #c0392b;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      max-width: none;
+      flex: 1.5
+    }
+
+    .kb-key.search-btn:active {
+      background: #922b21
+    }
+
+    .kb-key.backspace {
+      max-width: 110px;
+      flex: 1.6;
+    }
+
+    @media(max-width:620px) {
+      #container {
+        flex-direction: column;
+        height: calc(100vh - 116px)
+      }
+
+      #sidebar {
+        width: 100%;
+        height: 220px;
+        border-left: none;
+        border-top: 1px solid #e0e0e0
+      }
+
+      #map {
+        flex: 1
+      }
+
+      .kb-key {
+        height: 44px;
+        font-size: 16px
+      }
+    }
+
+    @media(min-width:900px) {
+      #kb-panel {
+        max-width: 700px;
+        margin: 0 auto;
+        border-radius: 16px 16px 0 0
+      }
+
+      .kb-key {
+        height: 52px;
+        font-size: 18px
+      }
+    }
+
+    .marker-cluster {
+      background-clip: padding-box;
+    }
+
+    .marker-cluster div {
+      width: 36px;
+      height: 36px;
+      margin-left: -18px;
+      margin-top: -18px;
+      text-align: center;
+      border-radius: 50%;
+      background: #c0392b;
+      border: 3px solid white;
+      box-shadow: 0 2px 8px rgba(0,0,0,.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      color: white;
+      font-size: 12px;
+      line-height: 1;
+    }
+
+    .marker-cluster span {
+      display: inline-block;
+    }
+
+    #empty-state {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      padding: 20px;
+      text-align: center;
+      background: #fff;
+    }
+
+    #empty-state.visible {
+      display: flex;
+    }
+
+    #empty-state img {
+      max-width: 200px;
+      margin-bottom: 20px;
+      opacity: 0.8;
+    }
+
+    #empty-state p {
+      font-size: 14px;
+      color: #999;
+      margin: 0;
+    }
+
+    .leaflet-control-attribution {
+      pointer-events: none;
+      opacity: 0;
+    }
+
+    .leaflet-control-attribution a {
+      pointer-events: none;
+      cursor: default;
+    }
+
+    #copyright-box {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      background: white;
+      padding: 4px 8px;
+      font-size: 11px;
+      color: #666;
+      z-index: 1000;
+      border-radius: 4px 0 0 0;
+      box-shadow: 0 1px 5px rgba(0,0,0,0.15);
+      pointer-events: none;
+      user-select: none;
+    }
+
+    @media(max-width:620px) {
+      #copyright-box {
+        font-size: 10px;
+        padding: 3px 6px;
+      }
+    }
+
+    
+  </style>
 </head>
+
 <body>
 
-<div id="header">
-  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-  <div><h1>Sedi AIDO</h1><span>Associazione Italiana Donatori Organi</span></div>
-</div>
-
-<div id="controls">
-  <div id="search-box" onclick="openKb()">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-    <div id="search-display" class="placeholder">Cerca città o sede...</div>
-    <div id="search-clear" onclick="clearSearch(event)">✕</div>
-  </div>
-  <span id="count">894 sedi</span>
-</div>
-
-<div id="container">
-  <div id="map"></div>
-  <div id="sidebar"><div id="list"></div></div>
-</div>
-
-<!-- TASTIERA OVERLAY -->
-<div id="kb-overlay" onclick="handleOverlayClick(event)">
-  <div id="kb-panel">
-    <div id="kb-header">
-      <div id="kb-input-display"><span id="kb-text"></span><span class="cursor"></span></div>
-      <button id="kb-cancel" onclick="closeKb()">Chiudi</button>
-    </div>
-    <div id="kb-rows">
-      <div class="kb-row" id="row1"></div>
-      <div class="kb-row" id="row2"></div>
-      <div class="kb-row" id="row3"></div>
-      <div class="kb-row" id="row4"></div>
+  <div id="header">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+      <path
+        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+    </svg>
+    <div>
+      <h1>Sedi AIDO</h1><span>Associazione Italiana Donatori Organi</span>
     </div>
   </div>
-</div>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script>
-const SEDI = [{"t":"ABRUZZO","a":"VIA DEL MARE 1","c":"LANCIANO","z":"66034","la":42.2306455,"ln":14.3963181,"p":"","e":"","w":""},{"t":"ACQUANEGRA SUL CHIESE","a":"VIA CANNETI 79","c":"ACQUANEGRA SUL CHIESE","z":"46011","la":45.1624997,"ln":10.4324775,"p":"","e":"","w":""},{"t":"ACQUI TERME","a":"VIA CASAGRANDE 9","c":"ACQUI TERME","z":"15011","la":44.6733211,"ln":8.4656274,"p":"","e":"","w":""},{"t":"ADRO E TORBIATO","a":"VIA CAIROLI 29","c":"ADRO","z":"25030","la":45.6228185,"ln":9.9636922,"p":"","e":"","w":""},{"t":"AGNONE","a":"PIAZZA DANTE ALIGHIERI 47","c":"AGNONE","z":"86081","la":41.8086744,"ln":14.3739286,"p":"","e":"","w":""},{"t":"AGRATE BRIANZA-CAVENAGO","a":"VIA LECCO 11 C/O POLO SANITARIO","c":"AGRATE BRIANZA","z":"20864","la":45.5735414,"ln":9.3546298,"p":"","e":"","w":""},{"t":"AGRIGENTO","a":"VIA BUONARROTI 8","c":"CANICATTI","z":"92024","la":37.3581785,"ln":13.8506902,"p":"","e":"","w":""},{"t":"AGRIGENTO","a":"VIA IMERA 217","c":"AGRIGENTO","z":"92100","la":37.3167436,"ln":13.5799384,"p":"","e":"","w":""},{"t":"AIRASCA","a":"VIA STAZIONE 41","c":"AIRASCA","z":"10060","la":44.9171106,"ln":7.4893491,"p":"","e":"","w":""},{"t":"AIRUNO","a":"VIALE LIBERTA' 1","c":"AIRUNO","z":"23881","la":45.75057,"ln":9.42904,"p":"","e":"","w":""},{"t":"ALBANO SANT'ALESSANDRO","a":"VIA ROMA 2/A","c":"ALBANO SANT ALESSANDRO","z":"24061","la":45.685557,"ln":9.768672,"p":"","e":"","w":""},{"t":"ALBINO","a":"VIA MAZZINI 61","c":"ALBINO","z":"24021","la":45.7592557,"ln":9.7951675,"p":"","e":"","w":""},{"t":"ALBIZZATE","a":"VIA XX SETTEMBRE 17","c":"ALBIZZATE","z":"21041","la":45.724553,"ln":8.8007889,"p":"","e":"","w":""},{"t":"ALESSANDRIA","a":"VIA RICCARDO WAGNER 38/D","c":"ALESSANDRIA","z":"15121","la":44.9055897,"ln":8.6163956,"p":"","e":"","w":""},{"t":"ALGUA - BRACCA - COSTA SERINA","a":"VIA CHIESA 3","c":"COSTA SERINA","z":"24010","la":45.8267265,"ln":9.7330278,"p":"","e":"","w":""},{"t":"ALME'","a":"VIA DON ABELE ISENI 2","c":"ALME","z":"24011","la":45.7388427,"ln":9.6161659,"p":"","e":"","w":""},{"t":"ALMENNO SAN BARTOLOMEO","a":"VIA PAPA GIOVANNI XXX 53","c":"ALMENNO SAN BARTOLOMEO","z":"24030","la":45.7355827,"ln":9.5822881,"p":"","e":"","w":""},{"t":"ALMENNO SAN SALVATORE","a":"LARGO LEONARDO DA VINCI 3","c":"ALMENNO SAN SALVATORE","z":"24031","la":45.7492769,"ln":9.600877,"p":"","e":"","w":""},{"t":"ALTA VAL MARECCHIA","a":"VIA LIA BLATTI - VIA CAPOLUOGO 184","c":"MAIOLO","z":"47862","la":43.8744732,"ln":12.3120304,"p":"","e":"","w":""},{"t":"ALTA VALLE CAMONICA","a":"PIAZZA VITTORIA 1","c":"VIONE","z":"25050","la":46.24872,"ln":10.447994,"p":"","e":"","w":""},{"t":"ALTAMURA","a":"VIA PRIVATA ASTOLLA C/O NICOLA SABATO 1","c":"ALTAMURA","z":"70022","la":40.8253924,"ln":16.5527874,"p":"","e":"","w":""},{"t":"ALTOPIANO VALSASSINESE","a":"PIAZZA SANTA MARIA NASCENTE 19","c":"CREMENO","z":"23814","la":45.9270091,"ln":9.4601926,"p":"","e":"","w":""},{"t":"ALZANO LOMBARDO","a":"VIA MAZZINI 17","c":"ALZANO LOMBARDO","z":"24022","la":45.733001,"ln":9.729971,"p":"","e":"","w":""},{"t":"ALZATE BRIANZA","a":"PIAZZA DEL FILATOIO 2","c":"ORSENIGO","z":"22030","la":45.7776788,"ln":9.1815543,"p":"","e":"","w":""},{"t":"AMBIVERE","a":"VIA CESARE BATTISTI 5","c":"AMBIVERE","z":"24030","la":45.7161102,"ln":9.5455722,"p":"","e":"","w":""},{"t":"AMELIA","a":"VIA CAVOUR 101","c":"AMELIA","z":"05022","la":42.55877,"ln":12.4133,"p":"","e":"","w":""},{"t":"ANCONA","a":"VIA DELLA REPUBBLICA 21","c":"CHIARAVALLE","z":"60033","la":43.5974796,"ln":13.3241696,"p":"","e":"","w":""},{"t":"ANDRANO","a":"VIA VITTORIO ALFIERI 4","c":"ANDRANO","z":"73032","la":39.9889374,"ln":18.3803386,"p":"","e":"","w":""},{"t":"ANDRIA","a":"VIA STEFANO IANNUZZI 7","c":"ANDRIA","z":"76123","la":41.2253219,"ln":16.2971278,"p":"","e":"","w":""},{"t":"ANGIARI","a":"VIA SANTI 165/A","c":"ANGIARI","z":"37050","la":45.216778,"ln":11.288828,"p":"","e":"","w":""},{"t":"ANNONE BRIANZA","a":"VIA MAGGIORE 11","c":"ANNONE DI BRIANZA","z":"23841","la":45.8038075,"ln":9.3319465,"p":"","e":"","w":""},{"t":"ANTEGNATE","a":"VIA IV NOVEMBRE ","c":"ANTEGNATE","z":"24051","la":45.4858965,"ln":9.7891122,"p":"","e":"","w":""},{"t":"ARCENE","a":"PIAZZA DEL DONATORE AVIS AIDO ADMO 2","c":"ARCENE","z":"24040","la":45.5734722,"ln":9.6132818,"p":"","e":"","w":""},{"t":"ARCEVIA","a":"CORSO MAZZINI 14","c":"ARCEVIA","z":"60011","la":43.499921,"ln":12.939746,"p":"","e":"","w":""},{"t":"ARCOLE","a":"VIA GARIBALDI 54","c":"ARCOLE","z":"37040","la":45.3566062,"ln":11.288634,"p":"","e":"","w":""},{"t":"ARCONATE","a":"VIA BEATA VERGINE 47","c":"ARCONATE","z":"20020","la":45.5384811,"ln":8.8480381,"p":"","e":"","w":""},{"t":"ARDENNO","a":"VIA CAVOUR 7","c":"ARDENNO","z":"23011","la":46.1700698,"ln":9.6507395,"p":"","e":"","w":""},{"t":"AREA BIELLESE","a":"VIA TRENTO 8","c":"COSSATO","z":"13836","la":45.5702781,"ln":8.1774961,"p":"","e":"","w":""},{"t":"AREZZO","a":"VIA GIUSEPPE MAZZINI 41","c":"CASTIGLION FIORENTINO","z":"52043","la":43.3442119,"ln":11.9171218,"p":"","e":"","w":""},{"t":"ARGENTA","a":"VIA NAZIONALE PONENTE 4/A","c":"ARGENTA","z":"44011","la":44.6128924,"ln":11.8349565,"p":"","e":"","w":""},{"t":"ARIANO POLESINE","a":"VIA VERDI 4","c":"ARIANO POLESINE","z":"45012","la":44.9446756,"ln":12.1214453,"p":"","e":"","w":""},{"t":"ARLUNO","a":"VIA MARCONI 50","c":"ARLUNO","z":"20010","la":45.5063604,"ln":8.9426525,"p":"","e":"","w":""},{"t":"ARONA","a":"VIA SAN CARLO 32","c":"ARONA","z":"28041","la":45.7616476,"ln":8.5585772,"p":"","e":"","w":""},{"t":"ARTOGNE","a":"VIA TRENTO 7","c":"ARTOGNE","z":"25040","la":45.8524598,"ln":10.1671662,"p":"","e":"","w":""},{"t":"ARZIGNANO","a":"CORSO MAZZINI 38/A","c":"ARZIGNANO","z":"36071","la":45.5205136,"ln":11.3343592,"p":"","e":"","w":""},{"t":"ASCOLI PICENO","a":"VIA FILENI 1","c":"S.BENEDETTO DEL TRONTO","z":"63074","la":42.949614,"ln":13.8772322,"p":"","e":"","w":""},{"t":"ASCOLI PICENO","a":"VIA DEI CAPPUCCINI 26","c":"ASCOLI PICENO","z":"63100","la":42.8587794,"ln":13.5688451,"p":"","e":"","w":""},{"t":"ASOLA E CASALMORANO","a":"VIA TURBINI 3","c":"ASOLA","z":"46041","la":45.2207401,"ln":10.4132924,"p":"","e":"","w":""},{"t":"ASSEMINI","a":"VIA SARDEGNA 47","c":"ASSEMINI","z":"09032","la":39.2887994,"ln":9.0109824,"p":"","e":"","w":""},{"t":"ASSISI","a":"PIAZZA MARTIN LUTER KING (SALA EX LAVATOIO) SNC","c":"ASSISI","z":"06081","la":43.0581274,"ln":12.5766826,"p":"","e":"","w":""},{"t":"ASTI","a":"VIA A. ROBINO  131","c":"CANELLI","z":"14053","la":44.7222971,"ln":8.2945884,"p":"","e":"","w":""},{"t":"AUGUSTA","a":"VIALE ITALIA ","c":"AUGUSTA","z":"96011","la":37.2462668,"ln":15.2197684,"p":"","e":"","w":""},{"t":"AVELLINO","a":"VIA PADRE ROMUALDO FORMATO SNC","c":"AVELLINO","z":"83100","la":40.918915,"ln":14.7841729,"p":"","e":"","w":""},{"t":"AVERARA","a":"PIAZZA MOLINI ","c":"AVERARA","z":"24010","la":45.9876368,"ln":9.629126,"p":"","e":"","w":""},{"t":"AVERSA","a":"VIA ALFONSO I? D'ARAGONA 28","c":"AVERSA","z":"81031","la":40.9795431,"ln":14.2062215,"p":"","e":"","w":""},{"t":"AVEZZANO","a":"VIA UGO LA MALFA 64","c":"AVEZZANO","z":"67051","la":42.0453993,"ln":13.4307659,"p":"","e":"","w":""},{"t":"AVOLA","a":"VIA ALFIERI 8","c":"AVOLA","z":"96012","la":36.9065293,"ln":15.1368003,"p":"","e":"","w":""},{"t":"AZZANO DECIMO","a":"VIA MORES DI SOTTO 74","c":"AZZANO DECIMO","z":"33082","la":45.8822447,"ln":12.7101203,"p":"","e":"","w":""},{"t":"AZZANO SAN PAOLO","a":"VIA PAPA GIOVANNI XIII 15/A","c":"AZZANO SAN PAOLO","z":"24052","la":45.6579963,"ln":9.6707044,"p":"","e":"","w":""},{"t":"AZZONICA - SORISOLE","a":"VIA DEGLI ASSONICA 30","c":"SORISOLE","z":"24010","la":45.7420649,"ln":9.649744,"p":"","e":"","w":""},{"t":"BADIA POLESINE","a":"VIA FRATELLI ROSSELLI 83","c":"BADIA POLESINE","z":"45021","la":45.1004478,"ln":11.4873939,"p":"","e":"","w":""},{"t":"BAGNATICA","a":"VIA GAVAZZENI BAGNATICA ","c":"BAGNATICA","z":"24060","la":45.654982,"ln":9.746733,"p":"","e":"","w":""},{"t":"BAGNOLO BARGE E VALLE PO","a":"CORSO VITTORIO EMANUELE III 32","c":"BAGNOLO PIEMONTE","z":"12031","la":44.7621229,"ln":7.3158483,"p":"","e":"","w":""},{"t":"BAGNOLO DI PO ","a":"VIA DEL DONATORE 35","c":"BAGNOLO DI PO","z":"45022","la":45.0168663,"ln":11.5018033,"p":"","e":"","w":""},{"t":"BALLABIO","a":"VIA UGO BARTESAGHI ","c":"BALLABIO","z":"23811","la":45.9008558,"ln":9.4223082,"p":"","e":"","w":""},{"t":"BARDOLINO","a":"PIAZZA MATTEOTTI 1","c":"BARDOLINO","z":"37011","la":45.5476902,"ln":10.7212111,"p":"","e":"","w":""},{"t":"BARI","a":"C/O OSPEDALE CONSORZ. POLICL. VOLONT. PIAZZA GIULIO CESARE 1","c":"BARI","z":"70124","la":41.1120624,"ln":16.8618499,"p":"","e":"","w":""},{"t":"BARIANO","a":"PIAZZA DON L. PAGANESSI 4","c":"BARIANO","z":"24050","la":45.511729,"ln":9.705118,"p":"","e":"","w":""},{"t":"BARLETTA","a":"VIA POZZO SANT'AGOSTINO (EX OSPEDALE) SNC","c":"BARLETTA","z":"76121","la":41.3193494,"ln":16.275497,"p":"","e":"","w":""},{"t":"BARLETTA-ANDRIA-TRANI (BAT)","a":"VIA POZZO SANT'AGOSTINO (EX OSPEDALE) SNC","c":"BARLETTA","z":"76121","la":41.3193494,"ln":16.275497,"p":"","e":"","w":""},{"t":"BARZANA","a":"PIAZZA AZZURRI CAMPIONI DEL MONDO 7","c":"BARZANA","z":"24030","la":45.7340622,"ln":9.5697333,"p":"","e":"","w":""},{"t":"BARZANO'","a":"VIA RISORGIMENTO 33","c":"BARZANO","z":"23891","la":45.7431836,"ln":9.3165085,"p":"","e":"","w":""},{"t":"BASILICATA","a":"VIA CARMINE 46","c":"VALSINNI","z":"75029","la":40.173113,"ln":16.4443899,"p":"","e":"","w":""},{"t":"BASSA ROMAGNA","a":"CORSO MATTEOTTI 3","c":"LUGO","z":"48022","la":44.4197349,"ln":11.9126005,"p":"","e":"","w":""},{"t":"BASSA VAL SUGANA E TESINO","a":"PIAZZA DE GASPERI CASA DELLA COMUNITA' 3","c":"BORGO VAL SUGANA","z":"38051","la":46.0532177,"ln":11.4567464,"p":"","e":"","w":""},{"t":"BASTIA UMBRA","a":"VIA DELL'ARCO 55","c":"BASTIA UMBRA","z":"06083","la":43.0677896,"ln":12.5486904,"p":"","e":"","w":""},{"t":"BELGIOIOSO","a":"VIA GARIBALDI 64 PRESSO PALAZZO COMUNALE ","c":"BELGIOIOSO","z":"27010","la":45.1596663,"ln":9.313989,"p":"","e":"","w":""},{"t":"BELLANO","a":"VIA LORETI 9","c":"BELLANO","z":"23822","la":46.0428599,"ln":9.3040114,"p":"","e":"","w":""},{"t":"BELLARIA-IGEA MARINA","a":"VIA LARA MAGNANI VIA FABIO FILZI 2","c":"BELLARIA-IGEA MARINA","z":"47814","la":44.128427,"ln":12.470882,"p":"","e":"","w":""},{"t":"BELLINZAGO LOMBARDO","a":"VIA MALENZA 6","c":"BELLINZAGO LOMBARDO","z":"20060","la":45.540816,"ln":9.4471926,"p":"","e":"","w":""},{"t":"BELLINZAGO NOVARESE","a":"VIA RIMEMBRANZA 1","c":"BELLINZAGO NOVARESE","z":"28043","la":45.5679952,"ln":8.6421975,"p":"","e":"","w":""},{"t":"BELLUNO","a":"VIA DEL PIAVE 5","c":"BELLUNO","z":"32100","la":46.135907,"ln":12.218943,"p":"","e":"","w":""},{"t":"BERBENNO","a":"VIA VITTORIO EMANUELE ","c":"BERBENNO","z":"24030","la":45.81303,"ln":9.56893,"p":"","e":"","w":""},{"t":"BERGAMO","a":"Via Borgo Palazzo 90","c":"BERGAMO","z":"24125","la":45.6955024,"ln":9.6866638,"p":"","e":"","w":""},{"t":"BESANA BRIANZA ","a":"VIA A. MANZONI 21","c":"BESANA IN BRIANZA","z":"20842","la":45.701346,"ln":9.281995,"p":"","e":"","w":""},{"t":"BETTOLA","a":"VIALE VITTORIA 10","c":"BETTOLA","z":"29021","la":44.7776335,"ln":9.6076753,"p":"","e":"","w":""},{"t":"BIASSONO ","a":"VIA CESANA E VILLA 34","c":"BIASSONO","z":"20853","la":45.6286056,"ln":9.274437,"p":"","e":"","w":""},{"t":"BIBIONE","a":"VIA MAYA 92","c":"BIBIONE","z":"30028","la":45.6468468,"ln":13.054666,"p":"","e":"","w":""},{"t":"BIELLA","a":"VIA TORINO 39","c":"BIELLA","z":"13900","la":45.5591412,"ln":8.0608425,"p":"","e":"","w":""},{"t":"BISCEGLIE","a":"C/O ENTE ECC. \"SAN MICHELE ARCANGELO\" VIA M. TERLIZZI 12","c":"BISCEGLIE","z":"76011","la":41.2337697,"ln":16.5069331,"p":"","e":"","w":""},{"t":"BOARA PISANI","a":"PIAZZA ATHESIA 4/2","c":"BOARA PISANI","z":"35040","la":45.1074084,"ln":11.7838216,"p":"","e":"","w":""},{"t":"BOARA POLESINE","a":"VIA CURTATONE 87","c":"BOARA POLESINE","z":"45100","la":45.1055346,"ln":11.7905894,"p":"","e":"","w":""},{"t":"BOFFALORA SOPRA TICINO","a":"VIA CALDERARI 17","c":"BOFFALORA SOPRA TICINO","z":"20010","la":45.4663623,"ln":8.8324763,"p":"","e":"","w":""},{"t":"BOLGARE","a":"VIA DANTE 24","c":"BOLGARE","z":"24060","la":45.6338787,"ln":9.8173081,"p":"","e":"","w":""},{"t":"BOLOGNA","a":"VIA A. TIARINI 21/2?","c":"BOLOGNA","z":"40129","la":44.5086074,"ln":11.3437824,"p":"","e":"","w":""},{"t":"BOLZANO","a":"PIAZZA GRIES 18","c":"BOLZANO","z":"39100","la":46.5039169,"ln":11.3340142,"p":"","e":"","w":""},{"t":"BOLZANO VICENTINO","a":"VIA ROMA 15","c":"BOLZANO VICENTINO","z":"36040","la":45.6004699,"ln":11.6219625,"p":"","e":"","w":""},{"t":"BONATE SOPRA","a":"VIA SAN FRANCESCO D'ASSISI 9","c":"BONATE SOPRA","z":"24040","la":45.6847999,"ln":9.5586709,"p":"","e":"","w":""},{"t":"BORGHETTO LODIGIANO","a":"PIAZZA CARLO ALBERTO DALLA CHIESA 1","c":"BORGHETTO LODIGIANO","z":"26812","la":45.2132839,"ln":9.4993452,"p":"","e":"","w":""},{"t":"BORGO VIRGILIO","a":"VIA COSTA 2 - FRAZ. CAPPELLETTA","c":"BORGO VIRGILIO","z":"46030","la":45.1054996,"ln":10.7824418,"p":"","e":"","w":""},{"t":"BORGOLAVEZZARO","a":"VIA CAVOUR 10","c":"BORGOLAVEZZARO","z":"28071","la":45.317819,"ln":8.6996939,"p":"","e":"","w":""},{"t":"BORGOSATOLLO","a":"VIA ROMA 58","c":"BORGOSATOLLO","z":"25010","la":45.4765177,"ln":10.2379089,"p":"","e":"","w":""},{"t":"BORMIO","a":"C. BERNI 3","c":"BORMIO","z":"23032","la":46.468025,"ln":10.3682168,"p":"","e":"","w":""},{"t":"BOSSICO","a":"VIA A. DE GASPERI 1","c":"BOSSICO","z":"24060","la":45.8282373,"ln":10.0452957,"p":"","e":"","w":""},{"t":"BOTTA DI SEDRINA","a":"VIA PIAZZA 30","c":"SERINA","z":"24010","la":42.01668,"ln":13.283552,"p":"","e":"","w":""},{"t":"BOTTANUCO","a":"VIA ROMA 1","c":"BOTTANUCO","z":"24040","la":45.6413659,"ln":9.5027194,"p":"","e":"","w":""},{"t":"BOTTICINO","a":"VIA CAVE 74","c":"BOTTICINO","z":"25080","la":45.5464462,"ln":10.32031,"p":"","e":"","w":""},{"t":"BOZZOLO","a":"VIA MATTEOTTI 7","c":"BOZZOLO","z":"46012","la":45.109317,"ln":10.4807365,"p":"","e":"","w":""},{"t":"BRA","a":"VIA PRINCIPI DI PIEMONTE  15","c":"BRA","z":"12042","la":44.6959893,"ln":7.8525561,"p":"","e":"","w":""},{"t":"BREMBATE","a":"PIAZZETTA DEL DONATORE 7","c":"BREMBATE","z":"24041","la":45.604818,"ln":9.555462,"p":"","e":"","w":""},{"t":"BREMBATE DI SOPRA","a":"VIA XXV APRILE 18","c":"BREMBATE DI SOPRA","z":"24030","la":45.7197493,"ln":9.5816698,"p":"","e":"","w":""},{"t":"BREMBIO","a":"VIA GRAMSCI 29","c":"BREMBIO","z":"26822","la":45.2142906,"ln":9.5719928,"p":"","e":"","w":""},{"t":"BRENDOLA","a":"PIAZZA DEL DONATORE SNC","c":"BRENDOLA","z":"36040","la":45.4710551,"ln":11.445783,"p":"","e":"","w":""},{"t":"BRESCIA","a":"Via Monte Cengio 20","c":"BRESCIA","z":"25128","la":45.5536588,"ln":10.2133756,"p":"","e":"","w":""},{"t":"BRESSANONE","a":"VICOLO MARCELLO 5","c":"BRESSANONE","z":"39042","la":46.7177048,"ln":11.6572436,"p":"","e":"","w":""},{"t":"BRESSO","a":"VIA CAVOUR 6","c":"BRESSO","z":"20091","la":45.5391048,"ln":9.1903928,"p":"","e":"","w":""},{"t":"BRIATICO","a":"CORSO R. MARGHERITA 173","c":"BRIATICO","z":"89817","la":38.7242839,"ln":16.0286364,"p":"","e":"","w":""},{"t":"BRINDISI","a":"PIAZZA DI SUMMA EX OSPEDALE SNC","c":"BRINDISI","z":"72100","la":40.6360999,"ln":17.9329281,"p":"","e":"","w":""},{"t":"BRISIGHELLA","a":"VIA FRATELLI CARDINALI CICOGNANI 76","c":"BRISIGHELLA","z":"48013","la":44.2210898,"ln":11.7643481,"p":"","e":"","w":""},{"t":"BRIVIO","a":"VIA VITTORIO EMANUELE II 27","c":"BRIVIO","z":"23883","la":45.7422073,"ln":9.4471076,"p":"","e":"","w":""},{"t":"BRUGHERIO","a":"VIA OBERDAN 83","c":"BRUGHERIO","z":"20861","la":45.5500594,"ln":9.3079894,"p":"","e":"","w":""},{"t":"BRUSAPORTO","a":"VIA DAMIANO CHIESA 2","c":"BRUSAPORTO","z":"24060","la":45.6704995,"ln":9.7607212,"p":"","e":"","w":""},{"t":"BUDRIO","a":"VIA MARCONI 2","c":"BUDRIO","z":"40054","la":44.5373761,"ln":11.5363087,"p":"","e":"","w":""},{"t":"BUSSOLENGO","a":"VIA SAN VALENTINO 36","c":"BUSSOLENGO","z":"37012","la":45.4720264,"ln":10.8504042,"p":"","e":"","w":""},{"t":"BUSTO ARSIZIO","a":"VIA BELLINI 7","c":"BUSTO ARSIZIO","z":"21052","la":45.6153182,"ln":8.8477382,"p":"","e":"","w":""},{"t":"BUTTAPIETRA","a":"LARGO DEGLI ALPINI 2","c":"BUTTAPIETRA","z":"37060","la":45.343385,"ln":11.004182,"p":"","e":"","w":""},{"t":"CACCURI","a":"VIA CAMPO ","c":"CACCURI","z":"88833","la":39.2274343,"ln":16.78162,"p":"","e":"","w":""},{"t":"CADEO","a":"C/O MARES VIA VENEZIA - FRAZ. ROVELETO 11","c":"CADEO","z":"29010","la":44.9642728,"ln":9.8452014,"p":"","e":"","w":""},{"t":"CAERANO DI SAN MARCO","a":"VIA GOBBETTI 16","c":"CAERANO DI SAN MARCO","z":"31031","la":45.7879113,"ln":11.9977768,"p":"","e":"","w":""},{"t":"CAFASSE","a":"VIA VILLANOVA 1","c":"CAFASSE","z":"10070","la":45.2456171,"ln":7.5183306,"p":"","e":"","w":""},{"t":"CAGLIARI","a":"PIAZZA CHIESA SAN SEBASTIANO 3","c":"ELMAS","z":"09067","la":39.2685814,"ln":9.0493919,"p":"","e":"","w":""},{"t":"CAIRATE","a":"VIA DANTE ALIGHIERI 36","c":"CAIRATE","z":"21050","la":45.6883053,"ln":8.8728624,"p":"","e":"","w":""},{"t":"CALABRIA","a":"C/O AVIS CORSO GARIBALDI 585","c":"REGGIO CALABRIA","z":"89127","la":38.1027006,"ln":15.6375413,"p":"","e":"","w":""},{"t":"CALCI","a":"VIA ROMA 1","c":"CALCI","z":"56011","la":43.7262727,"ln":10.5138791,"p":"","e":"","w":""},{"t":"CALCINATO","a":"VIA PARCO DELLA RIMEMBRANZA  ","c":"CALCINATO","z":"25011","la":45.4584952,"ln":10.3956036,"p":"","e":"","w":""},{"t":"CALCIO","a":"VIA PAPA GIOVANNI XXIII 127","c":"CALCIO","z":"24054","la":45.5075481,"ln":9.8514886,"p":"","e":"","w":""},{"t":"CALOLZIOCORTE","a":"CORSO DANTE 18","c":"CALOLZIOCORTE","z":"23801","la":45.8022965,"ln":9.4302981,"p":"","e":"","w":""},{"t":"CALTANISSETTA","a":"VIA ROSSO DI SAN SECONDO 30","c":"CALTANISSETTA","z":"93100","la":37.4931664,"ln":14.0547908,"p":"","e":"","w":""},{"t":"CALTRANO","a":"PIAZZA DANTE 8","c":"CALTRANO","z":"36030","la":45.77045,"ln":11.4605,"p":"","e":"","w":""},{"t":"CALUSCO D'ADDA","a":"VIA DELL ASSUNTA 243","c":"CALUSCO D ADDA","z":"24033","la":45.6893689,"ln":9.472234,"p":"","e":"","w":""},{"t":"CAMBIAGO","a":"VIA V. VENETO 2","c":"CAMBIAGO","z":"20040","la":45.5731174,"ln":9.4233734,"p":"","e":"","w":""},{"t":"CAMERI","a":"VIA NOVARA 45","c":"CAMERI","z":"28062","la":45.4989964,"ln":8.6618947,"p":"","e":"","w":""},{"t":"CAMPAGNA LUPIA","a":"VIA G. DELEDDA 12","c":"CAMPAGNA LUPIA","z":"30010","la":45.3554903,"ln":12.0922991,"p":"","e":"","w":""},{"t":"CAMPANIA","a":"VIA G.G. D'AMORE 33","c":"PIEDIMONTE MATESE","z":"81016","la":41.3551177,"ln":14.3761113,"p":"","e":"","w":""},{"t":"CAMPOBASSO","a":"VIA M. VITULLI 6","c":"LARINO","z":"86035","la":41.8013564,"ln":14.9209721,"p":"","e":"","w":""},{"t":"CAMPOBASSO","a":"CONTRADA COLLE DELLE API 1","c":"CAMPOBASSO","z":"86100","la":41.588149,"ln":14.666083,"p":"","e":"","w":""},{"t":"CAMPOROSSO","a":"VIA VITTORIO EMANUELE 130","c":"CAMPOROSSO","z":"18033","la":43.8123064,"ln":7.6283929,"p":"","e":"","w":""},{"t":"CANARO","a":"VIA ROMA 82","c":"CANARO","z":"45034","la":44.935279,"ln":11.676331,"p":"","e":"","w":""},{"t":"CANELLI","a":"VIA A. ROBINO 131","c":"CANELLI","z":"14053","la":44.7222971,"ln":8.2945884,"p":"","e":"","w":""},{"t":"CANICATTI","a":"VIA A. RAMPI 11","c":"CANICATTI","z":"92024","la":37.3539675,"ln":13.8415936,"p":"","e":"","w":""},{"t":"CANONICA D'ADDA","a":"VIA TORINO 2","c":"CANONICA D ADDA","z":"24040","la":45.5742976,"ln":9.5415794,"p":"","e":"","w":""},{"t":"CANTELLO","a":"VIA COLLODI 7","c":"CANTELLO","z":"21050","la":45.8233884,"ln":8.8940733,"p":"","e":"","w":""},{"t":"CAORLE","a":"VIA DELL'ASTESE 2","c":"CAORLE","z":"30021","la":45.6010403,"ln":12.8819822,"p":"","e":"","w":""},{"t":"CAPO DI PONTE","a":"VIA COLOMBERA 13","c":"CAPO DI PONTE","z":"25044","la":46.0316983,"ln":10.3470632,"p":"","e":"","w":""},{"t":"CAPRANICA","a":"PIAZZA SAN FRANCESCO 1","c":"CAPRANICA","z":"01012","la":42.25681,"ln":12.178093,"p":"","e":"","w":""},{"t":"CAPRIATE SAN GERVASIO","a":"PIAZZA DELLA VITTORIA 13","c":"CAPRIATE SAN GERVASIO","z":"24042","la":45.6085137,"ln":9.5281291,"p":"","e":"","w":""},{"t":"CAPRINO BERGAMASCO","a":"PIAZZA GARIBALDI 6","c":"CAPRINO BERGAMASCO","z":"24030","la":45.746513,"ln":9.482373,"p":"","e":"","w":""},{"t":"CAPRINO VERONESE","a":"VIA GARDESANA 585","c":"CAPRINO VERONESE","z":"37013","la":45.6042072,"ln":10.7853465,"p":"","e":"","w":""},{"t":"CARATE BRIANZA","a":"VIA MILANO 3","c":"CARATE BRIANZA","z":"20841","la":45.6765522,"ln":9.2367432,"p":"","e":"","w":""},{"t":"CARAVAGGIO","a":"VIA BERNARDO DA CARAVAGGIO ","c":"CARAVAGGIO","z":"24043","la":45.5050243,"ln":9.6537855,"p":"","e":"","w":""},{"t":"CARBONERA","a":"VIA CAL DI BREDA-PEZZAN 7/8","c":"CARBONERA","z":"31030","la":45.6985798,"ln":12.2910501,"p":"","e":"","w":""},{"t":"CARNAGO-ROVATE","a":"VIA LIBERTA' 5","c":"CARNAGO","z":"21040","la":45.7230171,"ln":8.8351491,"p":"","e":"","w":""},{"t":"CAROBBIO DEGLI ANGELI","a":"PIAZZA LOCATELLI ","c":"CAROBBIO DEGLI ANGELI","z":"24060","la":45.6676854,"ln":9.834648,"p":"","e":"","w":""},{"t":"CARPANETO PIACENTINO","a":"VIA SAN CORRADO CONFALONIERI C/O FREGHIERI DORIANA 6","c":"CARPANETO PIACENTINO","z":"29013","la":44.9152997,"ln":9.7930703,"p":"","e":"","w":""},{"t":"CARPENEDOLO - ACQUAFREDDA","a":"PIAZZA MATTEOTTI 1","c":"CARPENEDOLO","z":"25013","la":45.3647811,"ln":10.4301354,"p":"","e":"","w":""},{"t":"CARPI","a":"VIA NUOVA PONENTE 22/B","c":"CARPI","z":"41012","la":44.7821498,"ln":10.8663729,"p":"","e":"","w":""},{"t":"CARPIGNANO SESIA","a":"PIAZZA DELLA LIBERTA' 4","c":"CARPIGNANO SESIA","z":"28064","la":45.5352012,"ln":8.4182622,"p":"","e":"","w":""},{"t":"CARUGATE","a":"VIA GARIBALDI - C/O AVIS 21","c":"CARUGATE","z":"20061","la":45.5564788,"ln":9.3415569,"p":"","e":"","w":""},{"t":"CARVICO","a":"VIA SANTA MARIA 7","c":"CARVICO","z":"24030","la":45.7041625,"ln":9.4795773,"p":"","e":"","w":""},{"t":"CASALBUTTANO","a":"PIAZZA LIBERTA'  18","c":"CASALBUTTANO ED UNITI","z":"26011","la":45.251173,"ln":9.96437,"p":"","e":"","w":""},{"t":"CASALE MONFERRATO","a":"STRADA VECCHIA POZZO S. EVASIO 1L","c":"CASALE MONFERRATO","z":"15033","la":45.1201324,"ln":8.4438352,"p":"","e":"","w":""},{"t":"CASALMAGGIORE","a":"VIA BIXIO 50","c":"CASALMAGGIORE","z":"26041","la":44.9860085,"ln":10.419717,"p":"","e":"","w":""},{"t":"CASALMORANO","a":"PIAZZA IV NOVEMBRE 9","c":"CASALMORANO","z":"26020","la":45.2869508,"ln":9.8977676,"p":"","e":"","w":""},{"t":"CASARANO","a":"VIA ROMA 26","c":"CASARANO","z":"73042","la":40.010026,"ln":18.1619164,"p":"","e":"","w":""},{"t":"CASATENOVO","a":"VIA CASTELBARCO 7","c":"CASATENOVO","z":"23880","la":45.69511,"ln":9.30809,"p":"","e":"","w":""},{"t":"CASAZZA","a":"VIA NAZIONALE 90","c":"CASAZZA","z":"24060","la":45.7513394,"ln":9.9092741,"p":"","e":"","w":""},{"t":"CASELLE TORINESE","a":"VIA MONACHE 20","c":"CASELLE TORINESE","z":"10072","la":45.1841732,"ln":7.6643473,"p":"","e":"","w":""},{"t":"CASENTINO","a":"VIA BERNI 41","c":"BIBBIENA","z":"52011","la":43.6953719,"ln":11.8181882,"p":"","e":"","w":""},{"t":"CASERTA","a":"VIA DEGLI OLEANDRI (ZONA 167) 2","c":"CASERTA","z":"81100","la":41.0699043,"ln":14.357103,"p":"","e":"","w":""},{"t":"CASIRATE D'ADDA","a":"VIA RINALDO PALADINI 4","c":"CASIRATE D ADDA","z":"24040","la":45.49361,"ln":9.5673683,"p":"","e":"","w":""},{"t":"CASNIGO","a":"PIAZZA SAN GIOVANNI BATTISTA 22","c":"CASNIGO","z":"24020","la":45.8171258,"ln":9.8657428,"p":"","e":"","w":""},{"t":"CASPERIA","a":"VIA GUGLIELMO MARCONI 12","c":"CASPERIA","z":"02041","la":42.3372368,"ln":12.6702596,"p":"","e":"","w":""},{"t":"CASSAGO BRIANZA","a":"VIA N. SAURO 19","c":"CASSAGO BRIANZA","z":"23893","la":45.7372517,"ln":9.2923969,"p":"","e":"","w":""},{"t":"CASSANO D'ADDA ","a":"PIAZZA GARIBALDI 62","c":"CASSANO D ADDA","z":"20062","la":45.52483,"ln":9.5219175,"p":"","e":"","w":""},{"t":"CASSIGLIO","a":"VIA ROMA N 10 ","c":"CASSIGLIO","z":"24010","la":45.9668538,"ln":9.6136211,"p":"","e":"","w":""},{"t":"CASSINA DE PECCHI","a":"VIA MAZZINI 26","c":"CASSINA DE  PECCHI","z":"20060","la":45.520303,"ln":9.3582788,"p":"","e":"","w":""},{"t":"CASTEGNATO ","a":"VIA MOLINO 32/B","c":"CASTEGNATO","z":"25045","la":45.5580585,"ln":10.108328,"p":"","e":"","w":""},{"t":"CASTEL D'ARIO","a":"VIA A. GRAMSCI 1","c":"CASTEL D'ARIO","z":"46033","la":45.1836999,"ln":10.9750055,"p":"","e":"","w":""},{"t":"CASTEL D'AZZANO","a":"VIA BARBARANI 12","c":"CASTEL D'AZZANO","z":"37060","la":45.3551681,"ln":10.9534472,"p":"","e":"","w":""},{"t":"CASTEL GOFFREDO","a":"VIA MONTEGRAPPA 68A","c":"CASTEL GOFFREDO","z":"46042","la":45.3009879,"ln":10.4727582,"p":"","e":"","w":""},{"t":"CASTEL ROZZONE","a":"PIAZZA CASTELLO 1","c":"CASTEL ROZZONE","z":"24040","la":45.5557779,"ln":9.6232786,"p":"","e":"","w":""},{"t":"CASTEL SAN PIETRO TERME","a":"VIA UGO FOSCOLO 39","c":"CASTEL SAN PIETRO TERME","z":"40024","la":44.3972903,"ln":11.5795305,"p":"","e":"","w":""},{"t":"CASTELBELFORTE","a":"VIA ROMA 29","c":"CASTELBELFORTE","z":"46032","la":45.2142508,"ln":10.8914026,"p":"","e":"","w":""},{"t":"CASTELCOVATI","a":"VIA EUROPA 16","c":"CASTELCOVATI","z":"25030","la":45.5038141,"ln":9.9482317,"p":"","e":"","w":""},{"t":"CASTELCUCCO","a":"VIA LATTERIA 1","c":"CASTELCUCCO","z":"31030","la":45.8342723,"ln":11.8862187,"p":"","e":"","w":""},{"t":"CASTELFIDARDO","a":"VIA MATTEOTTI 19","c":"CASTELFIDARDO","z":"60022","la":43.4632672,"ln":13.5498562,"p":"","e":"","w":""},{"t":"CASTELFRANCO EMILIA","a":"VIA DEI MILLE 62","c":"CASTELFRANCO EMILIA","z":"41013","la":44.5468354,"ln":11.0668078,"p":"","e":"","w":""},{"t":"CASTELGUGLIELMO","a":"VIA TORINO 186","c":"CASTELGUGLIELMO","z":"45020","la":45.0202904,"ln":11.5349645,"p":"","e":"","w":""},{"t":"CASTELLANZA","a":"VIA BERNOCCHI 10","c":"CASTELLANZA","z":"21053","la":45.6128309,"ln":8.8993121,"p":"","e":"","w":""},{"t":"CASTELLEONE","a":"PIAZZA TRIESTE 7","c":"CASTELLEONE","z":"26012","la":45.29596,"ln":9.76494,"p":"","e":"","w":""},{"t":"CASTELLEONE DI SUASA","a":"VIA ROMA 48/E","c":"CASTELLEONE DI SUASA","z":"60010","la":43.6082579,"ln":12.9819696,"p":"","e":"","w":""},{"t":"CASTELLETTO MONFERRATO","a":"VIA BUSINA' 1","c":"CASTELLETTO MONFERRATO","z":"15040","la":44.9798455,"ln":8.5653676,"p":"","e":"","w":""},{"t":"CASTELLI CALEPIO","a":"G. MARCONI 25","c":"CASTELLI CALEPIO","z":"24060","la":45.6400734,"ln":9.9052853,"p":"","e":"","w":""},{"t":"CASTELLO DI GODEGO","a":"VIA S. PIETRO 24/A","c":"CASTELLO DI GODEGO","z":"31030","la":45.6899485,"ln":11.8854183,"p":"","e":"","w":""},{"t":"CASTELNUOVO DEL GARDA","a":"VIA MILANO 5","c":"CASTELNUOVO DEL GARDA","z":"37014","la":45.4388963,"ln":10.7651163,"p":"","e":"","w":""},{"t":"CASTELVERDE","a":"VIA MONS. GARDINALI 9","c":"CASTELVERDE","z":"26022","la":45.1875418,"ln":9.9950132,"p":"","e":"","w":""},{"t":"CASTIGLIONE DEL LAGO","a":"VIA XXV APRILE 35","c":"CASTIGLIONE DEL LAGO","z":"06061","la":43.1259774,"ln":12.0490308,"p":"","e":"","w":""},{"t":"CASTIGLIONE DELLE STIVIERE","a":"VIA MULINI 20","c":"CASTIGLIONE DELLE STIVIERE","z":"46043","la":45.393293,"ln":10.490539,"p":"","e":"","w":""},{"t":"CASTIONE DELLA PRESOLANA","a":"VIA VITTORIO EMANUELE 30","c":"CASTIONE DELLA PRESOLANA","z":"24020","la":45.9078887,"ln":10.0355853,"p":"","e":"","w":""},{"t":"CASTREZZATO ","a":"VIA GUGLIELMO MARCONI ","c":"CASTREZZATO","z":"25030","la":45.5124982,"ln":9.9814501,"p":"","e":"","w":""},{"t":"CATANIA","a":"PIAZZA S. MARIA DI GESU'  5","c":"CATANIA","z":"95123","la":37.5117382,"ln":15.0784741,"p":"","e":"","w":""},{"t":"CAVAGNOLO","a":"VIA MONTECHIARO 10","c":"CAVAGNOLO","z":"10020","la":45.1485606,"ln":8.0425848,"p":"","e":"","w":""},{"t":"CAVALLERMAGGIORE","a":"VIA BONINO 1","c":"CAVALLERMAGGIORE","z":"12030","la":44.7067898,"ln":7.6877636,"p":"","e":"","w":""},{"t":"CAVASO DEL TOMBA","a":"VIA CALDOIE 1","c":"CAVASO DEL TOMA","z":"31034","la":45.864373,"ln":11.9260846,"p":"","e":"","w":""},{"t":"CAVRIANA","a":"GIARDINO SUP. VILLA MIRRA ","c":"CAVRIANA","z":"46040","la":45.351402,"ln":10.5994775,"p":"","e":"","w":""},{"t":"CAZZANO DI TRAMIGNA","a":"VIA PISOLO DI SOTTO 7","c":"CAZZANO DI TRAMIGNA","z":"37030","la":45.4685622,"ln":11.2159582,"p":"","e":"","w":""},{"t":"CECINA","a":"PIAZZA ALESSANDRINI 13","c":"CECINA","z":"57023","la":43.3117568,"ln":10.5287326,"p":"","e":"","w":""},{"t":"CEDEGOLO - GREVO","a":"PIAZZA ROMA 1","c":"CEDEGOLO","z":"25051","la":46.0770613,"ln":10.3488181,"p":"","e":"","w":""},{"t":"CEGGIA","a":"PIAZZETTA RONCHESE 23","c":"CEGGIA","z":"30022","la":45.6843935,"ln":12.6365329,"p":"","e":"","w":""},{"t":"CELADINA - BERGAMO","a":"VIA PIZZO SCAIS 1/B","c":"BERGAMO","z":"24125","la":45.6934077,"ln":9.7076933,"p":"","e":"","w":""},{"t":"CENATE SOTTO","a":"VIA MONS. BIAVA 14","c":"CENATE SOTTO","z":"24069","la":45.6986828,"ln":9.8254985,"p":"","e":"","w":""},{"t":"CENE","a":"PIAZZA ITALIA 14","c":"CENE","z":"24020","la":45.7794532,"ln":9.8256959,"p":"","e":"","w":""},{"t":"CENTRO VALSASSINA","a":"VIA MASCHERI 12","c":"CORTENOVA","z":"23813","la":45.9944345,"ln":9.390259,"p":"","e":"","w":""},{"t":"CERESARA","a":"VIA TRIFOGLIO 2","c":"CERESARA","z":"46040","la":45.2639017,"ln":10.5703864,"p":"","e":"","w":""},{"t":"CERIANO LAGHETTO","a":"VIA DANTE ALIGHIERI 15","c":"CERIANO LAGHETTO","z":"20816","la":45.6231361,"ln":9.1044146,"p":"","e":"","w":""},{"t":"CERIGNOLA","a":"VIA STRESA 3","c":"CERIGNOLA","z":"71042","la":41.2680548,"ln":15.9055753,"p":"","e":"","w":""},{"t":"CERNUSCO SUL NAVIGLIO","a":"PIAZZA MATTEOTTI 8","c":"CERNUSCO SUL NAVIGLIO","z":"20063","la":45.5247862,"ln":9.3301636,"p":"","e":"","w":""},{"t":"CESANO BOSCONE","a":"VIA DANTE 47","c":"CESANO BOSCONE","z":"20090","la":45.446912,"ln":9.0911874,"p":"","e":"","w":""},{"t":"CEVA","a":"VIA XX SETTEMBRE 9","c":"CEVA","z":"12073","la":44.3883201,"ln":8.0357152,"p":"","e":"","w":""},{"t":"CHIARAVALLE","a":"VIA REPUBBLICA 21","c":"CHIARAVALLE","z":"60033","la":43.5974796,"ln":13.3241696,"p":"","e":"","w":""},{"t":"CHIARI","a":"VIA G. B. ROTA 27/B","c":"CHIARI","z":"25032","la":45.5367464,"ln":9.9321721,"p":"","e":"","w":""},{"t":"CHIAVARI","a":"VIA COL. FRANCESCHI 42","c":"CHIAVARI","z":"16043","la":44.3241158,"ln":9.3209712,"p":"","e":"","w":""},{"t":"CHIETI","a":"VIA ORTONA 17","c":"CHIETI","z":"66100","la":42.3551551,"ln":14.1413422,"p":"","e":"","w":""},{"t":"CHIGNOLO D'ISOLA","a":"VIA IV NOVEMBRE 5","c":"CHIGNOLO D ISOLA","z":"24040","la":45.6669834,"ln":9.5269248,"p":"","e":"","w":""},{"t":"CHIONS","a":"PIAZZA DON DAVIDE- FRAZIONE BASEDO 5","c":"CHIONS","z":"33083","la":45.8425463,"ln":12.7450941,"p":"","e":"","w":""},{"t":"CHIUDUNO","a":"VIA DELL ASSUNTA 8","c":"CHIUDUNO","z":"24060","la":45.651612,"ln":9.85111,"p":"","e":"","w":""},{"t":"CINGOLI","a":"VIA  DELLA CARITA' 6","c":"CINGOLI","z":"62011","la":43.3755782,"ln":13.2134115,"p":"","e":"","w":""},{"t":"CINISELLO BALSAMO","a":"VIA CASATI 6","c":"CINISELLO BALSAMO","z":"20092","la":45.553536,"ln":9.2195681,"p":"","e":"","w":""},{"t":"CIRO' MARINA","a":"VIA CROTONE 20","c":"CIRO' MARINA","z":"88811","la":39.3646841,"ln":17.1302324,"p":"","e":"","w":""},{"t":"CISANO BERGAMASCO","a":"VIA A. MANZONI 5","c":"CISANO BERGAMASCO","z":"24034","la":45.7430506,"ln":9.4696639,"p":"","e":"","w":""},{"t":"CISLAGO","a":"VIA CESARE BATTISTI 825","c":"CISLAGO","z":"21040","la":45.660918,"ln":8.974518,"p":"","e":"","w":""},{"t":"CISTERNA DI LATINA","a":"CORSO DELLA REPUBBLICA 186","c":"CISTERNA DI LATINA","z":"04012","la":41.5915023,"ln":12.8278765,"p":"","e":"","w":""},{"t":"CITTA' DI CASTELLO","a":"VIA CAROLINA TORREGGIANI 8","c":"CITTA' DI CASTELLO","z":"06012","la":43.455718,"ln":12.2496759,"p":"","e":"","w":""},{"t":"CITTANOVA","a":"VIA TOSCANINI 6","c":"CITTANOVA","z":"89022","la":38.3593435,"ln":16.076668,"p":"","e":"","w":""},{"t":"CIVIDALE MANTOVANO","a":"VIA MATTEOTTI  80 - FRAZ. CIVIDALE MANTOVANO ","c":"RIVAROLO MANTOVANO","z":"46017","la":45.0657441,"ln":10.4924978,"p":"","e":"","w":""},{"t":"CIVIDATE AL PIANO","a":"VIA MARCONI 60 ","c":"CIVIDATE AL PIANO","z":"24050","la":45.5542616,"ln":9.8327399,"p":"","e":"","w":""},{"t":"CIVIDATE CAMUNO","a":"PIAZZA REPUBBLICA 1","c":"CIVIDATE CAMUNO","z":"25040","la":45.4789839,"ln":9.1972286,"p":"","e":"","w":""},{"t":"CIVIDINO QUINTANO ","a":"VIA CADORNA 40","c":"CASTELLI CALEPIO","z":"24060","la":45.6117233,"ln":9.8907763,"p":"","e":"","w":""},{"t":"CIVITANOVA MARCHE","a":"VIA B.BUOZZI 20","c":"CIVITANOVA MARCHE","z":"62012","la":43.3069127,"ln":13.7280692,"p":"","e":"","w":""},{"t":"COCCAGLIO","a":"VIA P. MARCOLINI C/O CASA DELLA SOLIDARIETA' 7","c":"COCCAGLIO","z":"25030","la":45.5663232,"ln":9.9728941,"p":"","e":"","w":""},{"t":"CODIGORO","a":"VIA PRAMPOLINI 5","c":"CODIGORO","z":"44021","la":44.8310041,"ln":12.105587,"p":"","e":"","w":""},{"t":"COLICO","a":"VIA G. MAZZINI 6/B","c":"COLICO","z":"23823","la":46.1360112,"ln":9.3705451,"p":"","e":"","w":""},{"t":"COLLE UMBERTO","a":"VIA GARIBALDI 2","c":"COLLE UMBERTO","z":"31014","la":45.9445811,"ln":12.3430613,"p":"","e":"","w":""},{"t":"COLLIO VAL TROMPIA","a":"VIA MANIVA 40","c":"COLLIO","z":"25060","la":45.8097509,"ln":10.366267,"p":"","e":"","w":""},{"t":"COLOGNA VENETA","a":"VIA CAVOUR 68","c":"COLOGNA VENETA","z":"37044","la":45.3113896,"ln":11.3851085,"p":"","e":"","w":""},{"t":"COLOGNO AL SERIO ","a":"VAI A. DE GASPERI 20","c":"COLOGNO AL SERIO","z":"24055","la":45.5833927,"ln":9.7113325,"p":"","e":"","w":""},{"t":"COLOGNO MONZESE","a":"VIA TURATI 1","c":"COLOGNO MONZESE","z":"20093","la":45.523522,"ln":9.277581,"p":"","e":"","w":""},{"t":"COLOGNOLA - BERGAMO","a":"VIA S. SISTO 9","c":"BERGAMO","z":"24126","la":45.6743711,"ln":9.6636907,"p":"","e":"","w":""},{"t":"COLOGNOLA AI COLLI","a":"VIA CALCINESE 25","c":"COLOGNOLA AI COLLI","z":"37030","la":45.4239272,"ln":11.1637443,"p":"","e":"","w":""},{"t":"COMEZZANO-CIZZAGO","a":"VIA MARCONI  4","c":"COMEZZANO-CIZZAGO","z":"25030","la":45.4730334,"ln":9.9480869,"p":"","e":"","w":""},{"t":"COMO","a":"Via Napoleona 60","c":"COMO","z":"22100","la":45.7910093,"ln":9.0895588,"p":"","e":"","w":""},{"t":"COMUN NUOVO","a":"VIA MARCONI ","c":"COMUN NUOVO","z":"24040","la":45.6192867,"ln":9.6447306,"p":"","e":"","w":""},{"t":"CONCADIRAME","a":"VIA BASSA 1","c":"CONCADIRAME","z":"45100","la":45.0955349,"ln":11.7419883,"p":"","e":"","w":""},{"t":"CONCAMARISE","a":"VIA CAPITELLO 39","c":"CONCAMARISE","z":"37050","la":45.207428,"ln":11.139649,"p":"","e":"","w":""},{"t":"CONCORDIA SAGITTARIA","a":"VIA ROMA 55","c":"CONCORDIA SAGITTARIA","z":"30023","la":45.755577,"ln":12.8462672,"p":"","e":"","w":""},{"t":"CONTIGLIANO","a":"VIA FONTE CERRO SUD 16/C","c":"CONTIGLIANO","z":"02043","la":42.3933209,"ln":12.784571,"p":"","e":"","w":""},{"t":"CORATO","a":"VIA LARGHETTO SAN BENEDETTO SNC","c":"CORATO","z":"70033","la":41.1536866,"ln":16.4117521,"p":"","e":"","w":""},{"t":"CORBETTA","a":"VIA ROMA 12","c":"CORBETTA","z":"20011","la":45.4685403,"ln":8.9191168,"p":"","e":"","w":""},{"t":"CORIGLIANO D'OTRANTO","a":"VIA SAN MARTINO 39","c":"CORIGLIANO","z":"73022","la":40.1622465,"ln":18.2556609,"p":"","e":"","w":""},{"t":"CORNUDA","a":"VIA G. PASCOLI 5/C","c":"CORNUDA","z":"31041","la":45.829345,"ln":12.0096242,"p":"","e":"","w":""},{"t":"CORSICO- TREZZANO SUL NAVIGLIO ","a":"VIA ELIO VITTORINI 14","c":"CORSICO","z":"20094","la":45.4281405,"ln":9.087771,"p":"","e":"","w":""},{"t":"CORTE FRANCA","a":"VIA DANTE ALIGHIERI 6","c":"CORTE FRANCA","z":"25040","la":45.6428795,"ln":9.9947407,"p":"","e":"","w":""},{"t":"CORTEMAGGIORE","a":"VIA LIBERTA' 6","c":"CORTEMAGGIORE","z":"29016","la":44.9960295,"ln":9.9293632,"p":"","e":"","w":""},{"t":"COSTA DI MEZZATE","a":"PIAZZA XXV APRILE 9","c":"COSTA DI MEZZATE","z":"24060","la":45.664685,"ln":9.7928967,"p":"","e":"","w":""},{"t":"COSTA DI ROVIGO","a":"VIA SCARDONA 7","c":"COSTA DI ROVIGO","z":"45023","la":45.0486287,"ln":11.6935159,"p":"","e":"","w":""},{"t":"COSTA MASNAGA","a":"VIA CAV. GIOVANNI MAZZONI 8","c":"COSTA MASNAGA","z":"23845","la":45.7708108,"ln":9.2739685,"p":"","e":"","w":""},{"t":"COSTIERA DEI CECH","a":"VIA PALOTTA 94","c":"TRAONA","z":"23019","la":46.1449793,"ln":9.5415154,"p":"","e":"","w":""},{"t":"COTRONEI","a":"VIA LAGHI SILANI 48","c":"COTRONEI","z":"88836","la":39.1644056,"ln":16.775483,"p":"","e":"","w":""},{"t":"CREAZZO","a":"VIA DON MINZONI  4","c":"CREAZZO","z":"36051","la":45.5308478,"ln":11.4856001,"p":"","e":"","w":""},{"t":"CREDARO","a":"VIA CASTEL TREBECCO 13/A","c":"CREDARO","z":"24060","la":45.6509869,"ln":9.9245329,"p":"","e":"","w":""},{"t":"CREMA","a":"VIA GRAMSCI 13 C/O ATS","c":"CREMA","z":"26013","la":45.3619369,"ln":9.6797867,"p":"","e":"","w":""},{"t":"CREMONA","a":"VIA F. APORTI 28","c":"CREMONA","z":"26100","la":45.0293522,"ln":10.4692654,"p":"","e":"","w":""},{"t":"CRESPANO DEL GRAPPA","a":"VIA GHERLA 30","c":"CRESPANO DEL GRAPPA","z":"31017","la":45.8219244,"ln":11.823398,"p":"","e":"","w":""},{"t":"CROCETTA DEL MONTELLO","a":"VIA FRANCESCO BARACCA 24","c":"CROCETTA DEL MONTELLO","z":"31035","la":45.8275873,"ln":12.0722184,"p":"","e":"","w":""},{"t":"CROTONE","a":"VIA BOLOGNA C/O OSPEDALE CIVILE ASL N. 5 SNC","c":"CROTONE","z":"88900","la":39.0807932,"ln":17.1271102,"p":"","e":"","w":""},{"t":"CUGGIONO ","a":"VIA DON ALBENI 3","c":"CUGGIONO","z":"20012","la":45.5014414,"ln":8.8146663,"p":"","e":"","w":""},{"t":"CUGLIERI","a":"VIA PIAVE 1","c":"CUGLIERI","z":"09073","la":40.1869484,"ln":8.5635295,"p":"","e":"","w":""},{"t":"CUNEO","a":"VIA PRINCIPI DI PIEMONTE C/O VERGNANO GIANFRANCO 15","c":"BRA","z":"12042","la":44.6952656,"ln":7.8527959,"p":"","e":"","w":""},{"t":"CUNEO/BORGO SAN DALMAZZO","a":"C/O FILIPPI GIANFRANCO VIA BEPPE FENOGLIO 39","c":"CUNEO","z":"12100","la":44.3710731,"ln":7.5341955,"p":"","e":"","w":""},{"t":"CUORGNE'","a":"VIA GARIBALDI 11","c":"CUORGNE'","z":"10082","la":45.3914799,"ln":7.6488694,"p":"","e":"","w":""},{"t":"CUPRA MARITTIMA","a":"VIA VITTORIO EMANUELE 51","c":"CUPRA MARITTIMA","z":"63074","la":43.0265271,"ln":13.8581917,"p":"","e":"","w":""},{"t":"CURNO","a":"VIA IV NOVEMBRE 25","c":"CURNO","z":"24035","la":45.6872864,"ln":9.6086277,"p":"","e":"","w":""},{"t":"CURTATONE","a":"VIA MAGGIOLINI 12","c":"CURTATONE","z":"46010","la":45.0936118,"ln":10.6960268,"p":"","e":"","w":""},{"t":"CUSANO MILANINO - CORMANO ","a":"VIA ZUCCHI 1","c":"CUSANO MILANINO","z":"20095","la":45.5488037,"ln":9.1754528,"p":"","e":"","w":""},{"t":"CUTRO","a":"VIA GIOVANNI XXIII C/O POLIAMBULATORIO ASP SNC","c":"CUTRO","z":"88842","la":39.0359151,"ln":16.974633,"p":"","e":"","w":""},{"t":"DAIRAGO","a":"VIA D. CHIESA 14","c":"DAIRAGO","z":"20020","la":45.5687833,"ln":8.8653494,"p":"","e":"","w":""},{"t":"DALMINE","a":"PIAZZALE RISORGIMENTO 10","c":"DALMINE","z":"24044","la":45.6470051,"ln":9.600285,"p":"","e":"","w":""},{"t":"DESIO","a":"VIA GRAMSCI 18","c":"DESIO","z":"20832","la":45.6196255,"ln":9.2094548,"p":"","e":"","w":""},{"t":"DOGLIANI","a":"VIALE PROF. GABETTI 166","c":"DOGLIANI","z":"12063","la":44.5308236,"ln":7.9477869,"p":"","e":"","w":""},{"t":"DOLO","a":"VIA XXIX APRILE C/O ULSS 13 2","c":"DOLO","z":"30031","la":45.4213518,"ln":12.071579,"p":"","e":"","w":""},{"t":"DOSSOBUONO","a":"VIA DEI MILLE 6","c":"DOSSOBUONO","z":"37062","la":45.3941895,"ln":10.9148777,"p":"","e":"","w":""},{"t":"DOVERA","a":"VIA VITTORIO EMANUELE 8/10","c":"DOVERA","z":"26010","la":45.3633437,"ln":9.5518262,"p":"","e":"","w":""},{"t":"ELMAS","a":"PIAZZA DI CHIESA 3","c":"ELMAS","z":"09030","la":39.2634329,"ln":9.0515805,"p":"","e":"","w":""},{"t":"EMILIA-ROMAGNA","a":"VIA ALESSANDRO TIARINI 21/2","c":"BOLOGNA","z":"40129","la":44.5086074,"ln":11.3437824,"p":"","e":"","w":""},{"t":"ENTRATICO","a":"PIAZZA ALDO MORO 8","c":"ENTRATICO","z":"24060","la":45.7054038,"ln":9.8746209,"p":"","e":"","w":""},{"t":"ERCHIE","a":"VIA DELLA LIBERTA' 1","c":"ERCHIE","z":"72020","la":40.429503,"ln":17.728092,"p":"","e":"","w":""},{"t":"ESANATOGLIA","a":"VIA ROMA 25","c":"ESANATOGLIA","z":"62024","la":43.2522756,"ln":12.9514402,"p":"","e":"","w":""},{"t":"FAENZA","a":"VIA CAVOUR 7","c":"FAENZA","z":"48018","la":44.2868524,"ln":11.8786615,"p":"","e":"","w":""},{"t":"FAGNANO OLONA","a":"PIAZZA GRAMSCI 1","c":"FAGNANO OLONA","z":"21054","la":45.6699445,"ln":8.8716951,"p":"","e":"","w":""},{"t":"FALZE' - SERNAGLIA DELLA BATTAGLIA","a":"VIA FARRA 104","c":"SERNAGLIA DELLA BATTAGLIA","z":"31010","la":45.872575,"ln":12.132095,"p":"","e":"","w":""},{"t":"FANANO","a":"VIA SABBATINI 29","c":"FANANO","z":"41021","la":44.2071169,"ln":10.7951029,"p":"","e":"","w":""},{"t":"FANO","a":"VIA S. FRANCESCO 54","c":"FANO","z":"61032","la":43.842999,"ln":13.0186954,"p":"","e":"","w":""},{"t":"FARA GERA D'ADDA","a":"PIAZZA PATRIOTI 1","c":"FARA GERA D ADDA","z":"24045","la":45.5536133,"ln":9.53414,"p":"","e":"","w":""},{"t":"FARA OLIVANA CON SOLA","a":"VIA ALLA CHIESA 7","c":"FARA OLIVANA CON SOLA","z":"24058","la":45.4944271,"ln":9.7481681,"p":"","e":"","w":""},{"t":"FASANO","a":"VIA PORTICI DELLE TERESIANE 1","c":"FASANO","z":"72015","la":40.8141218,"ln":14.339067,"p":"","e":"","w":""},{"t":"FAVARA","a":"VIA ALDO MORO 89","c":"FAVARA","z":"92026","la":37.3061557,"ln":13.6489079,"p":"","e":"","w":""},{"t":"FELONICA","a":"PIAZZA MUNICIPIO 16 - FRAZ. FELONICA","c":"FELONICA","z":"46022","la":44.9823475,"ln":11.3524376,"p":"","e":"","w":""},{"t":"FERMO","a":"VIA DEL PALO 11","c":"PORTO SANT'ELPIDIO","z":"63821","la":43.247226,"ln":13.7636037,"p":"","e":"","w":""},{"t":"FERMO","a":"VIA DEL BASTIONE 3","c":"FERMO","z":"63900","la":43.1595125,"ln":13.7163869,"p":"","e":"","w":""},{"t":"FERRARA","a":"VIA RAVENNA 52","c":"FERRARA","z":"44124","la":44.8217738,"ln":11.6289287,"p":"","e":"","w":""},{"t":"FICAROLO","a":"PIAZZETTA MADRE TERESA DI CALCUTTA 221","c":"FICAROLO","z":"45036","la":44.9541498,"ln":11.4364526,"p":"","e":"","w":""},{"t":"FIESSO D'ARTICO","a":"VIA RIVIERA DEL BRENTA 204","c":"FIESSO D'ARTICO","z":"30032","la":45.4173206,"ln":12.0419769,"p":"","e":"","w":""},{"t":"FIESSO UMBERTIANO","a":"VIA DANTE ALIGHIERI 66","c":"FIESSO UMBERTIANO","z":"45024","la":44.960899,"ln":11.6024639,"p":"","e":"","w":""},{"t":"FILAGO","a":"VIA FINARDI ","c":"FILAGO","z":"24040","la":45.6373024,"ln":9.5550919,"p":"","e":"","w":""},{"t":"FIORANO AL SERIO","a":"VIA GENNARO SORA 25","c":"FIORANO AL SERIO","z":"24020","la":45.7994632,"ln":9.8427402,"p":"","e":"","w":""},{"t":"FLERO","a":"VIA MAZZINI  9","c":"FLERO","z":"25020","la":45.4825196,"ln":10.1769699,"p":"","e":"","w":""},{"t":"FOGGIA","a":"VIA NAZARIO SAURO 1","c":"FOGGIA","z":"71121","la":41.4569931,"ln":15.540924,"p":"","e":"","w":""},{"t":"FOIANO DELLA CHIANA","a":"VIALE VITTORIO EMANUELE  20","c":"FOIANO DELLA CHIANA","z":"52045","la":43.2524608,"ln":11.8180392,"p":"","e":"","w":""},{"t":"FOLIGNO","a":"VIA DEI MOLINI 4","c":"FOLIGNO","z":"06034","la":42.9585859,"ln":12.705911,"p":"","e":"","w":""},{"t":"FOLLINA","a":"VIA CAL DELLA FORNACE 2","c":"FOLLINA","z":"31051","la":45.9509795,"ln":12.1147029,"p":"","e":"","w":""},{"t":"FONTANAFREDDA","a":"VIA STRINGHER 2","c":"FONTANAFREDDA","z":"33074","la":45.9798733,"ln":12.5603088,"p":"","e":"","w":""},{"t":"FONTANELLE","a":"VIA DELLA VITTORIA 40","c":"FONTANELLE","z":"31043","la":45.82636,"ln":12.4529,"p":"","e":"","w":""},{"t":"FONTANETTO PO","a":"VIA VIOTTI 34","c":"FONTANETTO PO","z":"13040","la":45.1960688,"ln":8.1924372,"p":"","e":"","w":""},{"t":"FORESTO SPARSO","a":"VIA ROMA 18","c":"FORESTO SPARSO","z":"24060","la":45.6967814,"ln":9.9067391,"p":"","e":"","w":""},{"t":"FORLI'-CESENA","a":"VIA GIACOMO DELLA TORRE 7","c":"FORLI'","z":"47121","la":44.2182042,"ln":12.0412375,"p":"","e":"","w":""},{"t":"FORNOVO SAN GIOVANNI","a":"PIAZZA SAN GIOVANNI ","c":"FORNOVO SAN GIOVANNI","z":"24040","la":45.49688,"ln":9.6761617,"p":"","e":"","w":""},{"t":"FOSSANO","a":"VIA E. RABIA 5/A","c":"CUNEO","z":"12100","la":44.420449,"ln":7.5356688,"p":"","e":"","w":""},{"t":"FOSSO'","a":"VIA ROMA ","c":"FOSSO'","z":"30030","la":45.3857245,"ln":12.0455616,"p":"","e":"","w":""},{"t":"FRANCAVILLA FONTANA","a":"PIAZZA MARESCIALLO DI MITRI 1","c":"FRANCAVILLA FONTANA","z":"72021","la":40.5272491,"ln":17.5838864,"p":"","e":"","w":""},{"t":"FRANCAVILLA IN SINNI ","a":"VIA CERTOSA (CASA CANONICA) 1","c":"FRANCAVILLA IN SINNI","z":"85034","la":40.0801475,"ln":16.2051149,"p":"","e":"","w":""},{"t":"FRATTA POLESINE","a":"VIA MARCO FORTINI 3","c":"FRATTA POLESINE","z":"45025","la":45.0287727,"ln":11.636095,"p":"","e":"","w":""},{"t":"FRIULI VENEZIA GIULIA","a":"VIA MONTEREALE 24","c":"PORDENONE","z":"33170","la":45.9563684,"ln":12.661452,"p":"","e":"","w":""},{"t":"GAETA","a":"VIA DEI FRASSINI C/O PARROCCHIA SANTO STEFANO SNC","c":"GAETA","z":"04024","la":41.2192991,"ln":13.5576516,"p":"","e":"","w":""},{"t":"GALBIATE","a":"LARGO DONATORI SANGUE 1","c":"GALBIATE","z":"23851","la":45.8193147,"ln":9.3759827,"p":"","e":"","w":""},{"t":"GALLARATE","a":"VICOLO DEL GAMBERO  7","c":"GALLARATE","z":"21013","la":45.6596485,"ln":8.790658,"p":"","e":"","w":""},{"t":"GALLIATE","a":"VIA XXV APRILE 66","c":"GALLIATE","z":"28066","la":45.4822914,"ln":8.7046618,"p":"","e":"","w":""},{"t":"GALLIPOLI","a":"VIA UNIONE MILITARE 35","c":"GALLIPOLI","z":"73014","la":40.0554615,"ln":17.991529,"p":"","e":"","w":""},{"t":"GAMBARA","a":"VIA GARIBALDI 70","c":"GAMBARA","z":"25020","la":45.255001,"ln":10.298334,"p":"","e":"","w":""},{"t":"GARBAGNA NOVARESE CON NIBBIOLA","a":"VIA OTTO MARZO 8","c":"NIBBIOLA","z":"28070","la":45.3733311,"ln":8.661037,"p":"","e":"","w":""},{"t":"GARBAGNATE MILANESE","a":"VIA CANOVA 45","c":"GARBAGNATE MILANESE","z":"20024","la":45.567147,"ln":9.0843969,"p":"","e":"","w":""},{"t":"GARDA","a":"PIAZZA DONATORI DI SANGUE 2","c":"GARDA","z":"37016","la":45.57661,"ln":10.71004,"p":"","e":"","w":""},{"t":"GARDONE VAL TROMPIA","a":"VIA X GIORNATE 43/45","c":"GARDONE VAL TROMPIA","z":"25063","la":45.6887719,"ln":10.1829771,"p":"","e":"","w":""},{"t":"GARLASCO","a":"PIAZZA SANTA TRINITA'  6","c":"GARLASCO","z":"27026","la":43.7702444,"ln":11.2512843,"p":"","e":"","w":""},{"t":"GARLATE","a":"VIA STATALE 497","c":"GARLATE","z":"23852","la":45.8061819,"ln":9.4033807,"p":"","e":"","w":""},{"t":"GAZOLDO DEGLI IPPOLITI","a":"VIA MARCONI 126","c":"GAZOLDO DEGLI IPPOLITI","z":"46040","la":45.1997988,"ln":10.5797506,"p":"","e":"","w":""},{"t":"GENOVA","a":"LARGO R. BENZI 10","c":"GENOVA","z":"16132","la":44.4078726,"ln":8.9695386,"p":"","e":"","w":""},{"t":"GESSATE","a":"PIAZZA DELLA PACE 1","c":"GESSATE","z":"20060","la":45.5539099,"ln":9.4365585,"p":"","e":"","w":""},{"t":"GHISALBA","a":"VIA TORINO 18","c":"GHISALBA","z":"24050","la":45.5940155,"ln":9.7602204,"p":"","e":"","w":""},{"t":"GIANICO-DARFO BOARIO TERME","a":"VIA MARCONI 8","c":"GIANICO","z":"25040","la":45.8652066,"ln":10.1810208,"p":"","e":"","w":""},{"t":"GIFFONE","a":"VIA ARIOSTO 1","c":"GIFFONE","z":"89020","la":38.4387704,"ln":16.1490438,"p":"","e":"","w":""},{"t":"GIUSSANO","a":"VIA ZARA 16","c":"GIUSSANO","z":"20833","la":45.6729479,"ln":9.2055854,"p":"","e":"","w":""},{"t":"GORGONZOLA","a":"PIAZZA GIOVANNI XXIII 3","c":"GORGONZOLA","z":"20064","la":45.5302529,"ln":9.3968634,"p":"","e":"","w":""},{"t":"GORLAGO","a":"PIAZZA EUROPA 9","c":"GORLAGO","z":"24060","la":45.6749889,"ln":9.8292215,"p":"","e":"","w":""},{"t":"GORLE","a":"VIA LIBERTA 1","c":"GORLE","z":"24020","la":45.7013231,"ln":9.716764,"p":"","e":"","w":""},{"t":"GORNO - ONETA","a":"PIAZZA VALLASIO 24","c":"GORNO","z":"24020","la":45.8660086,"ln":9.8430481,"p":"","e":"","w":""},{"t":"GOTTOLENGO","a":"VIA CIRCONVALLAZIONE  ","c":"GOTTOLENGO","z":"25023","la":45.289061,"ln":10.2698393,"p":"","e":"","w":""},{"t":"GOVERNOLO","a":"VIA MATTEOTTI 6 - FRAZ. GOVERNOLO ","c":"RONCOFERRARO","z":"46037","la":45.0864299,"ln":10.9584569,"p":"","e":"","w":""},{"t":"GRASSOBBIO","a":"VIA ROMA 46","c":"GRASSOBBIO","z":"24050","la":45.6573937,"ln":9.722776,"p":"","e":"","w":""},{"t":"GRAVINA ","a":"PIAZZA SCACCHI 43","c":"GRAVINA","z":"70024","la":40.8163296,"ln":16.4182146,"p":"","e":"","w":""},{"t":"GROSIO ED UNITI","a":"VIA MILANO  2","c":"GROSIO","z":"23033","la":46.2892043,"ln":10.2637885,"p":"","e":"","w":""},{"t":"GROSSETO","a":"VIA SENESE C/O  OSPEDALE MISERICORDIA 161","c":"GROSSETO","z":"58100","la":42.7769758,"ln":11.1248742,"p":"","e":"","w":""},{"t":"GRUMELLO CREMONESE","a":"VIA G. MARCONI 2","c":"GRUMELLO CREMONESE ED UNITI","z":"26023","la":45.193313,"ln":9.8674,"p":"","e":"","w":""},{"t":"GRUMELLO DEL MONTE","a":"VIA BORLINO 5","c":"GRUMELLO DEL MONTE","z":"24064","la":45.64343,"ln":9.87527,"p":"","e":"","w":""},{"t":"GRUMELLO DEL PIANO","a":"VIA MORALI 12","c":"BERGAMO","z":"24127","la":45.6677228,"ln":9.6395369,"p":"","e":"","w":""},{"t":"GUIDIZZOLO","a":"VIA CARLO ALBERTO DALLA CHIESA 8/B","c":"GUIDIZZOLO","z":"46040","la":45.318864,"ln":10.5893032,"p":"","e":"","w":""},{"t":"GUSSAGO ","a":"VIA CASAGLIO 7","c":"GUSSAGO","z":"25064","la":45.5917482,"ln":10.1573162,"p":"","e":"","w":""},{"t":"GUSSOLA","a":"VIA XX SETTEMBRE 31","c":"GUSSOLA","z":"26040","la":45.0103737,"ln":10.3544772,"p":"","e":"","w":""},{"t":"IMOLA","a":"PIAZZALE DALLE BANDE NERE 11","c":"IMOLA","z":"40026","la":44.3543326,"ln":11.7079999,"p":"","e":"","w":""},{"t":"IMPERIA","a":"VIA SANT'AGATA 57","c":"IMPERIA","z":"18100","la":43.891673,"ln":8.0302945,"p":"","e":"","w":""},{"t":"INVERUNO","a":"PIAZZA PERTINI 1","c":"INVERUNO","z":"20010","la":45.5139325,"ln":8.8521537,"p":"","e":"","w":""},{"t":"ISERNIA","a":"VIA S. IPPOLITO c/o Ospedale Civile 1","c":"ISERNIA","z":"86170","la":41.5826739,"ln":14.2218628,"p":"","e":"","w":""},{"t":"ISOLA DELLA SCALA","a":"VIA RIMEMBRANZA 9","c":"ISOLA DELLA SCALA","z":"37063","la":45.271871,"ln":11.0054955,"p":"","e":"","w":""},{"t":"ISPICA","a":"VIA SIMETO 1","c":"ISPICA","z":"97014","la":36.7891978,"ln":14.8987953,"p":"","e":"","w":""},{"t":"IVREA","a":"VIA DEI CAPPUCCINI 16","c":"IVREA","z":"10015","la":45.4669997,"ln":7.8859062,"p":"","e":"","w":""},{"t":"JESI","a":"VIA RADICIOTTI 17","c":"JESI","z":"60035","la":43.521081,"ln":13.234132,"p":"","e":"","w":""},{"t":"L'AQUILA","a":"C/O CENTRO REG.LE DI IMM. E TIP. TISSUTALE OSPEDALE S. SALVATORE VIA LORENZO NATALI SNC","c":"COPPITO","z":"67100","la":42.3660027,"ln":13.3538014,"p":"","e":"","w":""},{"t":"LA SPEZIA","a":"VIA G. B. VALLE 16/18","c":"LA SPEZIA","z":"19124","la":44.1093593,"ln":9.8307578,"p":"","e":"","w":""},{"t":"LABRO","a":"VIA GARIBALDI 11","c":"LABRO","z":"02010","la":42.5187537,"ln":12.7997255,"p":"","e":"","w":""},{"t":"LALLIO","a":"VIA ARCIPRETE ROTA 16","c":"LALLIO","z":"24040","la":45.6661038,"ln":9.6293349,"p":"","e":"","w":""},{"t":"LANCIANO","a":"VIA DEL MARE 1","c":"LANCIANO","z":"66034","la":42.2306455,"ln":14.3963181,"p":"","e":"","w":""},{"t":"LANDRIANO","a":"VIA SALVO D'ACQUISTO 2/A","c":"LANDRIANO","z":"27015","la":45.3103916,"ln":9.2627741,"p":"","e":"","w":""},{"t":"LARINO","a":"CONTRADA LA FRANCESCA 19","c":"LARINO","z":"86035","la":41.8298501,"ln":14.9306433,"p":"","e":"","w":""},{"t":"LATINA","a":"CORSO MATTEOTTI 238","c":"LATINA","z":"04100","la":41.4742095,"ln":12.9093114,"p":"","e":"","w":""},{"t":"LATINA SCALO","a":"VIA DELLA STAZIONE 211","c":"LATINA SCALO","z":"04100","la":41.5310829,"ln":12.9453551,"p":"","e":"","w":""},{"t":"LATISANA","a":"VIA SABBIONERA  87","c":"LATISANA","z":"33053","la":45.7685438,"ln":13.0015421,"p":"","e":"","w":""},{"t":"LAVAGNO","a":"VIA DEL DOSSO C/O RIDOLFI LUIGI 12","c":"LAVAGNO","z":"37030","la":45.4412989,"ln":11.1277105,"p":"","e":"","w":""},{"t":"LAZIO","a":"VIA COLA DI RIENZO (indirizzo recapito postale) 243","c":"ROMA","z":"00192","la":41.9080443,"ln":12.4654903,"p":"","e":"","w":""},{"t":"LAZISE","a":"VIA ROMA 3","c":"LAZISE","z":"37017","la":45.5083684,"ln":10.7331548,"p":"","e":"","w":""},{"t":"LECCE","a":"VIA LAZIO 13","c":"LECCE","z":"73100","la":40.3446794,"ln":18.1755031,"p":"","e":"","w":""},{"t":"LECCO","a":"VIA ALDO MORO 4","c":"LECCO","z":"23900","la":45.8645585,"ln":9.3897592,"p":"","e":"","w":""},{"t":"LEFFE","a":"VI ALBERTONI 65","c":"LEFFE","z":"24026","la":45.8008077,"ln":9.8879629,"p":"","e":"","w":""},{"t":"LEGNAGO","a":"VIA XXIV MAGGIO 8/10","c":"LEGNAGO","z":"37045","la":45.1949119,"ln":11.3065576,"p":"","e":"","w":""},{"t":"LEGNANO","a":"VIA MADONNINA DEL GRAPPA 37","c":"LEGNANO","z":"20025","la":45.5956585,"ln":8.9272399,"p":"","e":"","w":""},{"t":"LENDINARA","a":"VIA MONTEGRAPPA 31","c":"LENDINARA","z":"45026","la":45.0808345,"ln":11.5980076,"p":"","e":"","w":""},{"t":"LENO","a":"P.ZZA DONATORI SANGUE 1","c":"LENO","z":"25024","la":45.3654984,"ln":10.2171495,"p":"","e":"","w":""},{"t":"LENTATE SUL SEVESO","a":"VIA C.BATTISTI 12","c":"LENTATE SUL SEVESO","z":"20823","la":45.6788039,"ln":9.1174603,"p":"","e":"","w":""},{"t":"LENTINI","a":"VIA VITTORIO EMANUELE III 55","c":"LENTINI","z":"96016","la":37.290115,"ln":14.998993,"p":"","e":"","w":""},{"t":"LESMO-CAMPARADA","a":"PIAZZA DANTE 6","c":"LESMO","z":"20855","la":45.6502569,"ln":9.3076021,"p":"","e":"","w":""},{"t":"LICATA","a":"VIA FRATELLI ROSSELLI 1/5","c":"LICATA","z":"92027","la":37.1147826,"ln":13.9609895,"p":"","e":"","w":""},{"t":"LIGURIA","a":"LARGO R. BENZI 10","c":"GENOVA","z":"16132","la":44.4078726,"ln":8.9695386,"p":"","e":"","w":""},{"t":"LINAROLO","a":"VIALE VENEZIA  2 C/O ITALIANA ASSICURAZIONI ","c":"PAVIA","z":"27100","la":45.1812486,"ln":9.1689844,"p":"","e":"","w":""},{"t":"LIVORNO","a":"VIALE CARDUCCI 16","c":"LIVORNO","z":"57124","la":43.5530436,"ln":10.3239781,"p":"","e":"","w":""},{"t":"LIVRAGA","a":"VIA DANTE 30/BIS","c":"LIVRAGA","z":"26814","la":45.1928402,"ln":9.5457313,"p":"","e":"","w":""},{"t":"LIZZANO","a":"VIA BOGGIO 2","c":"LIZZANO","z":"74020","la":40.3936162,"ln":17.4457061,"p":"","e":"","w":""},{"t":"LOCATE VARESINO ","a":"VIA SAN VITO  4","c":"LOCATE VARESINO","z":"22070","la":45.6897429,"ln":8.9294675,"p":"","e":"","w":""},{"t":"LOCRI","a":"VIA MATTEOTTI C/O SEDE AVIS 108/110","c":"LOCRI","z":"89044","la":38.2337193,"ln":16.2638009,"p":"","e":"","w":""},{"t":"LODI","a":"Via Fanfulla 22","c":"LODI","z":"26900","la":45.3170056,"ln":9.501704,"p":"","e":"","w":""},{"t":"LODI VECCHIO","a":"VIA IV NOVEMBRE 7","c":"LODI VECCHIO","z":"26855","la":45.3018702,"ln":9.415547,"p":"","e":"","w":""},{"t":"LODRINO","a":"VIA ROMA 94","c":"LODRINO","z":"25060","la":45.7180425,"ln":10.2790477,"p":"","e":"","w":""},{"t":"LOMAGNA","a":"PIAZZA DON ANGELO LIMONTA 1","c":"LOMAGNA","z":"23871","la":45.72416,"ln":9.326942,"p":"","e":"","w":""},{"t":"LONATO DEL GARDA ","a":"VIA LUIGI MALAGNINI  1","c":"LONATO DEL GARDA","z":"25017","la":45.4556081,"ln":10.4912699,"p":"","e":"","w":""},{"t":"LONGUELO  - BERGAMO","a":"VIA LONGUELO 39/A","c":"BERGAMO","z":"24129","la":45.69598,"ln":9.63309,"p":"","e":"","w":""},{"t":"LORETO","a":"VIA TRIESTE 17","c":"LORETO","z":"60025","la":43.4388841,"ln":13.6074263,"p":"","e":"","w":""},{"t":"LOVERE","a":"VIA BERTOLOTTI 13","c":"LOVERE","z":"24065","la":45.8169391,"ln":10.0729494,"p":"","e":"","w":""},{"t":"LUCCA","a":"VIA CESARE BATTISTI 2","c":"LUCCA","z":"55100","la":43.8442515,"ln":10.5028308,"p":"","e":"","w":""},{"t":"LUCERA","a":"PIAZZA SALANDRA 25","c":"LUCERA","z":"71036","la":41.5080181,"ln":15.3355566,"p":"","e":"","w":""},{"t":"LUGAGNANO E VAL D'ARDA","a":"VIA PIACENZA 37","c":"LUGAGNANO VAL D'ARDA","z":"29018","la":44.8277001,"ln":9.8355435,"p":"","e":"","w":""},{"t":"LUNIGIANA","a":"VIA P. COCCHI 33","c":"PONTREMOLI","z":"54027","la":44.373313,"ln":9.8860454,"p":"","e":"","w":""},{"t":"MACCHIAGODENA","a":"VIA GARIBALDI OVEST C/O SEDE CENTOMANI FARE ","c":"MACCHIGODENA","z":"86096","la":41.5236508,"ln":14.4438546,"p":"","e":"","w":""},{"t":"MACERATA","a":"VIA ORESTE CALABRESI 5","c":"MACERATA","z":"62100","la":43.3010145,"ln":13.439095,"p":"","e":"","w":""},{"t":"MACHERIO","a":"VIA MILANO 25","c":"MACHERIO","z":"20846","la":45.6385998,"ln":9.2702887,"p":"","e":"","w":""},{"t":"MADDALONI","a":"VIA S. EUSTACHIO 104","c":"MADDALONI","z":"81024","la":41.0427279,"ln":14.374137,"p":"","e":"","w":""},{"t":"MAGENTA","a":"PIAZZA FORMENTANO 3","c":"MAGENTA","z":"20013","la":45.4655261,"ln":8.8850211,"p":"","e":"","w":""},{"t":"MAGIONE","a":"VIA AMENDOLA 8","c":"MAGIONE","z":"06063","la":43.1425957,"ln":12.2043761,"p":"","e":"","w":""},{"t":"MALEGNO-LOZIO-OSSIMO-BORNO","a":"VIA CAVA 36","c":"MALEGNO","z":"25053","la":45.949521,"ln":10.2759603,"p":"","e":"","w":""},{"t":"MANDELLO DEL LARIO","a":"VIA DANTE ALIGHIERI 47","c":"MANDELLO DEL LARIO","z":"23826","la":45.9215776,"ln":9.3222624,"p":"","e":"","w":""},{"t":"MANDURIA","a":"VIA ROMA 44","c":"MANDURIA","z":"74024","la":40.4003624,"ln":17.6279597,"p":"","e":"","w":""},{"t":"MANERBIO","a":"VIA PALESTRO 49","c":"MANERBIO","z":"25025","la":45.3547608,"ln":10.1349007,"p":"","e":"","w":""},{"t":"MANSUE'","a":"VIA CALATE 5","c":"MASUE'","z":"31040","la":45.819788,"ln":12.536079,"p":"","e":"","w":""},{"t":"MANTOVA","a":"Strada Dosso del Corso 1","c":"MANTOVA","z":"46100","la":45.1537479,"ln":10.7698696,"p":"","e":"","w":""},{"t":"MARANO DI VALPOLICELLA","a":"VIA CADILOI 39","c":"MARANO DI VALPOLICELLA","z":"37020","la":45.5322685,"ln":10.9097439,"p":"","e":"","w":""},{"t":"MARCALLO CON CASONE","a":"VIA ROMA 19","c":"MARCALLO CON CASONE","z":"20010","la":45.4847371,"ln":8.8713644,"p":"","e":"","w":""},{"t":"MARCHE","a":"VIA DELLA REPUBBLICA 21","c":"CHIARAVALLE","z":"60033","la":43.5974796,"ln":13.3241696,"p":"","e":"","w":""},{"t":"MARCONIA PISTICCI ","a":"PIAZZA ELETTRA 14","c":"MARCONIA PISTICCI","z":"75020","la":40.3626056,"ln":16.6872305,"p":"","e":"","w":""},{"t":"MARDIMAGO","a":"PIAZZA GIOVANNI XXIII 6","c":"MARDIMAGO","z":"45100","la":45.1115899,"ln":11.8478675,"p":"","e":"","w":""},{"t":"MARENO DI PIAVE","a":"VICOLO TRIESTE 10","c":"MARENO DI PIAVE","z":"34010","la":45.8590908,"ln":12.3324428,"p":"","e":"","w":""},{"t":"MAROSTICA","a":"VIA PANICA 17","c":"MAROSTICA","z":"36063","la":45.7443656,"ln":11.6497137,"p":"","e":"","w":""},{"t":"MARTINENGO","a":"VIA ALLEGRENI 33","c":"MARTINENGO","z":"24057","la":45.5695443,"ln":9.7675285,"p":"","e":"","w":""},{"t":"MASATE-BASIANO","a":"VIA MILANO 69","c":"MASATE","z":"20060","la":45.5678365,"ln":9.4640827,"p":"","e":"","w":""},{"t":"MASER","a":"VIA A. PALLADIO 2","c":"MASER","z":"31010","la":45.811802,"ln":11.9791779,"p":"","e":"","w":""},{"t":"MASSA CARRARA","a":"VIA PIETRO COCCHI ","c":"PONTREMOLI","z":"54027","la":44.3726857,"ln":9.8861504,"p":"","e":"","w":""},{"t":"MASSA-CARRARA-MONTIGNOSO","a":"VIA ENRICO MATTEI 21","c":"MASSA","z":"54100","la":44.017673,"ln":10.102043,"p":"","e":"","w":""},{"t":"MASSAFRA","a":"C/O ASS. LA FINESTRA","c":"VIA MESSAPIA 77","z":"Italy","la":40.5895727,"ln":17.1108343,"p":"","e":"","w":""},{"t":"MATERA","a":"VIA CARMINE 46","c":"VALSINNI","z":"75029","la":40.173113,"ln":16.4443899,"p":"","e":"","w":""},{"t":"MEDA","a":"VIA CONFALONIERI 4","c":"MEDA","z":"20821","la":45.6552098,"ln":9.1706512,"p":"","e":"","w":""},{"t":"MEDE","a":"VIA INVERNIZZI C/O GRUPPO ALPINI 28","c":"MEDE","z":"27035","la":45.0972294,"ln":8.7354167,"p":"","e":"","w":""},{"t":"MEDIA VALLE IMAGNA","a":"VIA SAN LORENZO ","c":"CAPIZZONE","z":"24030","la":45.7879758,"ln":9.5648352,"p":"","e":"","w":""},{"t":"MEDIA VALTELLINA","a":"PIAZZA LUINI 9","c":"PONTE IN VALTELLINA","z":"23026","la":46.1770799,"ln":9.981394,"p":"","e":"","w":""},{"t":"MEDOLE","a":"VIA GARIBALDI 12","c":"MEDOLE","z":"46046","la":45.3265844,"ln":10.5100978,"p":"","e":"","w":""},{"t":"MELZO","a":"VIA DE AMICIS 7","c":"MELZO","z":"20066","la":45.5045315,"ln":9.4240607,"p":"","e":"","w":""},{"t":"MENFI","a":"VIA MANDRAZZI II 1","c":"MENFI","z":"92013","la":37.6198182,"ln":12.9665821,"p":"","e":"","w":""},{"t":"MEOLO","a":"VIA DIAZ 93/2","c":"MEOLO","z":"30020","la":45.6251332,"ln":12.4591666,"p":"","e":"","w":""},{"t":"MERATE","a":"VIA S. AMBROGIO 17","c":"MERATE","z":"23807","la":45.6977451,"ln":9.4203492,"p":"","e":"","w":""},{"t":"MESERO","a":"VIA SAN BERNARDO 2","c":"MESERO","z":"20010","la":45.501402,"ln":8.857397,"p":"","e":"","w":""},{"t":"MESORACA","a":"VIA XX SETTEMBRE ","c":"MESORACA","z":"88838","la":39.0814262,"ln":16.7867666,"p":"","e":"","w":""},{"t":"MESSINA","a":"VIA CONSOLARE VALERIA CONTESSE- POLICLINICO 1","c":"MESSINA","z":"98124","la":38.1649036,"ln":15.5385052,"p":"","e":"","w":""},{"t":"MESTRINO","a":"VIA MARTIGNON 4","c":"MESTRINO","z":"35035","la":45.4440561,"ln":11.7576375,"p":"","e":"","w":""},{"t":"MEZZOCORONA","a":"PIAZZA DELLA CHIESA 3","c":"MEZZOCORONA","z":"38016","la":46.2169152,"ln":11.119482,"p":"","e":"","w":""},{"t":"MIANE","a":"VIA ROMA 50","c":"MIANE","z":"31050","la":45.9452346,"ln":12.0982156,"p":"","e":"","w":""},{"t":"MILANO","a":"Via De Amicis 7","c":"MELZO","z":"20066","la":45.5045315,"ln":9.4240607,"p":"","e":"","w":""},{"t":"MILANO SPECIALE","a":"PIAZZA OSPEDALE MAGGIORE 3","c":"MILANO","z":"20162","la":45.5096348,"ln":9.1871841,"p":"","e":"","w":""},{"t":"MILAZZO","a":"PRESIDIO OSPEDALIERO \"G.FOGLIANI\" C.DA GRAZIA ","c":"MILAZZO","z":"98057","la":38.2207102,"ln":15.2419327,"p":"","e":"","w":""},{"t":"MINERBE","a":"VIA LEONARDO DA VINCI 37","c":"MINERBE","z":"37046","la":45.2444397,"ln":11.3410354,"p":"","e":"","w":""},{"t":"MIRANO","a":"c/o OSPEDALE DI MIRANO DON G. SARTOR 4","c":"MIRANO","z":"30035","la":45.5002323,"ln":12.1108354,"p":"","e":"","w":""},{"t":"MISANO GERA D'ADDA","a":"VIA DON ALESSANDRO BATTAGLIA 1","c":"MISANO DI GERA D ADDA","z":"24040","la":45.4704443,"ln":9.6210262,"p":"","e":"","w":""},{"t":"MODENA","a":"VIA LIVIO BORRI 40","c":"MODENA","z":"41122","la":44.639353,"ln":10.9487611,"p":"","e":"","w":""},{"t":"MOLFETTA","a":"VIA TERLIZZI C/O OSPEDALE \"DON TONINO BELLO\" ","c":"MOLFETTA","z":"70056","la":41.1916075,"ln":16.5914959,"p":"","e":"","w":""},{"t":"MOLISE","a":"CORSO VITTORIO EMANUELE 56","c":"JELSI","z":"86015","la":41.5178688,"ln":14.7976395,"p":"","e":"","w":""},{"t":"MONASTEROLO DEL CASTELLO","a":"PIAZZA PAPA GIOVANNI XXIII ","c":"MONASTEROLO DEL CASTELLO","z":"24060","la":45.7630956,"ln":9.9300521,"p":"","e":"","w":""},{"t":"MONASTIER","a":"VIA SICILIA 5","c":"MONASTIER DI TREVISO","z":"31050","la":45.646491,"ln":12.4791719,"p":"","e":"","w":""},{"t":"MONCALVO","a":"PIAZZA SAN FRANCESCO 1","c":"MONCALVO","z":"14036","la":45.0487492,"ln":8.2666181,"p":"","e":"","w":""},{"t":"MONDOVI'","a":"CORSO ALPI 40","c":"MONDOVI","z":"12084","la":44.3821879,"ln":7.8101722,"p":"","e":"","w":""},{"t":"MONOPOLI","a":"VIA SAN DOMENICO 13","c":"MONOPOLI","z":"70043","la":40.9522377,"ln":17.30165,"p":"","e":"","w":""},{"t":"MONTAGNA PISTOIESE","a":"PIAZZA MATTEOTTI 73","c":"SAN MARCELLO PISTOIESE","z":"51028","la":44.0554517,"ln":10.7908583,"p":"","e":"","w":""},{"t":"MONTE MARENZO","a":"PRESSO MUNICIPIO ","c":"MONTE MARENZO","z":"23804","la":45.7682824,"ln":9.4566722,"p":"","e":"","w":""},{"t":"MONTEBELLUNA","a":"VIA MONTE BIANCO 15/3","c":"MONTEBELLUNA","z":"31044","la":45.7703359,"ln":12.0263783,"p":"","e":"","w":""},{"t":"MONTECARLO","a":"VIA DON MINZONI C/O SCUOLA ELEMENTARE S. SALVATORE ","c":"MONTECARLO","z":"55015","la":43.8534454,"ln":10.6657906,"p":"","e":"","w":""},{"t":"MONTECASSIANO","a":"VIA R. MURRI 1","c":"MONTECASSIANO","z":"62010","la":43.3659609,"ln":13.4403299,"p":"","e":"","w":""},{"t":"MONTECCHIA DI CROSARA","a":"C/O PRESIDENTE ALESSANDRO BARATO VIA DEGLI ULIVI 10","c":"MONTECCHIA DI CROSARA","z":"37030","la":45.4797613,"ln":11.2529627,"p":"","e":"","w":""},{"t":"MONTEFANO","a":"VIA ROMA 28","c":"MONTEFANO","z":"62010","la":43.4121941,"ln":13.438198,"p":"","e":"","w":""},{"t":"MONTEFIASCONE","a":"VIA CASTI 1","c":"MONTEFIASCONE","z":"01027","la":42.537753,"ln":12.030395,"p":"","e":"","w":""},{"t":"MONTELABBATE","a":"LARGO DONATORI DI SANGUE ","c":"MONTELABBIATE","z":"61025","la":43.8638117,"ln":12.7784806,"p":"","e":"","w":""},{"t":"MONTELLO","a":"VIA SANT ANTONINO 7","c":"MONTELLO","z":"24060","la":45.6698369,"ln":9.8074894,"p":"","e":"","w":""},{"t":"MONTELUPONE","a":"VIA VECCHIOTTI 23","c":"MONTELUPONE","z":"62010","la":43.3449784,"ln":13.567821,"p":"","e":"","w":""},{"t":"MONTEMURLO","a":"VIA BICCHIERAIA 7","c":"MONTEMURLO","z":"59013","la":43.9303619,"ln":11.0332042,"p":"","e":"","w":""},{"t":"MONTEPULCIANO","a":"VIA GRACCIANO NEL CORSO 73","c":"MONTEPULCIANO","z":"53045","la":43.0959338,"ln":11.7845465,"p":"","e":"","w":""},{"t":"MONTICELLI D'ONGINA","a":"VIA DONATORI DI SANGUE 22","c":"MONTICELLI D'ONGINA","z":"29010","la":45.0901923,"ln":9.9339036,"p":"","e":"","w":""},{"t":"MONTICELLO CONTE OTTO","a":"PIAZZA DEL DONATORE 22","c":"MONTICELLO CONTE OTTO","z":"36010","la":45.6007929,"ln":11.5697123,"p":"","e":"","w":""},{"t":"MONTICHIARI","a":"VIA CIOTTI 154","c":"MONTICHIARI","z":"25018","la":45.4110809,"ln":10.4056263,"p":"","e":"","w":""},{"t":"MONZA  ","a":"VIA SOLFERINO 16","c":"MONZA","z":"20900","la":45.5781549,"ln":9.2675926,"p":"","e":"","w":""},{"t":"MONZA BRIANZA","a":"Via Solferino 16","c":"MONZA","z":"20900","la":45.5781549,"ln":9.2675926,"p":"","e":"","w":""},{"t":"MORBEGNO","a":"VIA PARAVICINI 2","c":"MORBEGNO","z":"23017","la":46.1330658,"ln":9.5729148,"p":"","e":"","w":""},{"t":"MORENGO","a":"VIA CASTELLO 15","c":"MORENGO","z":"24050","la":45.5342218,"ln":9.7046871,"p":"","e":"","w":""},{"t":"MORNICO AL SERIO","a":"VIA ZERRA 17","c":"MORNICO AL SERIO","z":"24050","la":45.5929473,"ln":9.8055827,"p":"","e":"","w":""},{"t":"MOZZO","a":"VIA ALFREDO PIATTI 54","c":"MOZZO","z":"24030","la":45.6987701,"ln":9.6074668,"p":"","e":"","w":""},{"t":"MUGGIA","a":"PIAZZA DELL'OSPITALE C/O OSPED.LE MAGGIORE 1","c":"TRIESTE","z":"34129","la":45.6493858,"ln":13.7810595,"p":"","e":"","w":""},{"t":"MUGGIO'","a":"VIA SONDRIO 24/INTERNO","c":"MUGGIO","z":"20835","la":45.5821265,"ln":9.2232276,"p":"","e":"","w":""},{"t":"NAPOLI","a":"VIA F. BLUNDO 54","c":"NAPOLI","z":"80128","la":40.8517946,"ln":14.2308833,"p":"","e":"","w":""},{"t":"NEMBRO","a":"PIAZZA UMBERTO I 8","c":"NEMBRO","z":"24027","la":45.7453841,"ln":9.7622076,"p":"","e":"","w":""},{"t":"NERVESA DELLA BATTAGLIA","a":"VIA LUGO DI ROMAGNA 12","c":"NERVESA DELLA BATTAGLIA","z":"31040","la":45.8210834,"ln":12.2072589,"p":"","e":"","w":""},{"t":"NERVIANO","a":"VIA RONDANINI 5","c":"NERVIANO","z":"20014","la":45.5544213,"ln":8.9727224,"p":"","e":"","w":""},{"t":"NIBIONNO","a":"PIAZZA MARTIRI 3/A","c":"NIBIONNO","z":"23895","la":45.7487463,"ln":9.269818,"p":"","e":"","w":""},{"t":"NOGARA-GAZZO VERONESE","a":"VIA PALMINO STERZI 22","c":"NOGARA","z":"37054","la":45.1820701,"ln":11.0607124,"p":"","e":"","w":""},{"t":"NOGAROLE ROCCA","a":"VIA VITTORIO VENETO 20","c":"NOGAROLE ROCCA","z":"37060","la":45.27256,"ln":10.89224,"p":"","e":"","w":""},{"t":"NOLA-CIMITILE","a":"VIA GRAMSCI 66","c":"CIMITILE","z":"80030","la":40.9448571,"ln":14.518728,"p":"","e":"","w":""},{"t":"NOLE","a":"VIA TORINO 127","c":"NOLE","z":"10076","la":45.2457564,"ln":7.5703204,"p":"","e":"","w":""},{"t":"NONE","a":"VIA BRIGNONE 3","c":"NONE","z":"10060","la":44.9321326,"ln":7.5411167,"p":"","e":"","w":""},{"t":"NOVA MILANESE","a":"VIA BRODOLINI 2","c":"NOVA MILANESE","z":"20834","la":45.581923,"ln":9.1970292,"p":"","e":"","w":""},{"t":"NOVARA ","a":"CORSO CAVOUR 15","c":"NOVARA","z":"28100","la":45.4483794,"ln":8.621859,"p":"","e":"","w":""},{"t":"NOVE","a":"VIA SAN GIUSEPPE 2","c":"NOVE","z":"36055","la":45.7250119,"ln":11.6808791,"p":"","e":"","w":""},{"t":"NOVELLARA","a":"LARGO DELLA SOLIDARIETA' E DELLA PACE 3","c":"NOVELLARA","z":"42017","la":44.8431299,"ln":10.7275253,"p":"","e":"","w":""},{"t":"NOVI LIGURE","a":"VIA DEI MILLE 52/A","c":"NOVI LIGURE","z":"15067","la":44.7667357,"ln":8.7866623,"p":"","e":"","w":""},{"t":"ODERZO","a":"VIA ALTINATE 72","c":"ODERZO","z":"31046","la":45.7744281,"ln":12.4820966,"p":"","e":"","w":""},{"t":"OFFIDA","a":"CORSO SERPENTE AUREO 79","c":"OFFIDA","z":"63073","la":42.935152,"ln":13.691615,"p":"","e":"","w":""},{"t":"OGGIONO","a":"VIA LOCATELLI 15","c":"OGGIONO","z":"23848","la":45.78958,"ln":9.35291,"p":"","e":"","w":""},{"t":"OLBIA","a":"VIA PINTURICCHIO 35","c":"OLBIA","z":"07026","la":40.9256071,"ln":9.4826179,"p":"","e":"","w":""},{"t":"OLEGGIO","a":"VIA GAGGIOLO 11","c":"OLEGGIO","z":"28047","la":45.5933104,"ln":8.6362321,"p":"","e":"","w":""},{"t":"OLGIATE MOLGORA E CALCO","a":"PIAZZA PAPA PAOLO VI ","c":"OLGIATE MOLGORA","z":"23887","la":45.7282023,"ln":9.4033542,"p":"","e":"","w":""},{"t":"OLGIATE OLONA","a":"VIA L. GREPPI 6","c":"OLGIATE OLONA","z":"21075","la":45.6296646,"ln":8.8883249,"p":"","e":"","w":""},{"t":"OLGINATE","a":"PIAZZA ROMA 4","c":"OLGINATE","z":"23854","la":45.8016827,"ln":9.412058,"p":"","e":"","w":""},{"t":"OLMO MARTELLAGO","a":"VIA DAMIANO CHIESA 9/C","c":"MARTELLAGO","z":"30030","la":45.5172566,"ln":12.1793059,"p":"","e":"","w":""},{"t":"OME - MONTICELLI BRUSATI ","a":"PIAZZA ALDO MORO 2","c":"OME","z":"25050","la":45.6241318,"ln":10.1244976,"p":"","e":"","w":""},{"t":"ORIGGIO","a":"VIA PIANTANIDA 22","c":"ORIGGIO","z":"21040","la":45.5970942,"ln":9.0207338,"p":"","e":"","w":""},{"t":"ORIO AL SERIO","a":"LARGO XXV APRILE 16","c":"ORIO AL SERIO","z":"24050","la":45.675958,"ln":9.692743,"p":"","e":"","w":""},{"t":"ORMELLE","a":"STRADON 20","c":"ORMELLE","z":"31010","la":45.77441,"ln":12.43843,"p":"","e":"","w":""},{"t":"ORNAGO","a":"VIA MARTIRI DI BOVES 1/I","c":"VIMERCATE","z":"20871","la":45.6081278,"ln":9.3642527,"p":"","e":"","w":""},{"t":"OSIMO","a":"VIA MATTEOTTI 56","c":"OSIMO","z":"60027","la":43.4856719,"ln":13.4878942,"p":"","e":"","w":""},{"t":"OSIO SOTTO","a":"VIA MATTEOTTI 10","c":"OSIO SOTTO","z":"24046","la":45.6180279,"ln":9.593769,"p":"","e":"","w":""},{"t":"OSPITALETTO MANTOVANO","a":"VIA S. GIOVANNI BOSCO 9 - FRAZ. OSPITALETTO","c":"MARCARIA","z":"46010","la":45.1346194,"ln":10.6093773,"p":"","e":"","w":""},{"t":"OSTIANO","a":"PIAZZA CAVOUR 11","c":"OSTIANO","z":"26032","la":45.2234556,"ln":10.2501174,"p":"","e":"","w":""},{"t":"OSTRA","a":"VIA GRAMSCI 16","c":"OSTRA","z":"60010","la":43.6127321,"ln":13.1574471,"p":"","e":"","w":""},{"t":"OSTUNI","a":"VIA MARTIRI DI KINDU' 97","c":"OSTUNI","z":"72017","la":40.7285702,"ln":17.5788635,"p":"","e":"","w":""},{"t":"OZIERI","a":"PIAZZA FONTANA GRIXONI - PALAZZO PIETRI 6","c":"OZIERI","z":"07014","la":40.5839165,"ln":9.0047406,"p":"","e":"","w":""},{"t":"PADERNO D'ADDA","a":"PIAZZA VITTORIA 9","c":"PADERNO D ADDA","z":"23877","la":45.6815988,"ln":9.444158,"p":"","e":"","w":""},{"t":"PADERNO DEL GRAPPA","a":"VIA LUIGI CADORNA 7","c":"PADERNO DEL GRAPPA","z":"31010","la":45.827508,"ln":11.847867,"p":"","e":"","w":""},{"t":"PADOVA","a":"VIA SANT'EUFEMIA 6","c":"PADOVA","z":"35121","la":45.4063143,"ln":11.8869766,"p":"","e":"","w":""},{"t":"PAGAZZANO","a":"VIA ROMA C/O PALAZZO COMUNALE ","c":"PAGAZZANO","z":"24040","la":45.5323689,"ln":9.6716761,"p":"","e":"","w":""},{"t":"PAITONE","a":"VIA D. BESCHI 8","c":"PAITONE","z":"25080","la":45.5526021,"ln":10.4015647,"p":"","e":"","w":""},{"t":"PALAZZAGO","a":"VIA CA QUARENGO 2","c":"PALAZZAGO","z":"24030","la":45.752587,"ln":9.532842,"p":"","e":"","w":""},{"t":"PALAZZO PIGNANO","a":"VIA MAGNETO 18","c":"PALAZZO PIGNANO","z":"26020","la":45.3911141,"ln":9.5679318,"p":"","e":"","w":""},{"t":"PALAZZOLO SULL'OGLIO","a":"VIA SGRAZZUTTI 1","c":"PALAZZOLO SULL OGLIO","z":"25036","la":45.6000081,"ln":9.8861137,"p":"","e":"","w":""},{"t":"PALERMO","a":"VIA MARIANO D'AMELIO 26","c":"PALERMO","z":"90143","la":38.144806,"ln":13.3529245,"p":"","e":"","w":""},{"t":"PALMI","a":"VIA PROVINCIALE C/O CASADONTE SERGIO 1","c":"PALMI","z":"89015","la":38.3853062,"ln":15.8877494,"p":"","e":"","w":""},{"t":"PALOSCO","a":"PIAZZA CASTELLO 14","c":"PALOSCO","z":"24050","la":45.5842152,"ln":9.835634,"p":"","e":"","w":""},{"t":"PARMA","a":"VIA GRAMSCI PAD. RASORI 14","c":"PARMA","z":"43126","la":44.8054408,"ln":10.3087258,"p":"","e":"","w":""},{"t":"PARRE","a":"VIA DUCA D'AOSTA 34","c":"PARRE","z":"24020","la":45.8736328,"ln":9.8888095,"p":"","e":"","w":""},{"t":"PASSIRANO","a":"VIA CHIESA 28","c":"PASSIRANO","z":"25050","la":45.6120404,"ln":10.0729355,"p":"","e":"","w":""},{"t":"PAVIA","a":"Piazzale Golgi","c":"PAVIA","z":"27100","la":45.1956101,"ln":9.1486063,"p":"","e":"","w":""},{"t":"PEDRENGO","a":"VIA GIARDINI 10","c":"PEDRENGO","z":"24066","la":45.6994372,"ln":9.7295719,"p":"","e":"","w":""},{"t":"PEREGO-ROVAGNATE-S.MARIA HOE'","a":"VIA ROMA 17","c":"PEREGO","z":"23888","la":45.736637,"ln":9.3613048,"p":"","e":"","w":""},{"t":"PERUGIA","a":"PIAZZA V. MARTINELLI 1","c":"SAN SISTO-PERUGIA","z":"06132","la":43.08531,"ln":12.3461,"p":"","e":"","w":""},{"t":"PESARO ","a":"VIA GUIDOBALDO DELLA ROVERE 13","c":"PESARO","z":"61121","la":43.9324778,"ln":12.8457316,"p":"","e":"","w":""},{"t":"PESARO E URBINO","a":"VIA GUIDUBALDO DELLA ROVERE 13","c":"PESARO","z":"61121","la":43.9324778,"ln":12.8457316,"p":"","e":"","w":""},{"t":"PESCANTINA","a":"VIA PONTE 93","c":"PESCANTINA","z":"37026","la":45.4799511,"ln":10.8628655,"p":"","e":"","w":""},{"t":"PESCARA","a":"VIA FONTE ROMANA C/O OSP.LE CIVILE DELLO S.SPIRITO 8","c":"PESCARA","z":"65124","la":42.4637672,"ln":14.1970445,"p":"","e":"","w":""},{"t":"PESCATE","a":"VIA SAN FRANCESCO 12","c":"PESCATE","z":"23855","la":45.8263134,"ln":9.3929515,"p":"","e":"","w":""},{"t":"PESCHIERA BORROMEO","a":"PIAZZA PAOLO VI 4","c":"PESCHIERA BORROMEO","z":"20068","la":45.4310935,"ln":9.3159216,"p":"","e":"","w":""},{"t":"PESCHIERA DEL GARDA","a":"VIA PIEMONTE 4/B","c":"PESCHIERA DEL GARDA","z":"37019","la":45.4331232,"ln":10.6883226,"p":"","e":"","w":""},{"t":"PETILIA POLICASTRO","a":"VIA MERCATO SNC","c":"PETILIA POLICASTRO","z":"88837","la":39.1124455,"ln":16.7918719,"p":"","e":"","w":""},{"t":"PETOSINO","a":"VIA MARTIRI DELLA LIBERTA 57","c":"SORISOLE","z":"24010","la":45.7332946,"ln":9.6362101,"p":"","e":"","w":""},{"t":"PETRITOLI","a":"LARGO G. LEOPARDI 23","c":"PETRITOLI","z":"63848","la":43.0670642,"ln":13.6569176,"p":"","e":"","w":""},{"t":"PEVERAGNO (CN)","a":"VIA ANGELO CAMPANA 20","c":"PEVERAGNO","z":"12016","la":44.331734,"ln":7.623207,"p":"","e":"","w":""},{"t":"PEZZAZE","a":"VIA PARROCCHIA  1","c":"PEZZAZE","z":"25060","la":45.7752612,"ln":10.2387837,"p":"","e":"","w":""},{"t":"PIACENZA","a":"VIA TAVERNA 49","c":"PIACENZA","z":"29121","la":45.0545341,"ln":9.6830557,"p":"","e":"","w":""},{"t":"PIADENA","a":"VIA ALDO MORO C/O CENTRO CIVICO ","c":"PIADENA","z":"26034","la":45.1177376,"ln":10.3892893,"p":"","e":"","w":""},{"t":"PIANA PISTOIESE","a":"VIA BRANACCIA 14","c":"PIANA PISTOIESE","z":"51031","la":43.8816458,"ln":10.997359,"p":"","e":"","w":""},{"t":"PIANIGA","a":"VIA VICOLO ZAMPIERI 22","c":"PIANIGA","z":"30030","la":45.4590484,"ln":12.0290647,"p":"","e":"","w":""},{"t":"PIASCO","a":"VIA UMBERTO I 51","c":"PIASCO","z":"12026","la":44.5679796,"ln":7.4562411,"p":"","e":"","w":""},{"t":"PIEDIMONTE MATESE","a":"VIA LIMITE 11","c":"PIEDIMONTE MATESE","z":"81016","la":41.3623965,"ln":14.3966503,"p":"","e":"","w":""},{"t":"PIEMONTE","a":"STRADA COMUNALE SAN VITO REVIGLIASCO 34","c":"TORINO","z":"10133","la":45.05069,"ln":7.69141,"p":"","e":"","w":""},{"t":"PIEVE DI SOLIGO","a":"VIA GIORGIONE 2/4","c":"PIEVE DI SOLIGO","z":"31053","la":45.906303,"ln":12.1755863,"p":"","e":"","w":""},{"t":"PIEVE SAN GIACOMO","a":"VIA GARIBALDI  4/6","c":"PIEVE SAN GIACOMO","z":"26035","la":45.1267606,"ln":10.1860581,"p":"","e":"","w":""},{"t":"PIOMBINO","a":"VIALE DELLA REPUBBLICA 48","c":"PIOMBINO","z":"57025","la":42.9272765,"ln":10.5255549,"p":"","e":"","w":""},{"t":"PISA","a":"PIAZZA VITTORIO EMANUELE II 18","c":"PISA","z":"56126","la":43.7111389,"ln":10.3983956,"p":"","e":"","w":""},{"t":"PISOGNE","a":"VIA CAVOUR 1","c":"PISOGNE","z":"25055","la":45.8018458,"ln":10.1101668,"p":"","e":"","w":""},{"t":"PISTOIA","a":"PIAZZA SAN LORENZO 29","c":"PISTOIA","z":"51100","la":43.93564,"ln":10.91989,"p":"","e":"","w":""},{"t":"PIZZIGHETTONE","a":"VIA S. ARCHELAO 4","c":"PIZZIGHETTONE","z":"26026","la":45.1837649,"ln":9.8096351,"p":"","e":"","w":""},{"t":"POGGIO RUSCO","a":"VIA MANTEGNA 11","c":"POGGIO RUSCO","z":"46025","la":44.9753138,"ln":11.1325379,"p":"","e":"","w":""},{"t":"POGLIANO MILANESE","a":"VIA TOSCANINI 1","c":"POGLIANO MILANESE","z":"20010","la":45.5421894,"ln":8.9991366,"p":"","e":"","w":""},{"t":"POLLENZA","a":"PIAZZA DELLA LIBERTA'  29","c":"POLLENZA","z":"62010","la":43.2678187,"ln":13.3475787,"p":"","e":"","w":""},{"t":"POMEZIA","a":"VIA OVIDIO 44","c":"POMEZIA","z":"00071","la":41.6703594,"ln":12.4999971,"p":"","e":"","w":""},{"t":"PONCARALE - BORGO","a":"VIA A. GALLO 30","c":"PONCARALE","z":"25020","la":45.461159,"ln":10.1937142,"p":"","e":"","w":""},{"t":"PONTE DI PIAVE","a":"VIA VIVALDI 15","c":"SALGAREDA","z":"31040","la":45.7023845,"ln":12.4941729,"p":"","e":"","w":""},{"t":"PONTE SAN PIETRO","a":"VIA MOIOLI 4 ","c":"PONTE SAN PIETRO","z":"24036","la":45.6971917,"ln":9.5876017,"p":"","e":"","w":""},{"t":"PONTECCHIO POLESINE","a":"PIAZZA TORQUATO FRACCON 239","c":"PONTECCHIO POLESINE","z":"54030","la":45.0188951,"ln":11.8073713,"p":"","e":"","w":""},{"t":"PONTEDELLOLIO","a":"STRADA DEI GATTONI","c":"6 - LOCALITA' RIVA DI PONTEDELLOLIO 6","z":"Italy","la":44.8570721,"ln":9.6288534,"p":"","e":"","w":""},{"t":"PONTENURE","a":"VIA UGO MOSCHINI 16","c":"PONTENURE","z":"29010","la":44.9995937,"ln":9.7861282,"p":"","e":"","w":""},{"t":"PONTERANICA","a":"VIA UNIONE 1","c":"PONTERANICA","z":"24010","la":45.730417,"ln":9.651502,"p":"","e":"","w":""},{"t":"PONTEVICO","a":"PIAZZETTA GARIBALDI 1","c":"PONTEVICO","z":"25026","la":45.2713659,"ln":10.0925621,"p":"","e":"","w":""},{"t":"PONTIDA","a":"LARGO DONATORI AVIS AIDO ","c":"PONTIDA","z":"24030","la":45.7316949,"ln":9.4995456,"p":"","e":"","w":""},{"t":"PONTINIA","a":"VIA CAVOUR 20","c":"PONTINIA","z":"04014","la":41.4085242,"ln":13.045618,"p":"","e":"","w":""},{"t":"PONTOGLIO","a":"VIA PIAVE 15","c":"PONTOGLIO","z":"25037","la":45.5720932,"ln":9.8587725,"p":"","e":"","w":""},{"t":"PONZANO VENETO","a":"VIA BACHELET 7","c":"TREVISO","z":"31100","la":45.6939973,"ln":12.2334475,"p":"","e":"","w":""},{"t":"PORCARI","a":"VIA ROMANA EST C/O CROCE VERDE 71/A","c":"PORCARI","z":"55016","la":43.8362865,"ln":10.6267891,"p":"","e":"","w":""},{"t":"PORCIA","a":"VIA DELLE RISORGIVE 5","c":"PORCIA","z":"33080","la":45.9556332,"ln":12.6073474,"p":"","e":"","w":""},{"t":"PORDENONE","a":"VIA MONTEREALE 24","c":"PORDENONE","z":"33170","la":45.9563684,"ln":12.661452,"p":"","e":"","w":""},{"t":"PORTO AZZURRO","a":"PIAZZA G. MATTEOTTI 10","c":"PORTO AZZURRO","z":"57036","la":42.76525,"ln":10.3975011,"p":"","e":"","w":""},{"t":"PORTO CERESIO","a":"PIAZZA LURASCHI 24","c":"PORTO CERESIO","z":"21050","la":45.9042858,"ln":8.8994799,"p":"","e":"","w":""},{"t":"PORTO RECANATI","a":"VIA DANTE ALIGHIERI 2","c":"PORTO RECANATI","z":"62017","la":43.4255328,"ln":13.6657181,"p":"","e":"","w":""},{"t":"PORTO TORRES","a":"VIA PRINCIPE DI PIEMONTE C/O CASA ASSOCIAZIONI 61","c":"PORTO TORRES","z":"07046","la":40.8325856,"ln":8.4050711,"p":"","e":"","w":""},{"t":"PORTOBUFFOLE'","a":"VIA PAPA LUCIANI 15","c":"PORTOBUFFOLE'","z":"31039","la":45.8608221,"ln":12.5385537,"p":"","e":"","w":""},{"t":"POTENZA","a":"VIA SANT'ANTUONO C/O AVIS SNC","c":"SENISE","z":"85038","la":40.1490282,"ln":16.2874477,"p":"","e":"","w":""},{"t":"POTENZA PICENA","a":"VIA CUTINI 2","c":"POTENZA PICENA","z":"62018","la":43.3662743,"ln":13.6202816,"p":"","e":"","w":""},{"t":"POVEGLIANO","a":"VIA PAVAN 5","c":"POVEGLIANO","z":"31050","la":45.7613615,"ln":12.2009724,"p":"","e":"","w":""},{"t":"POZZUOLO MARTESANA","a":"VIA MARTIRI DELLA LIBERAZIONE 24","c":"POZZUOLO MARTESANA","z":"20060","la":45.5134576,"ln":9.452942,"p":"","e":"","w":""},{"t":"PRAMAGGIORE","a":"PIAZZA LIBERTA' 48","c":"PRAMAGGIORE","z":"30020","la":45.813409,"ln":12.737125,"p":"","e":"","w":""},{"t":"PRATA DI PORDENONE","a":"VIA LEONARDO DA VINCI 42","c":"PRATA DI PORDENONE","z":"33080","la":45.8451479,"ln":12.567093,"p":"","e":"","w":""},{"t":"PRATO","a":"VIA SANT'ORSOLA 19 A","c":"PRATO","z":"59100","la":43.87745,"ln":11.09376,"p":"","e":"","w":""},{"t":"PRATOLA SERRA","a":"VIA G. PICARDO 33","c":"PRATOLA SERRA","z":"83039","la":40.9863635,"ln":14.8535015,"p":"","e":"","w":""},{"t":"PRAVISDOMINI","a":"VIA ROMA 14","c":"PRAVISDOMINI","z":"33076","la":45.817967,"ln":12.693083,"p":"","e":"","w":""},{"t":"PREDORE","a":"PIAZZA VITTORIO VENETO 1","c":"PREDORE","z":"24040","la":45.0647992,"ln":7.6952675,"p":"","e":"","w":""},{"t":"PREGANZIOL","a":"VIA RIO SERVA 7","c":"PREGANZIOL","z":"31022","la":45.5889265,"ln":12.2576,"p":"","e":"","w":""},{"t":"PREGNANA MILANESE","a":"VIA MANZONI 8","c":"PREGNANA MILANESE","z":"20010","la":45.5168708,"ln":9.0089205,"p":"","e":"","w":""},{"t":"PRESEZZO","a":"VIA VITTORIO VENETO 1267","c":"PRESEZZO","z":"24030","la":45.6911883,"ln":9.5638311,"p":"","e":"","w":""},{"t":"PREVALLE","a":"VIALE RIMEMBRANZE 1","c":"PREVALLE","z":"25080","la":45.5523095,"ln":10.4226866,"p":"","e":"","w":""},{"t":"PREZZATE","a":"VIA XXIV MAGGIO 6","c":"MAPELLO","z":"24030","la":45.7191354,"ln":9.5607959,"p":"","e":"","w":""},{"t":"PROVAGLIO D'ISEO","a":"VIA CESARE BATTISTI 11","c":"PROVAGLIO D ISEO","z":"25050","la":45.635075,"ln":10.0493817,"p":"","e":"","w":""},{"t":"PROVINCIALE BERGAMO","a":"VIA BORGO PALAZZO 90","c":"BERGAMO","z":"24125","la":45.6955024,"ln":9.6866638,"p":"","e":"","w":""},{"t":"PROVINCIALE BRESCIA","a":"VIA MONTE CENGIO 20","c":"BRESCIA","z":"25128","la":45.5536588,"ln":10.2133756,"p":"","e":"","w":""},{"t":"Provinciale Caserta","a":"Via P. Harris 79","c":"Caserta","z":"81100","la":41.0555754,"ln":14.3423249,"p":"+390823445001 +393403075310","e":"","w":""},{"t":"PROVINCIALE COMO","a":"VIA NAPOLEONA C/O OSPEDALE SANT'ANNA 60","c":"COMO","z":"22100","la":45.7907527,"ln":9.0893873,"p":"","e":"","w":""},{"t":"PROVINCIALE CREMONA","a":"VIA F. APORTI 28","c":"CREMONA","z":"26100","la":45.0293522,"ln":10.4692654,"p":"","e":"","w":""},{"t":"PROVINCIALE LECCO ","a":"VIA ALDO MORO 4","c":"LECCO","z":"23900","la":45.8645585,"ln":9.3897592,"p":"","e":"","w":""},{"t":"PROVINCIALE LODI ","a":"VIA FANFULLA  22","c":"LODI","z":"26900","la":45.3170056,"ln":9.501704,"p":"","e":"","w":""},{"t":"PROVINCIALE MANTOVA","a":"STRADA DOSSO DEL CORSO 1","c":"MANTOVA","z":"46100","la":45.1534946,"ln":10.769253,"p":"","e":"","w":""},{"t":"PROVINCIALE MILANO ","a":"VIA DE AMICIS  7","c":"MELZO","z":"20066","la":45.5045315,"ln":9.4240607,"p":"","e":"","w":""},{"t":"PROVINCIALE MONZA BRIANZA ","a":"VIA SOLFERINO 16","c":"MONZA","z":"20900","la":45.5781549,"ln":9.2675926,"p":"","e":"","w":""},{"t":"PROVINCIALE PAVIA ","a":"PIAZZALE GOLGI C/O OSPEDALE S. MATTEO 2","c":"PAVIA","z":"27100","la":45.19622,"ln":9.1488409,"p":"","e":"","w":""},{"t":"PROVINCIALE SONDRIO","a":"VIA COLOMBARO 17","c":"SONDRIO","z":"23100","la":46.1701304,"ln":9.8753181,"p":"","e":"","w":""},{"t":"PROVINCIALE VARESE","a":"VIA CAIROLI 14","c":"VARESE","z":"21100","la":45.8213726,"ln":8.8342707,"p":"","e":"","w":""},{"t":"PUGLIA","a":"VIA NAZARIO SAURO 1","c":"FOGGIA","z":"71121","la":41.4569931,"ln":15.540924,"p":"","e":"","w":""},{"t":"PUTIGNANO","a":"VIA VINCENZO LATERZA 1","c":"PUTIGNANO","z":"70017","la":40.8544104,"ln":17.1204087,"p":"","e":"","w":""},{"t":"QUATTORDIO","a":"VIA PADANA OVEST 13","c":"QUATTORDIO","z":"15028","la":44.8963857,"ln":8.3999775,"p":"","e":"","w":""},{"t":"QUINTO VICENTINO","a":"VIA PIAVE 33","c":"QUINTO VICENTINO","z":"36050","la":45.559639,"ln":11.6471466,"p":"","e":"","w":""},{"t":"QUINZANO","a":"PIAZZA RIGHETTI 1","c":"VERONA","z":"37125","la":45.4718633,"ln":10.9747693,"p":"","e":"","w":""},{"t":"QUISTELLO","a":"VIA MARTIRI DI BELFIORE 5","c":"QUISTELLO","z":"46026","la":45.0094195,"ln":10.9810108,"p":"","e":"","w":""},{"t":"RAGUSA","a":"PIAZZA POLA C/O PALAZZO COMUNALE 5","c":"RAGUSA IBLA","z":"97100","la":36.9256527,"ln":14.7451209,"p":"","e":"","w":""},{"t":"RANICA","a":"VIA SIMONE ELIA 2","c":"RANICA","z":"24020","la":45.7267495,"ln":9.7141458,"p":"","e":"","w":""},{"t":"RAPOLLA","a":"PIAZZA DELLA LIBERTA' PALAZZO CRINGOLI 22","c":"RAPOLLA","z":"85027","la":40.9766198,"ln":15.6737874,"p":"","e":"","w":""},{"t":"RAVENNA","a":"Via Oriani 44","c":"RAVENNA","z":"48121","la":44.4145894,"ln":12.2042512,"p":"","e":"","w":""},{"t":"RECANATI","a":"P.LE ANDREA DA RECANATI  2","c":"RECANATI","z":"62019","la":43.3968329,"ln":13.5515093,"p":"","e":"","w":""},{"t":"REGGIO CALABRIA","a":"c/o AVIS CORSO GARIBALDI 585","c":"REGGIO CALABRIA","z":"89127","la":38.1027006,"ln":15.6375413,"p":"","e":"","w":""},{"t":"REGGIO EMILIA","a":"VIA MUZIO CLEMENTI 2/A","c":"REGGIO EMILIA","z":"42123","la":44.6947875,"ln":10.6103035,"p":"","e":"","w":""},{"t":"REGIONALE LOMBARDIA","a":"VIA BORGO PALAZZO 90","c":"BERGAMO","z":"24125","la":45.6955024,"ln":9.6866638,"p":"","e":"","w":""},{"t":"REVERE","a":"PIAZZA CASTELLO 10 - FRAZ. REVERE","c":"REVERE","z":"46036","la":45.0577029,"ln":11.1280697,"p":"","e":"","w":""},{"t":"RIESE PIO X","a":"VIA COSTANZA 18","c":"RIESE PIO X","z":"31039","la":45.7465092,"ln":11.8983708,"p":"","e":"","w":""},{"t":"RIETI","a":"PIAZZA VITTORIO EMANUELE - PALAZZO DOSI 17","c":"RIETI","z":"02100","la":42.4027674,"ln":12.8602021,"p":"","e":"","w":""},{"t":"RIMINI","a":"C/O CASA DELLE ASSOCIAZIONI VIA COVIGLIANO 238","c":"RIMINI","z":"47923","la":44.0423867,"ln":12.5516724,"p":"","e":"","w":""},{"t":"RIPATRANSONE","a":"CORSO VITTORIO EMANUELE 36","c":"RIPATRANSONE","z":"63065","la":42.9977954,"ln":13.7604984,"p":"","e":"","w":""},{"t":"RIVAROLO MANTOVANO","a":"VIA AVIS 1","c":"RIVAROLO MANTOVANO","z":"46017","la":45.0711387,"ln":10.431903,"p":"","e":"","w":""},{"t":"RIVERGARO","a":"VIA ROMA 43","c":"RIVERGARO","z":"29029","la":44.9128098,"ln":9.6019755,"p":"","e":"","w":""},{"t":"ROBECCO SUL NAVIGLIO","a":"VIA L. ARIOSTO 7","c":"ROBECCO SUL NAVIGLIO","z":"20087","la":45.4328871,"ln":8.8865863,"p":"","e":"","w":""},{"t":"ROCCABERNARDA","a":"VIA DELLA RESISTENZA SNC","c":"ROCCABERNARDA","z":"88835","la":39.1343558,"ln":16.871323,"p":"","e":"","w":""},{"t":"ROGENO","a":"VIA STAZIONE 2","c":"ROGENO","z":"23849","la":45.781955,"ln":9.2733614,"p":"","e":"","w":""},{"t":"ROMANENGO ","a":"VIA F.LLI DE BRAZZI 1","c":"ROMANENGO","z":"26014","la":45.3792683,"ln":9.7853515,"p":"","e":"","w":""},{"t":"ROMANO D'EZZELINO","a":"PIAZZALE CADORNA ","c":"ROMANO D'EZZELINO","z":"36060","la":45.7957511,"ln":11.7578929,"p":"","e":"","w":""},{"t":"ROMANO DI LOMBARDIA","a":"VIA S. FRANCESCO D ASSISI 12 C/O OSPEDALE SS. TRINITA  PIANO PRIMO","c":"ROMANO DI LOMBARDIA","z":"24058","la":45.5193133,"ln":9.7514169,"p":"","e":"","w":""},{"t":"RONCADE","a":"VIA SAN ROCCO 8","c":"RONCADE","z":"31056","la":45.6314728,"ln":12.3755687,"p":"","e":"","w":""},{"t":"ROSA'","a":"VIA SCHALLSTADT 13","c":"ROSA'","z":"36027","la":45.72247,"ln":11.7613977,"p":"","e":"","w":""},{"t":"ROSOLINA","a":"VIALE MARCONI 110/B","c":"ROSOLINA","z":"45010","la":45.0762901,"ln":12.2420257,"p":"","e":"","w":""},{"t":"ROSSANO VENETO","a":"VIA SAN ZENONE 258","c":"ROSSANO VENETO","z":"36028","la":45.7215587,"ln":11.8114883,"p":"","e":"","w":""},{"t":"ROSTA BUTTIGLIERA ALTA","a":"PIAZZA RIVOLI 11","c":"ROSTA","z":"10090","la":45.0712717,"ln":7.4665066,"p":"","e":"","w":""},{"t":"ROVATO","a":"VIA GOLGI 2","c":"ROVATO","z":"25038","la":45.5653786,"ln":9.9977735,"p":"","e":"","w":""},{"t":"ROVERBELLA","a":"PIAZZALE DONATORI DEL SANGUE 1","c":"ROVERBELLA","z":"46048","la":45.2684422,"ln":10.8021728,"p":"","e":"","w":""},{"t":"ROVIGO","a":"VIA DELLA PACE 5","c":"ROVIGO","z":"45100","la":45.0749779,"ln":11.7872456,"p":"","e":"","w":""},{"t":"RUBIERA","a":"VIA ALCIDE DE GASPERI 1/A","c":"RUBIERA","z":"42048","la":44.6490908,"ln":10.7769458,"p":"","e":"","w":""},{"t":"RUDIANO","a":"CORSO ALDO MORO - PALAZZO FENAROLI ","c":"RUDIANO","z":"25030","la":45.4896818,"ln":9.8838948,"p":"","e":"","w":""},{"t":"S. MARTINO DI VENEZZE","a":"VIA CAVOUR 840","c":"SAN MARTINO DI VENEZZE","z":"45030","la":45.1328069,"ln":11.9469382,"p":"","e":"","w":""},{"t":"SABAUDIA","a":"VIA VERBANIA 26","c":"SABAUDIA","z":"04016","la":41.29925,"ln":13.0305851,"p":"","e":"","w":""},{"t":"SALERNO","a":"VIA ANDREA LAUROGROTTO 19","c":"SALERNO","z":"84135","la":40.6823837,"ln":14.7755843,"p":"","e":"","w":""},{"t":"SALGAREDA","a":"VIA BOLZANO 1","c":"SALGAREDA","z":"31040","la":45.7156985,"ln":12.4741744,"p":"","e":"","w":""},{"t":"SALIZZOLE","a":"VIA ROMA 211","c":"SALIZZOLE","z":"37056","la":45.2425421,"ln":11.0906275,"p":"","e":"","w":""},{"t":"SALO'","a":"VIA BRUNATI ","c":"SALO","z":"25087","la":45.6074638,"ln":10.5261908,"p":"","e":"","w":""},{"t":"SALSOMAGGIORE TERME","a":"VIA MACELLO 3","c":"SALSOMAGGIORE TERME","z":"43039","la":44.8168542,"ln":9.9870461,"p":"","e":"","w":""},{"t":"SALVIROLA","a":"PIAZZA VITTORIA 16","c":"SALVIROLA","z":"26010","la":45.3534889,"ln":9.7796287,"p":"","e":"","w":""},{"t":"SALZANO","a":"VIA MAMELI 2","c":"SALZANO","z":"30030","la":45.5225725,"ln":12.1080065,"p":"","e":"","w":""},{"t":"SAMOLACO-VALCHIAVENNA","a":"VIA TRIVULZIA PRESSO BIBLIOTECA ","c":"SAMOLACO","z":"23027","la":46.2425879,"ln":9.4029476,"p":"","e":"","w":""},{"t":"SAN BASSANO","a":"VIA ROMA 84","c":"SAN BASSANO","z":"26020","la":45.2428199,"ln":9.8061169,"p":"","e":"","w":""},{"t":"SAN BEN. DEL T.-GROTTAMM.-MONTEPRAND.","a":"VIA FILENI 1","c":"SAN BENEDETTO DEL TRONTO","z":"63074","la":42.949614,"ln":13.8772322,"p":"","e":"","w":""},{"t":"SAN BIAGIO DI CALLALTA","a":"VIA 1 MAGGIO 42/B","c":"SAN BIAGIO DI CALLALTA","z":"31048","la":45.675692,"ln":12.331597,"p":"","e":"","w":""},{"t":"SAN BONIFACIO","a":"VIA C. BATTISTI 7","c":"SAN BONIFACIO","z":"37047","la":45.3977639,"ln":11.2643103,"p":"","e":"","w":""},{"t":"SAN COLOMBANO AL LAMBRO","a":"VIA OTTAVIO STEFFENINI 207","c":"SAN COLOMBANO AL LAMBRO","z":"20078","la":45.1826521,"ln":9.4904752,"p":"","e":"","w":""},{"t":"SAN FRANCESCO AL CAMPO","a":"VIA MILITARE 1","c":"SAN FRANCESCO AL CAMPO","z":"10070","la":45.2381351,"ln":7.6536817,"p":"","e":"","w":""},{"t":"SAN GERVASIO BRESCIANO","a":"VIALE XXV APRILE 17","c":"SAN GERVASIO BRESCIANO","z":"25020","la":45.3059988,"ln":10.1496834,"p":"","e":"","w":""},{"t":"SAN GINESIO","a":"PIAZZA VITTORIO EMANUELE 2","c":"RIPE SAN GINESIO","z":"62020","la":43.1429039,"ln":13.3674404,"p":"","e":"","w":""},{"t":"SAN GIORGIO DI MANTOVA E BIGARELLO","a":"VIA CHIESE 19","c":"SAN GIORGIO DI MANTOVA","z":"46030","la":45.1828863,"ln":10.8343441,"p":"","e":"","w":""},{"t":"SAN GIORGIO SUL LEGNANO","a":"VIA MELLA 1","c":"SAN GIORGIO SUL LEGNANO","z":"20010","la":45.57674,"ln":8.91146,"p":"","e":"","w":""},{"t":"SAN GIOVANNI BIANCO","a":"VIA POZZOLO 2/A","c":"SAN GIOVANNI BIANCO","z":"24015","la":45.8750867,"ln":9.6510585,"p":"","e":"","w":""},{"t":"SAN GIOVANNI ILARIONE","a":"VIA IV NOVEMBRE 63","c":"SAN GIOVANNI ILARIONE","z":"37035","la":45.5242718,"ln":11.2352421,"p":"","e":"","w":""},{"t":"SAN GIULIANO MILANESE","a":"VIA TRIESTE 50","c":"SAN GIULIANO MILANESE","z":"20098","la":45.3953843,"ln":9.2888683,"p":"","e":"","w":""},{"t":"SAN MARTINO IN PENSILIS","a":"LARGO SANTA MARIA SNC","c":"SAN MARTINO IN PENSILIS","z":"86046","la":41.8701198,"ln":15.0091407,"p":"","e":"","w":""},{"t":"SAN MAURIZIO CANAVESE","a":"VIA XX SETTEMBRE 3","c":"SAN MAURIZIO CANAVESE","z":"10077","la":45.2192643,"ln":7.6311357,"p":"","e":"","w":""},{"t":"SAN NAZARIO","a":"VIA EUROPA 5","c":"VALBRENTA","z":"36020","la":45.8247559,"ln":11.7045559,"p":"","e":"","w":""},{"t":"SAN PAOLO D'ARGON","a":"VIA DEL CONVENTO 5","c":"SAN PAOLO D ARGON","z":"24060","la":45.6910045,"ln":9.8057882,"p":"","e":"","w":""},{"t":"SAN PELLEGRINO TERME","a":"VIA SAN CARLO C/O VILLA SPERANZA 32","c":"SAN PELLEGRINO TERME","z":"24016","la":45.8372698,"ln":9.6636916,"p":"","e":"","w":""},{"t":"SAN PIETRO A MAIDA","a":"PIAZZA LARGO DANTE ","c":"SAN PIETRO A MAIDA","z":"88025","la":38.8470071,"ln":16.3458081,"p":"","e":"","w":""},{"t":"SAN SEVERO","a":"VICO G. GIUSTI 5","c":"SAN SEVERO","z":"71016","la":41.6801683,"ln":15.3878639,"p":"","e":"","w":""},{"t":"SAN STINO DI LIVENZA","a":"VIA FORO BOARIO 4","c":"SAN STINO DI LIVENZA","z":"30029","la":45.7304204,"ln":12.6799506,"p":"","e":"","w":""},{"t":"SAN VALENTINO IN ABRUZZO CITERIORE","a":"VIA FIUME 4","c":"SAN VALENTINO IN ABRUZZO CITERIORE","z":"65020","la":42.2326915,"ln":13.9867816,"p":"","e":"","w":""},{"t":"SAN VITO AL TAGLIAMENTO","a":"VIA DELLA STAZIONE 42","c":"SAN VITO AL TAGLIAMENTO","z":"33078","la":45.9155226,"ln":12.855282,"p":"","e":"","w":""},{"t":"SAN ZENO DI MONTAGNA","a":"VIA PONTE DEL DIAVOLO 2","c":"SAN ZENO DI MONTAGNA","z":"37010","la":45.6529141,"ln":10.7469058,"p":"","e":"","w":""},{"t":"SAN ZENONE DEGLI EZZELINI","a":"VIA CA' BEMBIO 17","c":"SAN ZENONE DEGLI EZZELINI","z":"31020","la":45.7786467,"ln":11.8333111,"p":"","e":"","w":""},{"t":"SANGUINETTO","a":"VIA INTERNO CASTELLO 13","c":"SANGUINETTO","z":"37058","la":45.1820565,"ln":11.1527348,"p":"","e":"","w":""},{"t":"SANNAZZARO","a":"VIA G. MARCONI 32","c":"SANNAZZARO DE  BURGONDI","z":"27039","la":45.1046581,"ln":8.9068967,"p":"","e":"","w":""},{"t":"SANT'AMBROGIO DI VALPOLICELLA","a":"VIA ALEARDI 12","c":"SANT'AMBROGIO DI VALPOLICELLA","z":"37015","la":45.5249155,"ln":10.8341957,"p":"","e":"","w":""},{"t":"SANT'ANGELO LODIGIANO","a":"VIA CAVOUR 19","c":"SANT ANGELO LODIGIANO","z":"26866","la":45.2421897,"ln":9.4064821,"p":"","e":"","w":""},{"t":"SANT'ELPIDIO A MARE","a":"VIA DELLA COSTITUZIONE 88","c":"SANT'ELPIDIO A MARE","z":"63811","la":43.2374328,"ln":13.6902474,"p":"","e":"","w":""},{"t":"SANTA CATERINA VILLARMOSA","a":"PIAZZA GARIBALDI 34","c":"SANTA CATERINA VILLARMOSA","z":"93018","la":37.589165,"ln":14.031762,"p":"","e":"","w":""},{"t":"SANTA MARIA CAPUA A VETERE","a":"VIA JAN PALACHE CENTRAL PARK 10","c":"SANTA MARIA CAPUA A VETERE","z":"81055","la":41.0874894,"ln":14.2580408,"p":"","e":"","w":""},{"t":"SANTA MARIA DI SALA","a":"VIA DESMAN 175/A","c":"SANTA MARIA DI SALA","z":"30036","la":45.5214601,"ln":12.0154398,"p":"","e":"","w":""},{"t":"SANTA MARIA LIGURE","a":"VIA MARTIRI DEL TURCHINO 2","c":"SANTA MARGHERITA LIGURE","z":"16038","la":44.3319723,"ln":9.2082651,"p":"","e":"","w":""},{"t":"SANTA MARIA NUOVA","a":"CORSO MATTEOTTI 9","c":"SANTA MARIA NUOVA","z":"60030","la":43.4953573,"ln":13.3087593,"p":"","e":"","w":""},{"t":"SANTA SEVERINA","a":"VIA XXIV MAGGIO 1","c":"SANTA SEVERINA","z":"88832","la":39.1478065,"ln":16.9158621,"p":"","e":"","w":""},{"t":"SANTENA","a":"VIA MILITE IGNOTO 32","c":"SANTENA","z":"10026","la":44.9504171,"ln":7.7697693,"p":"","e":"","w":""},{"t":"SANTO STEFANO TICINO","a":"VIA PIAVE 9","c":"SANTO STEFANO TICINO","z":"20010","la":45.489499,"ln":8.9189632,"p":"","e":"","w":""},{"t":"SARDEGNA","a":"PIAZZA DI CHIESA 3","c":"ELMAS","z":"09067","la":39.97042,"ln":9.661638,"p":"","e":"","w":""},{"t":"SAREZZO","a":"VIA PUCCINI 25/A","c":"SAREZZO","z":"25068","la":45.660097,"ln":10.1981499,"p":"","e":"","w":""},{"t":"SARMATO","a":"VIA GRAMSCI 3","c":"SARMATO","z":"29010","la":45.0581454,"ln":9.4914899,"p":"","e":"","w":""},{"t":"SARNICO","a":"VIA P.A.FACCANONI 6","c":"SARNICO","z":"24067","la":45.6687841,"ln":9.9538539,"p":"","e":"","w":""},{"t":"SARRABUS","a":"VIA VERDI 9","c":"MURAVERA","z":"09043","la":39.420147,"ln":9.5753537,"p":"","e":"","w":""},{"t":"SASSARI","a":"VIA PRINCIPE DI PIEMONTE C/O CASA ASSOCIAZIONI 61","c":"PORTO TORRES","z":"07046","la":40.8325856,"ln":8.4050711,"p":"","e":"","w":""},{"t":"SASSARI-ITTIRI","a":"VIA VERONA C/O ANTONIO DESSANTI 24","c":"SASSARI","z":"07100","la":40.7119097,"ln":8.5639133,"p":"","e":"","w":""},{"t":"SASSUOLO","a":"VIA DECORATI AL VALOR MILITARE 14","c":"SASSUOLO","z":"41049","la":44.5417434,"ln":10.7952577,"p":"","e":"","w":""},{"t":"SAVONA","a":"VIA SAN LORENZO 6","c":"SAVONA","z":"17100","la":44.3136915,"ln":8.47743,"p":"","e":"","w":""},{"t":"SCANZOROSCIATE","a":"VIA MONTE SAN MICHELE 3","c":"SCANZOROSCIATE","z":"24020","la":45.7107799,"ln":9.7359582,"p":"","e":"","w":""},{"t":"SCIACCA","a":"VIA DEGLI AGRIFOGLI 16","c":"SCIACCA","z":"92019","la":37.5124498,"ln":13.1055351,"p":"","e":"","w":""},{"t":"SCICLI","a":"VIALE I MAGGIO 5","c":"SCICLI","z":"97018","la":36.7867534,"ln":14.6968048,"p":"","e":"","w":""},{"t":"SEDRINA","a":"VIA CA DAMIANI 66","c":"SEDRINA","z":"24010","la":45.7811974,"ln":9.6255499,"p":"","e":"","w":""},{"t":"SEGRATE","a":"VIA DEGLI ALPINI 4","c":"SEGRATE","z":"20090","la":45.495957,"ln":9.3003204,"p":"","e":"","w":""},{"t":"SELLERO","a":"PIAZZA DONATORI DI SANGE 1","c":"SELLERO","z":"25050","la":46.0565891,"ln":10.345017,"p":"","e":"","w":""},{"t":"SENIGA","a":"VIA MARCONI 1","c":"SENIGA","z":"25020","la":45.2419682,"ln":10.1764446,"p":"","e":"","w":""},{"t":"SENNA LODIGIANA","a":"VIA DANTE 1","c":"SENNA LODIGIANA","z":"26856","la":45.1484043,"ln":9.5926824,"p":"","e":"","w":""},{"t":"SERAVEZZA-STAZZEMA-FORTE DEI MARMI","a":"VIA CORRADO DEL GRECO 11","c":"SERAVEZZA","z":"55047","la":43.9940893,"ln":10.2259971,"p":"","e":"","w":""},{"t":"SEREGNO","a":"VIA E. POZZOLI ","c":"SEREGNO","z":"20831","la":45.6486626,"ln":9.2062331,"p":"","e":"","w":""},{"t":"SERIATE","a":"VIA DECO E CANETTA 50","c":"SERIATE","z":"24068","la":45.6819653,"ln":9.7236198,"p":"","e":"","w":""},{"t":"SERMIDE","a":"VICOLO MASTINE 4 - FRAZ. SERMIDE ","c":"SERMIDE","z":"46028","la":45.0045287,"ln":11.2995094,"p":"","e":"","w":""},{"t":"SESTO AL REGHENA","a":"VIA MARIGNANA CENTRO 23","c":"SESTO AL REGHENA","z":"33079","la":45.8561,"ln":12.8019842,"p":"","e":"","w":""},{"t":"SESTO SAN GIOVANNI","a":"VIA GIARDINI 32","c":"SESTO SAN GIOVANNI","z":"20099","la":45.5334838,"ln":9.2355533,"p":"","e":"","w":""},{"t":"SETTIMO TORINESE","a":"VIA GALILEO FERRARIS 6","c":"SETTIMO MILANESE","z":"10036","la":45.1371336,"ln":7.7755503,"p":"","e":"","w":""},{"t":"SICILIA","a":"VIA NAZARIO SAURO 1","c":"LICATA","z":"92027","la":37.1023347,"ln":13.9401935,"p":"","e":"","w":""},{"t":"SICULIANA","a":"VIA A. DE GASPERI 5","c":"SICULIANA","z":"92010","la":37.3367698,"ln":13.4264798,"p":"","e":"","w":""},{"t":"SIENA","a":"C/O A.O.U.S. VIALE BRACCI 16","c":"SIENA","z":"53100","la":43.3431772,"ln":11.3272801,"p":"","e":"","w":""},{"t":"SIRACUSA","a":"VIA MARCO POLO 3","c":"LENTINI","z":"96016","la":37.279875,"ln":14.9882151,"p":"","e":"","w":""},{"t":"SIRMIONE","a":"VIA XX SETTEMBRE ","c":"SIRMIONE","z":"25019","la":45.4610431,"ln":10.6110177,"p":"","e":"","w":""},{"t":"SIROLO","a":"VIA ROSSINI 12","c":"SIROLO","z":"60020","la":43.5233295,"ln":13.618195,"p":"","e":"","w":""},{"t":"SIZIANO","a":"PIAZZA G. NEGRI 1","c":"SIZIANO","z":"27010","la":45.3189525,"ln":9.200198,"p":"","e":"","w":""},{"t":"SOLBIATE OLONA","a":"VIA XXV APRILE 2","c":"SOLBIATE OLONA","z":"21058","la":45.6514946,"ln":8.8834068,"p":"","e":"","w":""},{"t":"SOLFERINO","a":"VIA SAN MARTINO 10/2","c":"GUIDIZZOLO","z":"46040","la":45.3187497,"ln":10.5751217,"p":"","e":"","w":""},{"t":"SOLZA","a":"VIA SAN ROCCO C/O MUNICIPIO ","c":"SOLZA","z":"24030","la":45.6787941,"ln":9.4856435,"p":"","e":"","w":""},{"t":"SOMBRENO DI PALADINA","a":"VIA BERGAMO C/O CENTRO PARR.LE SOMBRENO 14","c":"PALADINA","z":"24030","la":45.6915821,"ln":9.6237573,"p":"","e":"","w":""},{"t":"SONDRIO ","a":"VIA N SAURO 45","c":"SONDRIO","z":"2100","la":46.1688563,"ln":9.8765367,"p":"","e":"","w":""},{"t":"SONNINO","a":"VIA PELLEGRINI 36","c":"SONNINO","z":"04010","la":41.413643,"ln":13.248693,"p":"","e":"","w":""},{"t":"SORESINA","a":"PIAZZA MARCONI 11","c":"SORESINA","z":"26015","la":45.2888604,"ln":9.854342,"p":"","e":"","w":""},{"t":"SORISOLE","a":"VIAPIAVE 8","c":"SORISOLE","z":"24010","la":45.7439443,"ln":9.6625041,"p":"","e":"","w":""},{"t":"SOTTO IL MONTE","a":"VIA DONATORI DI SANGUE E ORGANI 1","c":"SOTTO IL MONTE GIOVANNI XXIII","z":"24039","la":45.7059622,"ln":9.4988591,"p":"","e":"","w":""},{"t":"SPIRANO","a":"PIAZZA ERE ","c":"SPIRANO","z":"24050","la":45.5831091,"ln":9.6693261,"p":"","e":"","w":""},{"t":"SPOLETO","a":"VIA CARLO BANDINI C/O CESVOL 17","c":"SPOLETO","z":"06049","la":42.7398966,"ln":12.7399659,"p":"","e":"","w":""},{"t":"STEZZANO","a":"VIA CARRARA BEROA 1","c":"STEZZANO","z":"24040","la":45.6496871,"ln":9.6531504,"p":"","e":"","w":""},{"t":"SUELLO-CESANA-BOSISIO PARINI ","a":"VIA ROMA 14","c":"SUELLO","z":"23867","la":45.8185571,"ln":9.3082615,"p":"","e":"","w":""},{"t":"SUISIO","a":"VIA A. DE GASPERI 2","c":"SUISIO","z":"24040","la":45.6575406,"ln":9.5023182,"p":"","e":"","w":""},{"t":"SUSEGANA","a":"VIA VITTORIO VENETO 3","c":"SUSEGANA","z":"31058","la":45.8234192,"ln":12.2555448,"p":"","e":"","w":""},{"t":"SUSTINENTE","a":"VIA MARCONI 2014/A","c":"SUSTINENTE","z":"46030","la":45.072733,"ln":10.996605,"p":"","e":"","w":""},{"t":"SUZZARA E MOTTEGGIANA","a":"VIA GINA BIANCHI 30","c":"SUZZARA","z":"46029","la":44.9966711,"ln":10.7448992,"p":"","e":"","w":""},{"t":"TARANTO","a":"VIA DONATORI DEL SANGUE 1","c":"TARANTO","z":"74123","la":40.4545684,"ln":17.2651783,"p":"","e":"","w":""},{"t":"TARZO","a":"VIA XXV APRILE 46","c":"TARZO","z":"31020","la":45.970387,"ln":12.2333243,"p":"","e":"","w":""},{"t":"TAVERNOLA BERGAMASCA","a":"VIA RINO P.ZZALE TERESINA PUSTERLA 1","c":"TAVERNOLA BERGAMASCA","z":"24060","la":45.7102581,"ln":10.0447444,"p":"","e":"","w":""},{"t":"TAVULLIA","a":"VIA ROMA 29","c":"TAVULLIA","z":"61010","la":43.8978602,"ln":12.7549543,"p":"","e":"","w":""},{"t":"TEANO","a":"VIA ORTO CERASO PARCO ARCOBALENO ","c":"TEANO","z":"81057","la":41.2490121,"ln":14.0654642,"p":"","e":"","w":""},{"t":"TELGATE","a":"VIA ARCIPRETE ARICI 27","c":"TELGATE","z":"24060","la":45.627523,"ln":9.8522942,"p":"","e":"","w":""},{"t":"TERNI","a":"VIA LUDOVICO AMINALE 30","c":"TERNI","z":"05100","la":42.5604001,"ln":12.6448786,"p":"","e":"","w":""},{"t":"TERRE D'ACQUA","a":"VIA CORSO ITALIA 70","c":"SAN GIOVANNI IN PERSICETO","z":"40017","la":44.6383418,"ln":11.1869331,"p":"","e":"","w":""},{"t":"TERRE DEL RENO","a":"VIA CA' BASSA  4","c":"TERRE DEL RENO","z":"44047","la":44.8056073,"ln":11.4076203,"p":"","e":"","w":""},{"t":"TEZZE SUL BRENTA","a":"VIA T. MANIN ","c":"TEZZE SUL BRENTA","z":"36056","la":45.6873809,"ln":11.703066,"p":"","e":"","w":""},{"t":"TEZZE SUL BRENTA - BELVEDERE","a":"VIA NAZIONALE 119","c":"TEZZE SUL BRENTA","z":"36056","la":38.2109551,"ln":15.3466201,"p":"","e":"","w":""},{"t":"TIRANO","a":"VIA LUNGOADDA V ALPINI 3","c":"TIRANO","z":"23037","la":46.215715,"ln":10.1710381,"p":"","e":"","w":""},{"t":"TOLENTINO","a":"VIALE FORO BOARIO 2","c":"TOLENTINO","z":"62019","la":43.2066724,"ln":13.2860764,"p":"","e":"","w":""},{"t":"TORINO","a":"STRADA COMUNALE SAN VITO REVIGLIASCO 34","c":"TORINO","z":"10133","la":45.05069,"ln":7.69141,"p":"","e":"","w":""},{"t":"TORRE BOLDONE","a":"PIAZZA DEL BERSAGLIERE 5","c":"TORRE BOLDONE","z":"24020","la":45.719464,"ln":9.7080469,"p":"","e":"","w":""},{"t":"TORRE DE' BUSI","a":"VIA PIAVE ","c":"TORRE DE  BUSI","z":"23806","la":45.7742004,"ln":9.501955,"p":"","e":"","w":""},{"t":"TORRE DE' ROVERI","a":"VIA PAPA GIOVANNI XXIII 2","c":"TORRE DE  ROVERI","z":"24060","la":45.7000762,"ln":9.7709797,"p":"","e":"","w":""},{"t":"TORRE MELISSA","a":"VIA VILLAGGIO CRISTOFORO COLOMBO ","c":"TORRE MELISSA","z":"88814","la":39.3038655,"ln":17.1073024,"p":"","e":"","w":""},{"t":"TORRI DEL BENACO","a":"VIA DELL'ORTAGLIA 93","c":"TORRI DEL BENACO","z":"37010","la":45.6124044,"ln":10.6901044,"p":"","e":"","w":""},{"t":"TORTONA","a":"CORSO MONTEBELLO 58","c":"TORTONA","z":"15057","la":44.8976494,"ln":8.8640156,"p":"","e":"","w":""},{"t":"TOSCANA","a":"VIA BORGO OGNISSANTI 20","c":"FIRENZE","z":"50123","la":43.7740742,"ln":11.2432185,"p":"","e":"","w":""},{"t":"TRANI","a":"CORSO IMBRIANI 209","c":"TRANI","z":"76125","la":41.276084,"ln":16.4129311,"p":"","e":"","w":""},{"t":"TRAVERSETOLO","a":"VIALE VERDI 48","c":"TRAVERSETOLO","z":"43029","la":44.6416939,"ln":10.3839375,"p":"","e":"","w":""},{"t":"TRECENTA","a":"PIAZZA MARCONI 1","c":"TRECENTA","z":"45027","la":45.0307,"ln":11.4610701,"p":"","e":"","w":""},{"t":"TRENTO","a":"VIA SIGHELE 7","c":"TRENTO","z":"38122","la":46.0607563,"ln":11.124314,"p":"","e":"","w":""},{"t":"TRESCORE BALNEARIO","a":"VIA MAZZINI 13","c":"TRESCORE BALNEARIO","z":"24069","la":45.6908995,"ln":9.8449228,"p":"","e":"","w":""},{"t":"TRESIGALLO","a":"PIAZZA ITALIA 26","c":"TRESIGALLO","z":"44039","la":44.8173673,"ln":11.8972311,"p":"","e":"","w":""},{"t":"TREVIGNANO","a":"PIAZZA MEDAGLIE D'ARGENTO 2","c":"TREVIGNANO","z":"31040","la":45.7362078,"ln":12.0674726,"p":"","e":"","w":""},{"t":"TREVIOLO","a":"VIA M.LLO CADORNA C/O ORATORIO 4","c":"TREVIOLO","z":"24048","la":45.6762455,"ln":9.6254806,"p":"","e":"","w":""},{"t":"TREVISO","a":"VIA DELL'OSPEDALE 1","c":"TREVISO","z":"31100","la":45.6607087,"ln":12.257973,"p":"","e":"","w":""},{"t":"TREVISO","a":"VIA VANTI 18","c":"S.ELENA DI SILEA","z":"31057","la":45.6231831,"ln":12.3352583,"p":"","e":"","w":""},{"t":"TREZZO D'ADDA","a":"VIA SANTA MARTA 38","c":"TREZZO SULL ADDA","z":"20056","la":45.607863,"ln":9.518146,"p":"","e":"","w":""},{"t":"TRIESTE","a":"PIAZZA DELL'OSPITALE C/O OSPED.LE MAGGIORE 1","c":"TRIESTE","z":"34129","la":45.6493858,"ln":13.7810595,"p":"","e":"","w":""},{"t":"TRIGOLO","a":"VIA ROMA  43","c":"TRIGOLO","z":"26018","la":45.3286922,"ln":9.8134206,"p":"","e":"","w":""},{"t":"TRINO","a":"VIA ORTIGARA 6","c":"TRINO","z":"13039","la":45.1956697,"ln":8.3003345,"p":"","e":"","w":""},{"t":"TRIUGGIO","a":"VIA PUCCINI 2","c":"TRIUGGIO","z":"20884","la":45.6627558,"ln":9.2702282,"p":"","e":"","w":""},{"t":"TROFARELLO","a":"VIA SAN GIOVANNI BOSCO 4","c":"TROFARELLO","z":"10028","la":44.9848269,"ln":7.7411828,"p":"","e":"","w":""},{"t":"TUORO SUL TRASIMENO","a":"PIAZZA MUNICIPIO 13","c":"TUORO SUL TRASIMENO","z":"06069","la":43.2087987,"ln":12.0716942,"p":"","e":"","w":""},{"t":"TURBIGO","a":"VIA XXV APRILE 18","c":"TURBIGO","z":"20029","la":45.5285582,"ln":8.7348272,"p":"","e":"","w":""},{"t":"UBIALE DI CLANEZZO","a":"PIAZZA S. BARTOLOMEO 2","c":"UBIALE CLANEZZO","z":"24010","la":45.7816692,"ln":9.6163532,"p":"","e":"","w":""},{"t":"UDINE","a":"VIA SABBIONERA  87","c":"LATISANA","z":"33053","la":45.7685438,"ln":13.0015421,"p":"","e":"","w":""},{"t":"UDINE","a":"VIA SAVORGNANA 27","c":"UDINE","z":"33100","la":46.0607923,"ln":13.2372178,"p":"","e":"","w":""},{"t":"UGGIATE TREVANO","a":"VIA CROCE ROSSA INTERNAZIONALE 1","c":"UGGIATE TREVANO","z":"22029","la":45.8194474,"ln":8.9531134,"p":"","e":"","w":""},{"t":"UMBRIA","a":"PIAZZA V. MARTINELLI 1","c":"SAN SISTO-PERUGIA","z":"06132","la":43.08531,"ln":12.3461,"p":"","e":"","w":""},{"t":"UNIONE GRUPPI COMUNALI OLTRE LA GOGGIA ","a":"PIAZZZA AVIS AIDO ","c":"PIAZZA BREMBANA","z":"24014","la":45.9491601,"ln":9.6568864,"p":"","e":"","w":""},{"t":"URBINO","a":"VIA GRAMSCI 29","c":"URBINO","z":"61029","la":43.7291688,"ln":12.6314851,"p":"","e":"","w":""},{"t":"URGNANO","a":"VIA ROCCA 5","c":"URGNANO","z":"24059","la":45.5974435,"ln":9.694812,"p":"","e":"","w":""},{"t":"VAIANO","a":"VIA GIULIO BRAGA 181","c":"VAIANO","z":"59021","la":43.9695936,"ln":11.123233,"p":"","e":"","w":""},{"t":"VAL BREMBILLA","a":"PIAZZA DEL VOLONTARIATO 2","c":"VAL BREMBILLA","z":"24012","la":45.8217487,"ln":9.5942518,"p":"","e":"","w":""},{"t":"VAL DI NON","a":"PIAZZA C.A. PILATI 6","c":"TASSULLO","z":"38019","la":46.3361502,"ln":11.0508068,"p":"","e":"","w":""},{"t":"VAL DI SOLE","a":"VIA S. PIETRO 24/2","c":"VERMIGLIO","z":"38029","la":46.2979601,"ln":10.6953085,"p":"","e":"","w":""},{"t":"VAL PELLICE","a":"VIA ROMA 41","c":"LUSERNA SAN GIOVANNI","z":"10062","la":44.8143052,"ln":7.2461195,"p":"","e":"","w":""},{"t":"VALBREMBO","a":"VIA DON MILANI 8","c":"VALBREMBO","z":"24030","la":45.7180671,"ln":9.6067886,"p":"","e":"","w":""},{"t":"VALDICHIANA","a":"VIALE MAZZINI 41","c":"CASTIGLION FIORENTINO","z":"52043","la":43.3442119,"ln":11.9171218,"p":"","e":"","w":""},{"t":"VALDINIEVOLE CENTRO ","a":"VIA MANIN 22","c":"MONTECATINI TERME","z":"51016","la":43.882131,"ln":10.7687239,"p":"","e":"","w":""},{"t":"VALDOBBIADENE","a":"VIA BORGO VAL 10","c":"VALDOBBIADENE","z":"31049","la":45.9151735,"ln":12.0538264,"p":"","e":"","w":""},{"t":"VALEGGIO SUL MINCIO","a":"VIA PIAZZETTA DELL'ORATORIO 5","c":"VALEGGIO SUL MINCIO","z":"37067","la":45.3546919,"ln":10.7343791,"p":"","e":"","w":""},{"t":"VALENZA","a":"VIALE MANZONI 6","c":"VALENZA","z":"15048","la":45.0157874,"ln":8.6389346,"p":"","e":"","w":""},{"t":"VALGRIGNA","a":"VIA MANZONI 35","c":"ESINE","z":"25040","la":45.9279366,"ln":10.2404195,"p":"","e":"","w":""},{"t":"VALLAGARINA","a":"VIA MOZART 3","c":"ROVERETO","z":"38068","la":45.9003588,"ln":11.040222,"p":"","e":"","w":""},{"t":"VALLE DEI FIORI","a":"PIAZZA XX SETTEMBRE ","c":"PESCIA","z":"51017","la":43.9005078,"ln":10.6891169,"p":"","e":"","w":""},{"t":"VALLE DEL RENO","a":"VIA DEL FANCIULLO 6","c":"CASALECCHIO DI RENO","z":"40033","la":44.4795491,"ln":11.2651154,"p":"","e":"","w":""},{"t":"VALLE DEL SENIO","a":"VIA A .MORO 2","c":"RIOLO TERME","z":"48025","la":44.2762148,"ln":11.7245779,"p":"","e":"","w":""},{"t":"VALLE DI FIEMME","a":"VIA FIA 4","c":"TESERO","z":"38038","la":46.2899688,"ln":11.5118835,"p":"","e":"","w":""},{"t":"VALLE DI SCALVE","a":"VIA POLINI 7","c":"VILMINORE DI SCALVE","z":"24020","la":45.9957536,"ln":10.0908872,"p":"","e":"","w":""},{"t":"VALLE IMAGNA","a":"VIA V.VENETO 167","c":"SANT OMOBONO TERME","z":"24038","la":45.8146493,"ln":9.5327991,"p":"","e":"","w":""},{"t":"VALLE SERINA","a":"VIA PALMA IL VECCHIO 50","c":"SERINA","z":"24017","la":45.8723375,"ln":9.7294518,"p":"","e":"","w":""},{"t":"VALMADRERA","a":"VIA FATEBENEFRATELLI 6","c":"VALMADRERA","z":"23868","la":45.8481429,"ln":9.3596959,"p":"","e":"","w":""},{"t":"VALMALENCO ","a":"VIA ROMA 120","c":"CHIESA IN VALMALENCO","z":"23023","la":46.264127,"ln":9.8496405,"p":"","e":"","w":""},{"t":"VALROVINA - BASSANO DEL GRAPPA","a":"VIA CHIESA VALROVINA 33","c":"BASSANO DEL GRAPPA","z":"36061","la":45.7876026,"ln":11.6900487,"p":"","e":"","w":""},{"t":"VALSINNI","a":"VIA CARMINE 46","c":"VALSINNI","z":"75029","la":40.173113,"ln":16.4443899,"p":"","e":"","w":""},{"t":"VARANO BORGHI","a":"VIA VITTORIO VENETO 7","c":"VARANO BORGHI","z":"21020","la":45.7764596,"ln":8.7036552,"p":"","e":"","w":""},{"t":"VAZZOLA","a":"VIA CAMPANA 23","c":"VAZZOLA","z":"31028","la":45.839616,"ln":12.3807137,"p":"","e":"","w":""},{"t":"VELO D'ASTICO","a":"VIA VILLA CARRE 16/b","c":"VELO D'ASTICO","z":"36010","la":45.7987431,"ln":11.3717257,"p":"","e":"","w":""},{"t":"VENETO","a":"VIA DELLA PACCAGNELLA C/O OSPEDALE DELL'ANGELO 11","c":"MESTRE","z":"30174","la":45.5138501,"ln":12.2230154,"p":"","e":"","w":""},{"t":"VENEZIA","a":"VIA DELLA PACCAGNELLA C/O OSPEDALE DELL'ANGELO 11","c":"MESTRE - VENEZIA","z":"30174","la":45.513721,"ln":12.2232083,"p":"","e":"","w":""},{"t":"VENEZIA-CENTRO STORICO","a":"VIA CASTELLO-CALLE CAVALLERIZZA 6697","c":"VENEZIA","z":"30122","la":45.4398596,"ln":12.3430294,"p":"","e":"","w":""},{"t":"VERANO BRIANZA","a":"PIAZZA LIBERAZIONE 1","c":"VERANO BRIANZA","z":"20843","la":45.6880722,"ln":9.2303647,"p":"","e":"","w":""},{"t":"VERCELLI","a":"CORSO LIBERTA' 72","c":"VERCELLI","z":"13100","la":45.3239512,"ln":8.4205775,"p":"","e":"","w":""},{"t":"VERCURAGO","a":"VIA MARTIRI DELLA LIBERTA 3","c":"VERCURAGO","z":"23808","la":45.8055688,"ln":9.4198627,"p":"","e":"","w":""},{"t":"VERDELLINO","a":"VIA MARCONI 54","c":"VERDELLINO","z":"24040","la":45.605621,"ln":9.6199835,"p":"","e":"","w":""},{"t":"VERDELLO","a":"P.ZZA ALDO MORO S/N/C ","c":"VERDELLO","z":"24049","la":45.6051394,"ln":9.6303295,"p":"","e":"","w":""},{"t":"VEROLANUOVA","a":"VIA LENZI 65","c":"VEROLANUOVA","z":"25028","la":45.3320479,"ln":10.0833785,"p":"","e":"","w":""},{"t":"VERONA","a":"VIA CASTELLO 22","c":"CASTEL D'AZZANO","z":"37060","la":45.3535297,"ln":10.9456619,"p":"","e":"","w":""},{"t":"VERONELLA","a":"VIA G. MARCONI 47A","c":"VERONELLA","z":"37040","la":45.3207353,"ln":11.3247159,"p":"","e":"","w":""},{"t":"VESTENANOVA","a":"VIA ZOVO 53","c":"VESTENANOVA","z":"37030","la":45.4197144,"ln":11.1883792,"p":"","e":"","w":""},{"t":"VIADANICA","a":"VIA PAPA GIOVANNI XXIII 3","c":"VIADANICA","z":"24060","la":45.6849002,"ln":9.9644422,"p":"","e":"","w":""},{"t":"VIAREGGIO","a":"VIA CAVALLOTTI 97","c":"VIAREGGIO","z":"55049","la":43.86759,"ln":10.2493806,"p":"","e":"","w":""},{"t":"VICENZA","a":"VIALE TRENTO 128","c":"VICENZA","z":"36100","la":45.5544339,"ln":11.5333885,"p":"","e":"","w":""},{"t":"VICENZA 6 CIRCOSCRIZIONE","a":"VIA TRENTO 128","c":"VICENZA","z":"36100","la":45.5454787,"ln":11.5354214,"p":"","e":"","w":""},{"t":"VIDIGULFO","a":"VIA ROMA 148","c":"VIDIGULFO","z":"27018","la":45.2899623,"ln":9.2345518,"p":"","e":"","w":""},{"t":"VIGASIO","a":"VIA BASSINI 1","c":"VIGASIO","z":"37068","la":45.3156563,"ln":10.938917,"p":"","e":"","w":""},{"t":"VIGEVANO","a":"CORSO GENOVA 33","c":"VIGEVANO","z":"27029","la":45.3097616,"ln":8.8527505,"p":"","e":"","w":""},{"t":"VIGGIU' ","a":"VIA ROMA 60","c":"VIGGIU","z":"21059","la":45.8720737,"ln":8.9087138,"p":"","e":"","w":""},{"t":"VIGNATE","a":"VIA E. FERMI C/O CDA 39","c":"VIGNATE","z":"20060","la":45.4994579,"ln":9.3793184,"p":"","e":"","w":""},{"t":"VIGOLO","a":"VIA ROMA 1","c":"VIGOLO","z":"24060","la":45.7161511,"ln":10.0221759,"p":"","e":"","w":""},{"t":"VIGONOVO","a":"VIA DANTE 17","c":"VIGONOVO","z":"30030","la":45.3879877,"ln":12.0075948,"p":"","e":"","w":""},{"t":"VILLA D'ADDA","a":"PIAZZALE DONATORI AVIS-AIDO 4/A","c":"VILLA D ADDA","z":"24030","la":45.7128016,"ln":9.4660062,"p":"","e":"","w":""},{"t":"VILLA D'ALME'","a":"VIA ALDO MORO 2","c":"VILLA D ALM?","z":"24018","la":45.7457506,"ln":9.6175721,"p":"","e":"","w":""},{"t":"VILLA POMA","a":"PIAZZA ROMANO MAZZALI 21 - FRAZ. VILLA POMA ","c":"VILLA POMA","z":"46020","la":45.0003668,"ln":11.1139465,"p":"","e":"","w":""},{"t":"VILLACIDRO","a":"VIA GUIDO ROSSA 49","c":"VILLACIDRO","z":"09039","la":39.4642329,"ln":8.7447954,"p":"","e":"","w":""},{"t":"VILLAFRANCA DI VERONA","a":"VIA RINALDO DA VILLAFRANCA 9","c":"VILLAFRANCA","z":"37069","la":45.3504627,"ln":10.8455595,"p":"","e":"","w":""},{"t":"VILLAMARZANA","a":"VIA CHIESA 1","c":"VILLAMARZANA","z":"45030","la":45.0144684,"ln":11.6926294,"p":"","e":"","w":""},{"t":"VILLANOVA MARCHESANA","a":"VIA DELLA LIBERTA' 1","c":"VILLANOVA MARCHESANA","z":"45030","la":44.9916094,"ln":11.954577,"p":"","e":"","w":""},{"t":"VILLANUOVA SUL CLISI","a":"VIA BIANCHI  9","c":"VILLANUOVA SUL CLISI","z":"25089","la":45.6033468,"ln":10.4567096,"p":"","e":"","w":""},{"t":"VILLAR PEROSA","a":"VIA ASIAGO 5","c":"VILLAR PEROSA","z":"10069","la":44.9247562,"ln":7.2441671,"p":"","e":"","w":""},{"t":"VILLATA","a":"CORSO VITTORIO VENETO 64","c":"VILLATA","z":"13010","la":45.3880209,"ln":8.4328919,"p":"","e":"","w":""},{"t":"VILLAVERLA","a":"VIA PAPA GIOVANNI XXIII 15","c":"VILLAVERLA","z":"36030","la":45.6538167,"ln":11.4903311,"p":"","e":"","w":""},{"t":"VILLIMPENTA","a":"PIAZZA PAPA GIOVANNI XXIII 7","c":"VILLIMPENTA","z":"46039","la":45.1450955,"ln":11.0306036,"p":"","e":"","w":""},{"t":"VILLONGO","a":"VIA ROMA 20","c":"VILLONGO","z":"24060","la":45.6720932,"ln":9.9305369,"p":"","e":"","w":""},{"t":"VILLORBA","a":"VIA CODETTE-LANCENIGO 6","c":"VILLORBA","z":"31050","la":45.7032787,"ln":12.2736733,"p":"","e":"","w":""},{"t":"VIMERCATE ","a":"VIA PAPA GIOVANNI XXIII 13","c":"VIMERCATE","z":"20871","la":45.6133771,"ln":9.3704994,"p":"","e":"","w":""},{"t":"VITTUONE","a":"VIA VOLONTARI DELLE LIBERTA' 12","c":"VITTUONE","z":"20010","la":45.4904985,"ln":8.949015,"p":"","e":"","w":""},{"t":"VOGHERA","a":"VIA EMILIA 259","c":"VOGHERA","z":"27058","la":44.9957687,"ln":9.0153047,"p":"","e":"","w":""},{"t":"VOLPIANO","a":"PIAZZA AMEDEO DI SAVOIA 8","c":"VOLPIANO","z":"10088","la":45.2012489,"ln":7.7758031,"p":"","e":"","w":""},{"t":"VOLTA MANTOVANA","a":"VIA CUSTOZA 6","c":"VOLTA MANTOVANA","z":"46049","la":45.322013,"ln":10.660481,"p":"","e":"","w":""},{"t":"ZANE'","a":"PIAZZALE ALDO MORO 5","c":"ZANE'","z":"36010","la":45.722038,"ln":11.457185,"p":"","e":"","w":""},{"t":"ZANICA","a":"PIAZZA REPUBBLICA C/O CENTRO SOCIO CULTURALE ","c":"ZANICA","z":"24050","la":45.6401519,"ln":9.6843797,"p":"","e":"","w":""},{"t":"ZENSON DI PIAVE","a":"VIA G. BADINI 36","c":"ZENSON DI PIAVE","z":"31050","la":45.67765,"ln":12.49284,"p":"","e":"","w":""},{"t":"ZERO BRANCO","a":"VIA MILAN C/O LABRALATO ARDOINO 18","c":"ZERO BRANCO","z":"31059","la":45.5889576,"ln":12.172068,"p":"","e":"","w":""},{"t":"ZOGNO","a":"PIAZZA GUGLIELMO MARCONI 7","c":"ZOGNO","z":"24019","la":45.7933182,"ln":9.6593277,"p":"","e":"","w":""}];
+  <div id="controls">
+    <div id="search-box" onclick="openKb()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2.5">
+        <circle cx="11" cy="11" r="8" />
+        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+      </svg>
+      <div id="search-display" class="placeholder">Cerca città o sede...</div>
+      <div id="search-clear" onclick="clearSearch(event)">✕</div>
+    </div>
+    <span id="count">Caricamento...</span>
+  </div>
 
-/* ---- MAPPA ---- */
-const ITALY_BOUNDS=L.latLngBounds([35.2,6.6],[47.1,18.8]);
-const map=L.map('map',{zoomControl:true,tap:true,tapTolerance:15,minZoom:5,maxZoom:18,maxBounds:ITALY_BOUNDS,maxBoundsViscosity:1.0}).setView([42.5,12.5],6);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
-}).addTo(map);
+  <div id="container">
+    <div id="map">
+      <div id="copyright-box">
+        ©OpenStreetMap contributors | Dati mappa ©AIDO | ©Leaflet
+      </div>
+    </div>
+    <div id="sidebar">
+      <div id="list"></div>
+      <div id="empty-state">
+        <img src="../img/donatelloNotFound.png" alt="Nessuna sede trovata">
+      </div>
+    </div>
+  </div>
 
-const mkIcon=(active=false)=>L.divIcon({
-  className:'',
-  html:`<div style="width:${active?16:11}px;height:${active?16:11}px;background:${active?'#7b241c':'#c0392b'};border-radius:50%;border:2px solid white;box-shadow:0 1px 5px rgba(0,0,0,.5)"></div>`,
-  iconSize:[active?16:11,active?16:11],iconAnchor:[active?8:5.5,active?8:5.5],popupAnchor:[0,-10]
-});
+  <div id="kb-overlay" onclick="handleOverlayClick(event)">
+    <div id="kb-panel">
+      <div id="kb-header">
+        <div id="kb-input-display"><span id="kb-text"></span><span class="cursor"></span></div>
+        <button id="kb-cancel" onclick="closeKb()">Chiudi</button>
+      </div>
+      <div id="kb-rows">
+        <div class="kb-row" id="row1"></div>
+        <div class="kb-row" id="row2"></div>
+        <div class="kb-row" id="row3"></div>
+        <div class="kb-row" id="row4"></div>
+      </div>
+    </div>
+  </div>
 
-let markers=[],activeIdx=null,filtered=SEDI.map((_,i)=>i);
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.1/dist/leaflet.markercluster.js"></script>
+  <script src="https://unpkg.com/topojson-client@3"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.1/dist/MarkerCluster.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.1/dist/MarkerCluster.Default.css" />
+  <script>
+    const ITALY_BOUNDS = L.latLngBounds([35.2, 6.6], [47.1, 18.8]);
+    const ITALY_INTERACTION_BOUNDS = L.latLngBounds([35.2, 5], [47.1, 20]);
+    const map = L.map('map', {
+      zoomControl: true,
+      tap: true,
+      tapTolerance: 15,
+      minZoom: 6,
+      maxZoom: 18,
+      zoomSnap: 0.25,
+      zoomDelta: 0.25,
+      inertia: false,
+      bounceAtZoomLimits: false,
+      worldCopyJump: false,
+      maxBounds: ITALY_INTERACTION_BOUNDS,
+      maxBoundsViscosity: 1.0
+    }).setView([42.5, 12.5], 6);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      noWrap: true
+    }).addTo(map);
+    map.createPane('foreignFogPane');
+    map.getPane('foreignFogPane').style.zIndex = 330;
+    map.getPane('foreignFogPane').style.pointerEvents = 'none';
 
-function buildPopup(s){
-  return `<div style="font-family:sans-serif;min-width:170px;line-height:1.6">
+    function lockMapToItaly() {
+      const strictMinZoom = Math.max(6, map.getBoundsZoom(ITALY_INTERACTION_BOUNDS, false));
+      map.setMinZoom(strictMinZoom);
+      if (map.getZoom() < strictMinZoom) {
+        map.setZoom(strictMinZoom, { animate: false });
+      }
+      map.panInsideBounds(ITALY_INTERACTION_BOUNDS, { animate: false });
+    }
+
+    map.whenReady(lockMapToItaly);
+    window.addEventListener('resize', lockMapToItaly);
+
+    function addForeignLandFog(countriesTopoJson) {
+      function createFogIsland(centerLng, centerLat, radiusLng, radiusLat, points = 48) {
+        const coordinates = [];
+        for (let i = 0; i <= points; i++) {
+          const angle = (i / points) * Math.PI * 2;
+          coordinates.push([
+            centerLng + Math.cos(angle) * radiusLng,
+            centerLat + Math.sin(angle) * radiusLat
+          ]);
+        }
+        return {
+          type: 'Feature',
+          properties: {},
+          geometry: {
+            type: 'Polygon',
+            coordinates: [coordinates]
+          }
+        };
+      }
+
+      function getRingBounds(ring) {
+        return ring.reduce((bounds, [lng, lat]) => ({
+          minLng: Math.min(bounds.minLng, lng),
+          maxLng: Math.max(bounds.maxLng, lng),
+          minLat: Math.min(bounds.minLat, lat),
+          maxLat: Math.max(bounds.maxLat, lat)
+        }), {
+          minLng: Infinity,
+          maxLng: -Infinity,
+          minLat: Infinity,
+          maxLat: -Infinity
+        });
+      }
+
+      function isWesternAdriaticIslandPolygon(polygon) {
+        const ring = polygon[0];
+        if (!ring || ring.length < 4) return false;
+        const bounds = getRingBounds(ring);
+        const width = bounds.maxLng - bounds.minLng;
+        const height = bounds.maxLat - bounds.minLat;
+        const centerLng = (bounds.minLng + bounds.maxLng) / 2;
+        const centerLat = (bounds.minLat + bounds.maxLat) / 2;
+        return centerLng > 13 && centerLng < 18.2 &&
+          centerLat > 42.1 && centerLat < 45.9 &&
+          width < 1.15 &&
+          height < 0.65;
+      }
+
+      function stripExcludedForeignAreas(feature) {
+        const featureId = `${feature.id}`;
+        if (featureId === '336' || featureId === '674') return null;
+        if (!feature.geometry) return feature;
+
+        if (featureId === '191' && feature.geometry.type === 'MultiPolygon') {
+          const filteredCoordinates = feature.geometry.coordinates.filter(polygon => !isWesternAdriaticIslandPolygon(polygon));
+          return filteredCoordinates.length ? {
+            ...feature,
+            geometry: {
+              ...feature.geometry,
+              coordinates: filteredCoordinates
+            }
+          } : null;
+        }
+
+        return feature;
+      }
+
+      const countriesObject = countriesTopoJson.objects.countries;
+      const countries = topojson.feature(countriesTopoJson, countriesObject).features;
+      const filteredForeignFeatures = countries
+        .filter(feature => `${feature.id}` !== '380')
+        .map(stripExcludedForeignAreas)
+        .filter(Boolean);
+      const supplementalFogIslands = {
+        type: 'FeatureCollection',
+        features: [
+          createFogIsland(14.42, 35.93, 0.26, 0.16),
+          createFogIsland(14.21, 36.04, 0.12, 0.08),
+          createFogIsland(2.65, 39.57, 0.34, 0.22)
+        ]
+      };
+      const foreignCountries = {
+        type: 'FeatureCollection',
+        features: [
+          ...filteredForeignFeatures,
+          ...supplementalFogIslands.features
+        ]
+      };
+      const foreignCoastline = topojson.mesh(countriesTopoJson, countriesObject, (a, b) => a === b && `${a.id}` !== '380');
+      const italyBoundary = topojson.mesh(countriesTopoJson, countriesObject, (a, b) => {
+        if (a === b) return false;
+        const aItaly = `${a.id}` === '380';
+        const bItaly = `${b.id}` === '380';
+        return aItaly !== bItaly && `${a.id}` !== '336' && `${a.id}` !== '674' && `${b.id}` !== '336' && `${b.id}` !== '674';
+      });
+      const fogCoreStyle = {
+        fillColor: '#161616',
+        fillOpacity: 0.72,
+        stroke: false,
+        color: 'transparent',
+        opacity: 0,
+        weight: 0
+      };
+      const fogFeatherStyles = [
+        { color: '#2e2e2e', opacity: 0.22, weight: 20, className: 'foreign-land-blur' },
+        { color: '#494949', opacity: 0.2, weight: 31, className: 'foreign-land-blur' },
+        { color: '#676767', opacity: 0.18, weight: 44, className: 'foreign-land-drift' },
+        { color: '#878787', opacity: 0.16, weight: 57, className: 'foreign-land-drift' },
+        { color: '#a4a4a4', opacity: 0.13, weight: 69, className: 'foreign-land-drift' },
+        { color: '#c0c0c0', opacity: 0.1, weight: 79, className: 'foreign-land-drift' },
+        { color: '#d8d8d8', opacity: 0.07, weight: 86, className: 'foreign-land-drift' }
+      ].map(style => ({
+        fill: false,
+        stroke: true,
+        lineJoin: 'round',
+        lineCap: 'round',
+        ...style
+      }));
+
+      [foreignCoastline, italyBoundary].forEach(edgeGeometry => {
+        fogFeatherStyles.slice().reverse().forEach(({ className, ...style }) => {
+          L.geoJSON(edgeGeometry, {
+            pane: 'foreignFogPane',
+            interactive: false,
+            className,
+            style
+          }).addTo(map);
+        });
+      });
+
+      fogFeatherStyles.slice().reverse().forEach(({ className, ...style }) => {
+        L.geoJSON(supplementalFogIslands, {
+          pane: 'foreignFogPane',
+          interactive: false,
+          className,
+          style
+        }).addTo(map);
+      });
+
+      L.geoJSON(foreignCountries, {
+        pane: 'foreignFogPane',
+        interactive: false,
+        className: 'foreign-land-fog',
+        style: fogCoreStyle
+      }).addTo(map);
+    }
+
+    fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json')
+      .then(response => {
+        if (!response.ok) throw new Error('Impossibile caricare i confini delle nazioni');
+        return response.json();
+      })
+      .then(addForeignLandFog)
+      .catch(error => console.warn('Layer nebbia non caricato:', error));
+
+    const markerGroup = L.markerClusterGroup({
+      maxClusterRadius: 40,
+      iconCreateFunction: function (cluster) {
+        const count = cluster.getChildCount();
+        const size = count < 10 ? 'small' : count < 100 ? 'medium' : 'large';
+        return L.divIcon({
+          html: `<div style="width:36px;height:36px;background:#c0392b;border-radius:50%;border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;font-weight:bold;color:white;font-size:${size === 'large' ? '14px' : '12px'}">${count}</div>`,
+          iconSize: [36, 36],
+          iconAnchor: [18, 18],
+          className: 'marker-cluster'
+        });
+      }
+    });
+
+    const mkIcon = (active = false) => L.divIcon({
+      className: '',
+      html: `<div style="width:${active ? 18 : 14}px;height:${active ? 18 : 14}px;background:${active ? '#7b241c' : '#c0392b'};border-radius:50%;border:2px solid white;box-shadow:0 1px 5px rgba(0,0,0,.5)"></div>`,
+      iconSize: [active ? 18 : 14, active ? 18 : 14], iconAnchor: [active ? 9 : 7, active ? 9 : 7], popupAnchor: [0, -10]
+    });
+
+    let SEDI = [];
+    let markers = [], activeIdx = null, filtered = [], visibleMarkers = new Set();
+
+    function buildPopup(s) {
+      return `<div style="font-family:sans-serif;min-width:170px;line-height:1.6">
     <b style="font-size:13px;color:#c0392b">${s.t}</b><br>
     <span style="font-size:12px;color:#555">📍 ${s.a}, ${s.c} ${s.z}</span>
-    ${s.p?`<br><span style="font-size:12px">📞 ${s.p}</span>`:''}
-    ${s.e?`<br><span style="font-size:12px">✉️ ${s.e}</span>`:''}
+    ${s.p ? `<br><span style="font-size:12px">📞 ${s.p}</span>` : ''}
+    ${s.e ? `<br><span style="font-size:12px">✉️ ${s.e}</span>` : ''}
   </div>`;
-}
+    }
 
-function renderList(indices){
-  const list=document.getElementById('list');
-  list.innerHTML='';
-  const slice=indices.slice(0,200);
-  slice.forEach(i=>{
-    const s=SEDI[i];
-    const d=document.createElement('div');
-    d.className='item'+(activeIdx===i?' active':'');
-    d.innerHTML=`<h3>${s.t}</h3><p>${s.a}<br>${s.c}${s.z?' ('+s.z+')':''}</p>`;
-    d.addEventListener('click',()=>focusSede(i),{passive:true});
-    list.appendChild(d);
-  });
-  if(indices.length>200){
-    const more=document.createElement('div');
-    more.style='padding:12px;text-align:center;font-size:12px;color:#aaa';
-    more.textContent=`+${indices.length-200} altre sedi — raffina la ricerca`;
-    list.appendChild(more);
-  }
-}
+    function renderList(indices) {
+      const list = document.getElementById('list');
+      const emptyState = document.getElementById('empty-state');
+      list.innerHTML = '';
 
-function focusSede(i){
-  activeIdx=i;
-  const s=SEDI[i];
-  map.setView([s.la,s.ln],14,{animate:true});
-  markers[i].openPopup();
-  renderList(filtered);
-  const idx=filtered.indexOf(i);
-  const items=document.querySelectorAll('.item');
-  if(idx>=0&&items[idx]) items[idx].scrollIntoView({behavior:'smooth',block:'nearest'});
-}
-
-function filterSedi(q){
-  const qlo=q.toLowerCase().trim();
-  filtered=qlo?SEDI.map((_,i)=>i).filter(i=>{
-    const s=SEDI[i];
-    return s.t.toLowerCase().includes(qlo)||s.c.toLowerCase().includes(qlo)||s.a.toLowerCase().includes(qlo);
-  }):SEDI.map((_,i)=>i);
-  document.getElementById('count').textContent=`${filtered.length} sedi`;
-  renderList(filtered);
-  markers.forEach((m,i)=>{
-    if(filtered.includes(i)){if(!map.hasLayer(m))map.addLayer(m);}
-    else{if(map.hasLayer(m))map.removeLayer(m);}
-  });
-  if(filtered.length>0&&filtered.length<50&&qlo){
-    const lats=filtered.map(i=>SEDI[i].la),lngs=filtered.map(i=>SEDI[i].ln);
-    const bounds=L.latLngBounds(filtered.map(i=>[SEDI[i].la,SEDI[i].ln]));
-    map.fitBounds(bounds,{padding:[40,40]});
-  }
-}
-
-SEDI.forEach((s,i)=>{
-  const m=L.marker([s.la,s.ln],{icon:mkIcon()})
-    .addTo(map)
-    .bindPopup(buildPopup(s));
-  m.on('click',()=>{activeIdx=i;renderList(filtered);});
-  markers.push(m);
-});
-
-renderList(filtered);
-document.getElementById('count').textContent=`${SEDI.length} sedi`;
-
-/* ---- TASTIERA DIGITALE ---- */
-const ROWS=[
-  ['Q','W','E','R','T','Y','U','I','O','P'],
-  ['A','S','D','F','G','H','J','K','L'],
-  ['Z','X','C','V','B','N','M','⌫'],
-  ['SPAZIO',"'",'.','-','CERCA']
-];
-
-let kbValue='';
-
-function buildKb(){
-  const rowIds=['row1','row2','row3','row4'];
-  ROWS.forEach((row,ri)=>{
-    const el=document.getElementById(rowIds[ri]);
-    row.forEach(k=>{
-      const btn=document.createElement('button');
-      btn.className='kb-key';
-      if(k==='⌫'){
-        btn.classList.add('dark','backspace');
-        btn.innerHTML=`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/><line x1="18" y1="9" x2="12" y2="15"/><line x1="12" y1="9" x2="18" y2="15"/></svg>`;
-      } else if(k==='SPAZIO'){
-        btn.classList.add('space');
-        btn.textContent='spazio';
-      } else if(k==='CERCA'){
-        btn.classList.add('search-btn');
-        btn.innerHTML=`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" style="margin-right:4px"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> Cerca`;
-      } else {
-        btn.textContent=k;
+      if (indices.length === 0) {
+        emptyState.classList.add('visible');
+        return;
       }
-      btn.addEventListener('touchstart',e=>{e.preventDefault();kbPress(k);},{passive:false});
-      btn.addEventListener('mousedown',e=>{e.preventDefault();kbPress(k);});
-      el.appendChild(btn);
+
+      emptyState.classList.remove('visible');
+      const slice = indices.slice(0, 200);
+      slice.forEach(i => {
+        const s = SEDI[i];
+        const d = document.createElement('div');
+        d.className = 'item' + (activeIdx === i ? ' active' : '');
+        d.innerHTML = `<h3>${s.t}</h3><p>${s.a}<br>${s.c}${s.z ? ' (' + s.z + ')' : ''}</p>`;
+        d.addEventListener('click', () => focusSede(i), { passive: true });
+        list.appendChild(d);
+      });
+      if (indices.length > 200) {
+        const more = document.createElement('div');
+        more.style = 'padding:12px;text-align:center;font-size:12px;color:#aaa';
+        more.textContent = `+${indices.length - 200} altre sedi — raffina la ricerca`;
+        list.appendChild(more);
+      }
+    }
+
+    function focusSede(i) {
+      activeIdx = i;
+      const s = SEDI[i];
+      map.setView([s.la, s.ln], 14, { animate: true });
+      if (markers[i]) markers[i].openPopup();
+      const visibleIndices = Array.from(visibleMarkers);
+      renderList(visibleIndices);
+      const idx = visibleIndices.indexOf(i);
+      const items = document.querySelectorAll('.item');
+      if (idx >= 0 && items[idx]) items[idx].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function filterSedi(q) {
+      const qlo = q.toLowerCase().trim();
+      filtered = qlo ? SEDI.map((_, i) => i).filter(i => {
+        const s = SEDI[i];
+        return s.t.toLowerCase().includes(qlo) || s.c.toLowerCase().includes(qlo) || s.a.toLowerCase().includes(qlo);
+      }) : SEDI.map((_, i) => i);
+      updateVisibleMarkers();
+
+      if (filtered.length > 0 && filtered.length < 50 && qlo) {
+        const bounds = L.latLngBounds(filtered.map(i => [SEDI[i].la, SEDI[i].ln]));
+        map.fitBounds(bounds, { padding: [40, 40] });
+      }
+    }
+
+    function updateVisibleMarkers() {
+      const bounds = map.getBounds();
+      const newVisible = new Set();
+
+      markerGroup.clearLayers();
+
+      filtered.forEach(i => {
+        const s = SEDI[i];
+        const isInBounds = bounds.contains([s.la, s.ln]);
+
+        if (isInBounds) {
+          newVisible.add(i);
+          if (!markers[i]) {
+            const m = L.marker([s.la, s.ln], { icon: mkIcon() })
+              .bindPopup(buildPopup(s));
+            m.on('click', () => {
+              activeIdx = i;
+              updateVisibleMarkers();
+              setTimeout(() => { if (markers[i]) markers[i].openPopup(); }, 50);
+            });
+            markers[i] = m;
+          }
+          markerGroup.addLayer(markers[i]);
+        }
+      });
+
+      visibleMarkers = newVisible;
+
+      const visibleIndices = Array.from(visibleMarkers);
+      renderList(visibleIndices);
+      document.getElementById('count').textContent = `${visibleIndices.length} sedi visibili`;
+    }
+
+    map.addLayer(markerGroup);
+    map.on('moveend', updateVisibleMarkers);
+    map.on('zoomend', updateVisibleMarkers);
+
+    fetch('datiMappa.geojson')
+      .then(response => response.json())
+      .then(data => {
+        SEDI = data.features.map(feature => {
+          const props = feature.properties;
+          const coords = feature.geometry.coordinates;
+          return {
+            t: props.nome || props.title || props.name || '',
+            a: props.indirizzo || props.address || '',
+            c: props.citta || props.city || props.comune || '',
+            z: props.cap || props.zip || props.postal_code || '',
+            p: props.telefono || props.phone || props.tel || '',
+            e: props.email || props.mail || '',
+            la: coords[1],
+            ln: coords[0]
+          };
+        });
+
+        filtered = SEDI.map((_, i) => i);
+        updateVisibleMarkers();
+        document.getElementById('count').textContent = `${SEDI.length} sedi totali`;
+      })
+      .catch(error => {
+        console.error('Errore caricamento dati:', error);
+        document.getElementById('count').textContent = 'Errore caricamento';
+      });
+
+    const ROWS = [
+      ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
+      ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
+      ['Z', 'X', 'C', 'V', 'B', 'N', 'M', '⌫'],
+      ['SPAZIO', "'", '.', '-', 'CERCA']
+    ];
+
+    let kbValue = '';
+
+    function buildKb() {
+      const rowIds = ['row1', 'row2', 'row3', 'row4'];
+      ROWS.forEach((row, ri) => {
+        const el = document.getElementById(rowIds[ri]);
+        row.forEach(k => {
+          const btn = document.createElement('button');
+          btn.className = 'kb-key';
+          if (k === '⌫') {
+            btn.classList.add('dark', 'backspace');
+            btn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/><line x1="18" y1="9" x2="12" y2="15"/><line x1="12" y1="9" x2="18" y2="15"/></svg>`;
+          } else if (k === 'SPAZIO') {
+            btn.classList.add('space');
+            btn.textContent = 'spazio';
+          } else if (k === 'CERCA') {
+            btn.classList.add('search-btn');
+            btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" style="margin-right:4px"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> Cerca`;
+          } else {
+            btn.textContent = k;
+          }
+          btn.addEventListener('touchstart', e => { e.preventDefault(); kbPress(k); }, { passive: false });
+          btn.addEventListener('mousedown', e => { e.preventDefault(); kbPress(k); });
+          el.appendChild(btn);
+        });
+      });
+    }
+
+    function kbPress(k) {
+      if (k === '⌫') { kbValue = kbValue.slice(0, -1); }
+      else if (k === 'SPAZIO') { kbValue += ' '; }
+      else if (k === 'CERCA') { closeKb(); return; }
+      else { kbValue += k; }
+      updateKbDisplay();
+      applySearch();
+    }
+
+    function updateKbDisplay() {
+      document.getElementById('kb-text').textContent = kbValue;
+      const disp = document.getElementById('search-display');
+      if (kbValue) {
+        disp.textContent = kbValue;
+        disp.classList.remove('placeholder');
+        document.getElementById('search-clear').classList.add('visible');
+      } else {
+        disp.textContent = 'Cerca città o sede...';
+        disp.classList.add('placeholder');
+        document.getElementById('search-clear').classList.remove('visible');
+      }
+    }
+
+    function applySearch() { filterSedi(kbValue); }
+
+    function openKb() {
+      kbValue = document.getElementById('search-display').classList.contains('placeholder') ? '' : document.getElementById('search-display').textContent;
+      document.getElementById('kb-text').textContent = kbValue;
+      document.getElementById('kb-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeKb() {
+      document.getElementById('kb-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function handleOverlayClick(e) {
+      if (e.target === document.getElementById('kb-overlay')) closeKb();
+    }
+
+    function clearSearch(e) {
+      e.stopPropagation();
+      kbValue = '';
+      updateKbDisplay();
+      filterSedi('');
+    }
+
+    buildKb();
+
+    document.addEventListener('keydown', e => {
+      if (!document.getElementById('kb-overlay').classList.contains('open')) return;
+
+      const key = e.key.toUpperCase();
+
+      if (key === 'BACKSPACE') {
+        e.preventDefault();
+        kbPress('⌫');
+      } else if (key === ' ') {
+        e.preventDefault();
+        kbPress('SPAZIO');
+      } else if (key === 'ENTER') {
+        e.preventDefault();
+        kbPress('CERCA');
+      } else if (/^[A-Z0-9'.\-]$/.test(key)) {
+        e.preventDefault();
+        kbPress(key);
+      }
     });
-  });
-}
 
-function kbPress(k){
-  if(k==='⌫'){kbValue=kbValue.slice(0,-1);}
-  else if(k==='SPAZIO'){kbValue+=' ';}
-  else if(k==='CERCA'){closeKb();return;}
-  else{kbValue+=k;}
-  updateKbDisplay();
-  applySearch();
-}
-
-function updateKbDisplay(){
-  document.getElementById('kb-text').textContent=kbValue;
-  const disp=document.getElementById('search-display');
-  if(kbValue){
-    disp.textContent=kbValue;
-    disp.classList.remove('placeholder');
-    document.getElementById('search-clear').classList.add('visible');
-  } else {
-    disp.textContent='Cerca città o sede...';
-    disp.classList.add('placeholder');
-    document.getElementById('search-clear').classList.remove('visible');
-  }
-}
-
-function applySearch(){filterSedi(kbValue);}
-
-function openKb(){
-  kbValue=document.getElementById('search-display').classList.contains('placeholder')?'':document.getElementById('search-display').textContent;
-  document.getElementById('kb-text').textContent=kbValue;
-  document.getElementById('kb-overlay').classList.add('open');
-  document.body.style.overflow='hidden';
-}
-
-function closeKb(){
-  document.getElementById('kb-overlay').classList.remove('open');
-  document.body.style.overflow='';
-}
-
-function handleOverlayClick(e){
-  if(e.target===document.getElementById('kb-overlay')) closeKb();
-}
-
-function clearSearch(e){
-  e.stopPropagation();
-  kbValue='';
-  updateKbDisplay();
-  filterSedi('');
-}
-
-buildKb();
-
-/* Previene zoom doppio tap su iOS/Android */
-let lastTap=0;
-document.addEventListener('touchend',e=>{
-  const now=Date.now();
-  if(now-lastTap<300){e.preventDefault();}
-  lastTap=now;
-},{passive:false});
-</script>
+    let lastTap = 0;
+    document.addEventListener('touchend', e => {
+      const now = Date.now();
+      if (now - lastTap < 300) { e.preventDefault(); }
+      lastTap = now;
+    }, { passive: false });
+  </script>
 </body>
+
 </html>

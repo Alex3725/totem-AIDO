@@ -6,25 +6,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          14.3963181,
-          42.2306455
-        ]
-      },
-      "properties": {
-        "nome": "ABRUZZO",
-        "indirizzo": "VIA DEL MARE 1",
-        "citta": "LANCIANO",
-        "cap": "66034",
-        "telefono": "",
-        "email": "",
-        "web": ""
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           10.4324775,
           45.1624997
         ]
@@ -500,25 +481,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          13.3241696,
-          43.5974796
-        ]
-      },
-      "properties": {
-        "nome": "ANCONA",
-        "indirizzo": "VIA DELLA REPUBBLICA 21",
-        "citta": "CHIARAVALLE",
-        "cap": "60033",
-        "telefono": "",
-        "email": "",
-        "web": ""
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           18.3803386,
           39.9889374
         ]
@@ -728,25 +690,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          11.9171218,
-          43.3442119
-        ]
-      },
-      "properties": {
-        "nome": "AREZZO",
-        "indirizzo": "VIA GIUSEPPE MAZZINI 41",
-        "citta": "CASTIGLION FIORENTINO",
-        "cap": "52043",
-        "telefono": "",
-        "email": "",
-        "web": ""
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           11.8349565,
           44.6128924
         ]
@@ -861,25 +804,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          13.8772322,
-          42.949614
-        ]
-      },
-      "properties": {
-        "nome": "ASCOLI PICENO",
-        "indirizzo": "VIA FILENI 1",
-        "citta": "S.BENEDETTO DEL TRONTO",
-        "cap": "63074",
-        "telefono": "",
-        "email": "",
-        "web": ""
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           13.5688451,
           42.8587794
         ]
@@ -946,25 +870,6 @@
         "indirizzo": "PIAZZA MARTIN LUTER KING (SALA EX LAVATOIO) SNC",
         "citta": "ASSISI",
         "cap": "06081",
-        "telefono": "",
-        "email": "",
-        "web": ""
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          8.2945884,
-          44.7222971
-        ]
-      },
-      "properties": {
-        "nome": "ASTI",
-        "indirizzo": "VIA A. ROBINO  131",
-        "citta": "CANELLI",
-        "cap": "14053",
         "telefono": "",
         "email": "",
         "web": ""
@@ -1317,25 +1222,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          16.275497,
-          41.3193494
-        ]
-      },
-      "properties": {
-        "nome": "BARLETTA-ANDRIA-TRANI (BAT)",
-        "indirizzo": "VIA POZZO SANT'AGOSTINO (EX OSPEDALE) SNC",
-        "citta": "BARLETTA",
-        "cap": "76121",
-        "telefono": "",
-        "email": "",
-        "web": ""
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           9.5697333,
           45.7340622
         ]
@@ -1364,25 +1250,6 @@
         "indirizzo": "VIA RISORGIMENTO 33",
         "citta": "BARZANO",
         "cap": "23891",
-        "telefono": "",
-        "email": "",
-        "web": ""
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          16.4443899,
-          40.173113
-        ]
-      },
-      "properties": {
-        "nome": "BASILICATA",
-        "indirizzo": "VIA CARMINE 46",
-        "citta": "VALSINNI",
-        "cap": "75029",
         "telefono": "",
         "email": "",
         "web": ""
@@ -1573,25 +1440,6 @@
         "indirizzo": "VIA VITTORIO EMANUELE ",
         "citta": "BERBENNO",
         "cap": "24030",
-        "telefono": "",
-        "email": "",
-        "web": ""
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          9.6866638,
-          45.6955024
-        ]
-      },
-      "properties": {
-        "nome": "BERGAMO",
-        "indirizzo": "Via Borgo Palazzo 90",
-        "citta": "BERGAMO",
-        "cap": "24125",
         "telefono": "",
         "email": "",
         "web": ""
@@ -2514,25 +2362,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          15.6375413,
-          38.1027006
-        ]
-      },
-      "properties": {
-        "nome": "CALABRIA",
-        "indirizzo": "C/O AVIS CORSO GARIBALDI 585",
-        "citta": "REGGIO CALABRIA",
-        "cap": "89127",
-        "telefono": "",
-        "email": "",
-        "web": ""
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           10.5138791,
           43.7262727
         ]
@@ -2713,25 +2542,6 @@
         "indirizzo": "VIA G. DELEDDA 12",
         "citta": "CAMPAGNA LUPIA",
         "cap": "30010",
-        "telefono": "",
-        "email": "",
-        "web": ""
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          14.3761113,
-          41.3551177
-        ]
-      },
-      "properties": {
-        "nome": "CAMPANIA",
-        "indirizzo": "VIA G.G. D'AMORE 33",
-        "citta": "PIEDIMONTE MATESE",
-        "cap": "81016",
         "telefono": "",
         "email": "",
         "web": ""
@@ -5763,25 +5573,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          11.3437824,
-          44.5086074
-        ]
-      },
-      "properties": {
-        "nome": "EMILIA-ROMAGNA",
-        "indirizzo": "VIA ALESSANDRO TIARINI 21/2",
-        "citta": "BOLOGNA",
-        "cap": "40129",
-        "telefono": "",
-        "email": "",
-        "web": ""
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           9.8746209,
           45.7054038
         ]
@@ -6475,25 +6266,6 @@
         "indirizzo": "VIA MARCO FORTINI 3",
         "citta": "FRATTA POLESINE",
         "cap": "45025",
-        "telefono": "",
-        "email": "",
-        "web": ""
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          12.661452,
-          45.9563684
-        ]
-      },
-      "properties": {
-        "nome": "FRIULI VENEZIA GIULIA",
-        "indirizzo": "VIA MONTEREALE 24",
-        "citta": "PORDENONE",
-        "cap": "33170",
         "telefono": "",
         "email": "",
         "web": ""
@@ -7530,25 +7302,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          12.4654903,
-          41.9080443
-        ]
-      },
-      "properties": {
-        "nome": "LAZIO",
-        "indirizzo": "VIA COLA DI RIENZO (indirizzo recapito postale) 243",
-        "citta": "ROMA",
-        "cap": "00192",
-        "telefono": "",
-        "email": "",
-        "web": ""
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           10.7331548,
           45.5083684
         ]
@@ -7767,25 +7520,6 @@
         "indirizzo": "VIA FRATELLI ROSSELLI 1/5",
         "citta": "LICATA",
         "cap": "92027",
-        "telefono": "",
-        "email": "",
-        "web": ""
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          8.9695386,
-          44.4078726
-        ]
-      },
-      "properties": {
-        "nome": "LIGURIA",
-        "indirizzo": "LARGO R. BENZI 10",
-        "citta": "GENOVA",
-        "cap": "16132",
         "telefono": "",
         "email": "",
         "web": ""
@@ -8404,25 +8138,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          13.3241696,
-          43.5974796
-        ]
-      },
-      "properties": {
-        "nome": "MARCHE",
-        "indirizzo": "VIA DELLA REPUBBLICA 21",
-        "citta": "CHIARAVALLE",
-        "cap": "60033",
-        "telefono": "",
-        "email": "",
-        "web": ""
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           16.6872305,
           40.3626056
         ]
@@ -8603,25 +8318,6 @@
         "indirizzo": "C/O ASS. LA FINESTRA",
         "citta": "VIA MESSAPIA 77",
         "cap": "Italy",
-        "telefono": "",
-        "email": "",
-        "web": ""
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          16.4443899,
-          40.173113
-        ]
-      },
-      "properties": {
-        "nome": "MATERA",
-        "indirizzo": "VIA CARMINE 46",
-        "citta": "VALSINNI",
-        "cap": "75029",
         "telefono": "",
         "email": "",
         "web": ""
@@ -9069,25 +8765,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          14.7976395,
-          41.5178688
-        ]
-      },
-      "properties": {
-        "nome": "MOLISE",
-        "indirizzo": "CORSO VITTORIO EMANUELE 56",
-        "citta": "JELSI",
-        "cap": "86015",
-        "telefono": "",
-        "email": "",
-        "web": ""
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           9.9300521,
           45.7630956
         ]
@@ -9506,25 +9183,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          9.2675926,
-          45.5781549
-        ]
-      },
-      "properties": {
-        "nome": "MONZA BRIANZA",
-        "indirizzo": "Via Solferino 16",
-        "citta": "MONZA",
-        "cap": "20900",
-        "telefono": "",
-        "email": "",
-        "web": ""
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           9.5729148,
           46.1330658
         ]
@@ -9591,25 +9249,6 @@
         "indirizzo": "VIA ALFREDO PIATTI 54",
         "citta": "MOZZO",
         "cap": "24030",
-        "telefono": "",
-        "email": "",
-        "web": ""
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          13.7810595,
-          45.6493858
-        ]
-      },
-      "properties": {
-        "nome": "MUGGIA",
-        "indirizzo": "PIAZZA DELL'OSPITALE C/O OSPED.LE MAGGIORE 1",
-        "citta": "TRIESTE",
-        "cap": "34129",
         "telefono": "",
         "email": "",
         "web": ""
@@ -10670,25 +10309,6 @@
         ]
       },
       "properties": {
-        "nome": "PESARO ",
-        "indirizzo": "VIA GUIDOBALDO DELLA ROVERE 13",
-        "citta": "PESARO",
-        "cap": "61121",
-        "telefono": "",
-        "email": "",
-        "web": ""
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          12.8457316,
-          43.9324778
-        ]
-      },
-      "properties": {
         "nome": "PESARO E URBINO",
         "indirizzo": "VIA GUIDUBALDO DELLA ROVERE 13",
         "citta": "PESARO",
@@ -10997,25 +10617,6 @@
         "indirizzo": "VIA LIMITE 11",
         "citta": "PIEDIMONTE MATESE",
         "cap": "81016",
-        "telefono": "",
-        "email": "",
-        "web": ""
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          7.69141,
-          45.05069
-        ]
-      },
-      "properties": {
-        "nome": "PIEMONTE",
-        "indirizzo": "STRADA COMUNALE SAN VITO REVIGLIASCO 34",
-        "citta": "TORINO",
-        "cap": "10133",
         "telefono": "",
         "email": "",
         "web": ""
@@ -11909,272 +11510,6 @@
         "indirizzo": "VIA CESARE BATTISTI 11",
         "citta": "PROVAGLIO D ISEO",
         "cap": "25050",
-        "telefono": "",
-        "email": "",
-        "web": ""
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          9.6866638,
-          45.6955024
-        ]
-      },
-      "properties": {
-        "nome": "PROVINCIALE BERGAMO",
-        "indirizzo": "VIA BORGO PALAZZO 90",
-        "citta": "BERGAMO",
-        "cap": "24125",
-        "telefono": "",
-        "email": "",
-        "web": ""
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          10.2133756,
-          45.5536588
-        ]
-      },
-      "properties": {
-        "nome": "PROVINCIALE BRESCIA",
-        "indirizzo": "VIA MONTE CENGIO 20",
-        "citta": "BRESCIA",
-        "cap": "25128",
-        "telefono": "",
-        "email": "",
-        "web": ""
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          14.3423249,
-          41.0555754
-        ]
-      },
-      "properties": {
-        "nome": "Provinciale Caserta",
-        "indirizzo": "Via P. Harris 79",
-        "citta": "Caserta",
-        "cap": "81100",
-        "telefono": "+390823445001 +393403075310",
-        "email": "",
-        "web": ""
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          9.0893873,
-          45.7907527
-        ]
-      },
-      "properties": {
-        "nome": "PROVINCIALE COMO",
-        "indirizzo": "VIA NAPOLEONA C/O OSPEDALE SANT'ANNA 60",
-        "citta": "COMO",
-        "cap": "22100",
-        "telefono": "",
-        "email": "",
-        "web": ""
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          10.4692654,
-          45.0293522
-        ]
-      },
-      "properties": {
-        "nome": "PROVINCIALE CREMONA",
-        "indirizzo": "VIA F. APORTI 28",
-        "citta": "CREMONA",
-        "cap": "26100",
-        "telefono": "",
-        "email": "",
-        "web": ""
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          9.3897592,
-          45.8645585
-        ]
-      },
-      "properties": {
-        "nome": "PROVINCIALE LECCO ",
-        "indirizzo": "VIA ALDO MORO 4",
-        "citta": "LECCO",
-        "cap": "23900",
-        "telefono": "",
-        "email": "",
-        "web": ""
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          9.501704,
-          45.3170056
-        ]
-      },
-      "properties": {
-        "nome": "PROVINCIALE LODI ",
-        "indirizzo": "VIA FANFULLA  22",
-        "citta": "LODI",
-        "cap": "26900",
-        "telefono": "",
-        "email": "",
-        "web": ""
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          10.769253,
-          45.1534946
-        ]
-      },
-      "properties": {
-        "nome": "PROVINCIALE MANTOVA",
-        "indirizzo": "STRADA DOSSO DEL CORSO 1",
-        "citta": "MANTOVA",
-        "cap": "46100",
-        "telefono": "",
-        "email": "",
-        "web": ""
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          9.4240607,
-          45.5045315
-        ]
-      },
-      "properties": {
-        "nome": "PROVINCIALE MILANO ",
-        "indirizzo": "VIA DE AMICIS  7",
-        "citta": "MELZO",
-        "cap": "20066",
-        "telefono": "",
-        "email": "",
-        "web": ""
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          9.2675926,
-          45.5781549
-        ]
-      },
-      "properties": {
-        "nome": "PROVINCIALE MONZA BRIANZA ",
-        "indirizzo": "VIA SOLFERINO 16",
-        "citta": "MONZA",
-        "cap": "20900",
-        "telefono": "",
-        "email": "",
-        "web": ""
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          9.1488409,
-          45.19622
-        ]
-      },
-      "properties": {
-        "nome": "PROVINCIALE PAVIA ",
-        "indirizzo": "PIAZZALE GOLGI C/O OSPEDALE S. MATTEO 2",
-        "citta": "PAVIA",
-        "cap": "27100",
-        "telefono": "",
-        "email": "",
-        "web": ""
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          9.8753181,
-          46.1701304
-        ]
-      },
-      "properties": {
-        "nome": "PROVINCIALE SONDRIO",
-        "indirizzo": "VIA COLOMBARO 17",
-        "citta": "SONDRIO",
-        "cap": "23100",
-        "telefono": "",
-        "email": "",
-        "web": ""
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          8.8342707,
-          45.8213726
-        ]
-      },
-      "properties": {
-        "nome": "PROVINCIALE VARESE",
-        "indirizzo": "VIA CAIROLI 14",
-        "citta": "VARESE",
-        "cap": "21100",
-        "telefono": "",
-        "email": "",
-        "web": ""
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          15.540924,
-          41.4569931
-        ]
-      },
-      "properties": {
-        "nome": "PUGLIA",
-        "indirizzo": "VIA NAZARIO SAURO 1",
-        "citta": "FOGGIA",
-        "cap": "71121",
         "telefono": "",
         "email": "",
         "web": ""
@@ -13781,25 +13116,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          9.661638,
-          39.97042
-        ]
-      },
-      "properties": {
-        "nome": "SARDEGNA",
-        "indirizzo": "PIAZZA DI CHIESA 3",
-        "citta": "ELMAS",
-        "cap": "09067",
-        "telefono": "",
-        "email": "",
-        "web": ""
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           10.1981499,
           45.660097
         ]
@@ -13866,25 +13182,6 @@
         "indirizzo": "VIA VERDI 9",
         "citta": "MURAVERA",
         "cap": "09043",
-        "telefono": "",
-        "email": "",
-        "web": ""
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          8.4050711,
-          40.8325856
-        ]
-      },
-      "properties": {
-        "nome": "SASSARI",
-        "indirizzo": "VIA PRINCIPE DI PIEMONTE C/O CASA ASSOCIAZIONI 61",
-        "citta": "PORTO TORRES",
-        "cap": "07046",
         "telefono": "",
         "email": "",
         "web": ""
@@ -14227,25 +13524,6 @@
         "indirizzo": "VIA GALILEO FERRARIS 6",
         "citta": "SETTIMO MILANESE",
         "cap": "10036",
-        "telefono": "",
-        "email": "",
-        "web": ""
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          13.9401935,
-          37.1023347
-        ]
-      },
-      "properties": {
-        "nome": "SICILIA",
-        "indirizzo": "VIA NAZARIO SAURO 1",
-        "citta": "LICATA",
-        "cap": "92027",
         "telefono": "",
         "email": "",
         "web": ""
@@ -15073,25 +14351,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          11.2432185,
-          43.7740742
-        ]
-      },
-      "properties": {
-        "nome": "TOSCANA",
-        "indirizzo": "VIA BORGO OGNISSANTI 20",
-        "citta": "FIRENZE",
-        "cap": "50123",
-        "telefono": "",
-        "email": "",
-        "web": ""
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           16.4129311,
           41.276084
         ]
@@ -15453,25 +14712,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          13.0015421,
-          45.7685438
-        ]
-      },
-      "properties": {
-        "nome": "UDINE",
-        "indirizzo": "VIA SABBIONERA  87",
-        "citta": "LATISANA",
-        "cap": "33053",
-        "telefono": "",
-        "email": "",
-        "web": ""
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           13.2372178,
           46.0607923
         ]
@@ -15500,25 +14740,6 @@
         "indirizzo": "VIA CROCE ROSSA INTERNAZIONALE 1",
         "citta": "UGGIATE TREVANO",
         "cap": "22029",
-        "telefono": "",
-        "email": "",
-        "web": ""
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          12.3461,
-          43.08531
-        ]
-      },
-      "properties": {
-        "nome": "UMBRIA",
-        "indirizzo": "PIAZZA V. MARTINELLI 1",
-        "citta": "SAN SISTO-PERUGIA",
-        "cap": "06132",
         "telefono": "",
         "email": "",
         "web": ""
@@ -16089,25 +15310,6 @@
         "indirizzo": "VIA VILLA CARRE 16/b",
         "citta": "VELO D'ASTICO",
         "cap": "36010",
-        "telefono": "",
-        "email": "",
-        "web": ""
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          12.2230154,
-          45.5138501
-        ]
-      },
-      "properties": {
-        "nome": "VENETO",
-        "indirizzo": "VIA DELLA PACCAGNELLA C/O OSPEDALE DELL'ANGELO 11",
-        "citta": "MESTRE",
-        "cap": "30174",
         "telefono": "",
         "email": "",
         "web": ""
