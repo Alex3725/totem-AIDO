@@ -37,8 +37,12 @@
  const EDGE_RESISTANCE = 0.12; // elasticity when no adjacent page exists
 
 // ─── Looping support ----------------------------------------------------
+const loopedPrevOption = $derived<MenuOption | null>(
+ prevOption ?? (menuOptions.length ? menuOptions[menuOptions.length - 1] : null)
+);
+
 const loopedNextOption = $derived<MenuOption | null>(
- nextOption ?? menuOptions[0] ?? null
+ nextOption ?? (menuOptions.length ? menuOptions[0] : null)
 );
 
  // ─── Resize observer: keep containerWidth in sync ────────────────────
@@ -82,7 +86,7 @@ const loopedNextOption = $derived<MenuOption | null>(
   const delta = e.clientX - pStartX;
 
   // Apply elastic resistance when swiping past the edge
-  if (delta > 0 && !prevOption) {
+  if (delta > 0 && !loopedPrevOption) {
    offset = delta * EDGE_RESISTANCE;
   } else if (delta < 0 && !loopedNextOption) {
    offset = delta * EDGE_RESISTANCE;
@@ -103,7 +107,7 @@ const loopedNextOption = $derived<MenuOption | null>(
   const overVelocity = velocity > VELOCITY_THRESHOLD;
   const shouldNavigate = overThreshold || overVelocity;
 
-  if (shouldNavigate && delta > 0 && prevOption) {
+  if (shouldNavigate && delta > 0 && loopedPrevOption) {
    triggerNavigation('prev');
   } else if (shouldNavigate && delta < 0 && loopedNextOption) {
    triggerNavigation('next');
@@ -136,7 +140,7 @@ const loopedNextOption = $derived<MenuOption | null>(
 
   // Wait for the CSS transition to finish, then actually navigate
   setTimeout(() => {
-   const option = direction === 'prev' ? prevOption : loopedNextOption;
+   const option = direction === 'prev' ? loopedPrevOption : loopedNextOption;
    if (option) goto(`/opzioni-menu/${option.slug}`);
   }, 280);
  }
@@ -174,9 +178,9 @@ const loopedNextOption = $derived<MenuOption | null>(
   They live OUTSIDE the clip container and the moving track.
   Result: they never translate during swipe.
  -->
-  <CarouselArrows
-  {prevOption}
-  nextOption={loopedNextOption}
+   <CarouselArrows
+    prevOption={loopedPrevOption}
+    nextOption={loopedNextOption}
   onPrev={() => triggerNavigation('prev')}
   onNext={() => triggerNavigation('next')}
   disabled={isAnimating}
@@ -204,8 +208,8 @@ const loopedNextOption = $derived<MenuOption | null>(
   >
    <!-- ① Ghost Previous (off-screen left) -->
    <div class="h-full flex-none" style="width: 33.333%">
-    {#if prevOption}
-     <GhostSlide option={prevOption} />
+    {#if loopedPrevOption}
+     <GhostSlide option={loopedPrevOption} />
     {/if}
    </div>
 
