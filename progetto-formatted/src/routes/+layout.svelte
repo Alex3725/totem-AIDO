@@ -5,9 +5,18 @@
 
 	let { children } = $props();
 
+	const routeSegments = $derived(
+		(page.route.id ?? '')
+			.split('/')
+			.filter(Boolean)
+	);
+
+	const isTopLevelOpzioniMenu = $derived(
+		routeSegments[0] === 'opzioni-menu' && routeSegments.length === 2
+	);
+
 	const isChildPage = $derived(
-		page.route.id !== '/' &&
-		!/^\/opzioni-menu\/[^/]+$/.test(page.route.id ?? '')
+		page.route.id !== '/' && !isTopLevelOpzioniMenu
 	);
 </script>
 
