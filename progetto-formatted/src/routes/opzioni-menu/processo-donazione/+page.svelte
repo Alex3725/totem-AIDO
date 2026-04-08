@@ -4,6 +4,6 @@
     let { data }: PageProps = $props();
 </script>
 
-<div class=" bg-red-700">
+<div class=" w-full h-full bg-red-700">
 	<h1>ciaooo o o o o o o</h1>
 </div>
