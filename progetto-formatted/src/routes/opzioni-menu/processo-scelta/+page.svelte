@@ -1,9 +1,10 @@
 <script lang="ts">
-	import type { PageProps } from './$types';
+	import FlipButtonSingle from '$lib/components/newComponent/FlipButtonSingle.svelte';
 
-	let { data }: PageProps = $props();
 </script>
 
 <div class=" w-full h-full bg-red-700">
-	<h1>ciaooo o o o o o o</h1>
+    <FlipButtonSingle avanti="prova" dietro="ciao"/>
+    <FlipButtonSingle avanti="prova" dietro="ciao"/>
+    <FlipButtonSingle avanti="prova" dietro="ciao"/>
 </div>
