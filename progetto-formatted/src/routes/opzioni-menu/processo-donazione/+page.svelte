@@ -17,9 +17,9 @@
             <FlipButtonSingle avanti="Azienda Sanitaria Locale" dietro="Scopri qual'è il riferimento sanitario più vicino al tuo territorio"/>
             <FlipButtonSingle avanti="Comune" dietro="Informazioni su dove puoi esprimere la tua scelta nel tuo comune"/>
             <FlipButtonSingle avanti="Iscrizione AIDO" dietro="Confronta i diversi canali disponibili per registrare la tua volontà"/>
-
     </div>
+    
     <div class="w-full h-[20%] flex flex-col items-center justify-center gap-4 p-3">
-        <PulsanteContent titolo="Consulta la mappa ATS" route="/opzioni-menu/processo-scelta/mappa" />
+        <PulsanteContent titolo="Scopri subito!" route="/opzioni-menu/processo-scelta/mappa" />
     </div>
 </div>
