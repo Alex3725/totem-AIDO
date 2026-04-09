@@ -10,7 +10,7 @@
 	       text-center text-white">
 
     <div class=" w-full h-[20%] flex items-center justify-center font-black ">
-        <h1 class=" text-[5rem] text-white ">Processo di scelta</h1>
+        <h1 class=" text-[5rem] text-white ">Processo di donazione</h1>
     </div>
 
     <div class=" w-full h-[60%] p-4 flex flex-col items-center justify-center gap-4">
