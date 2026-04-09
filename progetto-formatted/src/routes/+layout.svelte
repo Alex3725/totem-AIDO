@@ -7,7 +7,8 @@
  import type { MenuOption, MenuOptionSlug } from '$lib/data/menu-options';
  import { setMenuDotsSlug } from '$lib/stores/menu-dots.store';
  import AssistFloatingButton from '$lib/components/common/AssistFloatingButton.svelte';
-	import { goto } from '$app/navigation';
+ import { goto } from '$app/navigation';
+ import { resolve } from '$app/paths';
 
  // Rename the layout's implicit children snippet to avoid
  // shadowing the SwipeCarousel's children snippet further down.
@@ -60,7 +61,7 @@
   }
   //redirect from home to first menu page
   if (page.url.pathname === '/') {
-     goto('/opzioni-menu/faq');
+     goto(resolve('/opzioni-menu/faq'));
   }
  });
 
@@ -163,7 +164,8 @@
        class="inline-flex items-center justify-center
               w-[9cqw] h-[9cqw] min-w-[3.4rem] min-h-[3.4rem]
               rounded-full bg-[#d40000]
-              shadow-[0_0.35cqw_0.9cqw_rgba(0,0,0,0.18)]"
+              shadow-[0_0.35cqw_0.9cqw_rgba(0,0,0,0.18)]
+              rounded-t-[1.45cqw]"
        aria-label="Torna indietro"
       >
        <img
