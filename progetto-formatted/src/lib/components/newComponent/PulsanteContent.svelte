@@ -1,11 +1,11 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
+  let { titolo, route }: { titolo: string; route: string } = $props();
 
   function handleClick() {
     goto(route);
   }
   
-  let { titolo, route }: { titolo: string; route: string } = $props();
 </script>
 
 <button
@@ -14,7 +14,7 @@
          rounded-xl font-semibold text-lg text-gray-800 shadow-lg 
          hover:shadow-xl active:shadow-md transition-all duration-200 
          flex items-center justify-center px-6 focus:outline-none focus:ring-4 
-         focus:ring-blue-200 disabled:opacity-50 disabled:cursor-not-allowed"
+         focus:ring-blue-200 disabled:opacity-50 disabled:cursor-not-allowed p-15 "
   onclick={handleClick}
 >
   {titolo}

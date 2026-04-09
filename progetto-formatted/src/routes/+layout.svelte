@@ -79,14 +79,14 @@
          landscape:rounded-[4vmin] landscape:p-[1.05vmin]"
  >
   <div
-   class="h-full rounded-[2.2cqw] border-[max(2px,0.35cqw)] border-solid border-[#8db9ff]
+   class="w-full h-full rounded-[2.2cqw] border-[max(2px,0.35cqw)] border-solid border-[#8db9ff]
           bg-white p-[1.25cqw] flex flex-col min-h-0 gap-[1.25cqh]"
   >
    <!-- ═══════════════════════════
         HEADER — tre colonne allineate
         ═══════════════════════════ -->
    <header
-    class="grid grid-cols-[1fr_auto_1fr] items-center
+    class="w-full grid grid-cols-[1fr_auto_1fr] items-center
            h-[11.2cqh] min-h-[5.6cqw]
            rounded-[1.5cqw] bg-[#f6f6f6]
            px-[1.2cqw]"
@@ -124,7 +124,7 @@
         Carousel mode: SwipeCarousel wraps the page content.
         Normal mode: page content rendered directly.
         ═══════════════════════════ -->
-   <section class="flex-1 min-h-0 overflow-hidden flex flex-col">
+   <section class="w-full flex-1 min-h-0 overflow-hidden flex flex-col">
     {#if isCarouselMode}
      <!--
       Pass prevOption / nextOption so the carousel knows which ghost
