@@ -9,12 +9,9 @@
 </script>
 
 <button
-  class="w-full max-w-md h-14 bg-white hover:bg-gray-50 active:bg-gray-100 
-         border-2 border-gray-200 hover:border-gray-300 active:border-gray-400 
-         rounded-xl font-semibold text-lg text-gray-800 shadow-lg 
-         hover:shadow-xl active:shadow-md transition-all duration-200 
-         flex items-center justify-center px-6 focus:outline-none focus:ring-4 
-         focus:ring-blue-200 disabled:opacity-50 disabled:cursor-not-allowed p-15 "
+    class=" rounded-[1.2cqw] bg-white px-[4.25cqw] py-[1.6cqh]
+           text-[4.7cqw] font-black leading-none text-[#121212]
+           shadow-[0_0.55cqw_0.75cqw_rgba(0,0,0,0.38)] flex items-center "
   onclick={handleClick}
 >
   {titolo}
