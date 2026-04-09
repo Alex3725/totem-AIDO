@@ -7,6 +7,7 @@
  import type { MenuOption, MenuOptionSlug } from '$lib/data/menu-options';
  import { setMenuDotsSlug } from '$lib/stores/menu-dots.store';
  import AssistFloatingButton from '$lib/components/common/AssistFloatingButton.svelte';
+	import { goto } from '$app/navigation';
 
  // Rename the layout's implicit children snippet to avoid
  // shadowing the SwipeCarousel's children snippet further down.
@@ -56,6 +57,10 @@
  $effect(() => {
        if (isMenuParentPage && routeSegments[1]) {
    setMenuDotsSlug(routeSegments[1] as MenuOptionSlug);
+  }
+  //redirect from home to first menu page
+  if (page.url.pathname === '/') {
+     goto('/opzioni-menu/faq');
   }
  });
 
