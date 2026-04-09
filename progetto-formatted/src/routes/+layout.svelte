@@ -20,13 +20,21 @@
 
  /** Pagine madri: /opzioni-menu/[slug] */
  const isMenuParentPage = $derived(
-  routeSegments[0] === 'opzioni-menu' && routeSegments.length === 2
+ routeSegments[0] === 'opzioni-menu' &&
+     routeSegments.length === 2 &&
+     routeSegments[1] !== 'chat-assistenza'
  );
 
- /** Pagine figlie: /opzioni-menu/[slug]/... (qualsiasi livello successivo) */
+ /** Pagine figlie: /opzioni-menu/[slug]/... e la chat speciale */
  const isMenuChildPage = $derived(
-  routeSegments[0] === 'opzioni-menu' && routeSegments.length >= 3
+ routeSegments[0] === 'opzioni-menu' &&
+  (routeSegments.length >= 3 || routeSegments[1] === 'chat-assistenza')
  );
+
+/** La chat assistenza va trattata come una pagina speciale senza FAB */
+const isChatAssistancePage = $derived(
+ routeSegments[0] === 'opzioni-menu' && routeSegments[1] === 'chat-assistenza'
+);
 
  /** Tutto ciò che non è home né pagina madre mostra il back */
  const isChildPage = $derived(
@@ -159,8 +167,9 @@
      {#if showMenuDots}
       <MenuDots />
      {:else if showBack}
-      <a
-       href="javascript:history.back()"
+      <button
+       type="button"
+       onclick={() => history.back()}
        class="inline-flex items-center justify-center
               w-[9cqw] h-[9cqw] min-w-[3.4rem] min-h-[3.4rem]
               rounded-full bg-[#d40000]
@@ -173,12 +182,14 @@
         alt=""
         class="w-[5.2cqw] h-[5.2cqw] brightness-0 invert"
        />
-      </a>
+      </button>
      {/if}
     </div>
 
-    <!-- Destra: DONAtello AI -->
-    <AssistFloatingButton/>
+     <!-- Destra: DONAtello AI -->
+     {#if !isChatAssistancePage}
+      <AssistFloatingButton />
+     {/if}
    </footer>
   </div>
  </section>
