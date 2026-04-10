@@ -2,7 +2,7 @@
 	import FlipButtonSingle from '$lib/components/newComponent/FlipButtonSingle.svelte';
 	import PulsanteContent from '$lib/components/newComponent/PulsanteContent.svelte';
     import ProcessoDonazione from "$lib/components/newComponent/ProcessoDonazione.svelte";
-
+    export const ssr = false;
 </script>
 
 
