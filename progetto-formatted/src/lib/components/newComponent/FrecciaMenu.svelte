@@ -1,5 +1,13 @@
-<script>
-    let { onPrev = () => {}, onNext = () => {} } = $props();
+<script lang="ts">
+	type ButtonHandler = (event: MouseEvent & { currentTarget: EventTarget & HTMLButtonElement }) => void;
+
+	let {
+		onPrev = () => {},
+		onNext = () => {}
+	}: {
+		onPrev?: ButtonHandler;
+		onNext?: ButtonHandler;
+	} = $props();
 </script>
 
 <div class="flex justify-between items-center w-full">

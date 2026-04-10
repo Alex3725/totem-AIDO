@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { fly } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
+	import { fly } from 'svelte/transition';
 
 	type Node =
 		| 'diagnosi'
@@ -11,148 +11,171 @@
 		| 'familiari'
 		| 'prelievo';
 
-	let node: Node = 'diagnosi';
-
-	const go = (n: Node) => {
-		node = n;
-		console.log('node:', node);
+	type StepAction = {
+		label: string;
+		next: Node;
+		className: string;
 	};
+
+	type Step = {
+		icon?: string;
+		title: string;
+		description?: string;
+		titleClass?: string;
+		actions: StepAction[];
+	};
+
+	let node = $state<Node>('diagnosi');
+
+	const steps: Record<Node, Step> = {
+		diagnosi: {
+			icon: '🧠',
+			title: 'Diagnosi di morte',
+			description: 'Accertata con criteri neurologici',
+			actions: [
+				{
+					label: 'Continua',
+					next: 'osservazione',
+					className:
+						'w-full rounded-2xl bg-red-600 px-4 py-3 text-sm font-semibold text-white transition active:scale-[0.98]'
+				}
+			]
+		},
+		osservazione: {
+			icon: '⏱️',
+			title: 'Osservazione',
+			description: 'Periodo di conferma',
+			actions: [
+				{
+					label: 'Avanti',
+					next: 'comunicazione',
+					className:
+						'w-full rounded-2xl bg-red-600 px-4 py-3 text-sm font-semibold text-white transition active:scale-[0.98]'
+				}
+			]
+		},
+		comunicazione: {
+			icon: '👨‍👩‍👧',
+			title: 'Comunicazione',
+			description: 'Ai familiari',
+			actions: [
+				{
+					label: 'Continua',
+					next: 'scelta',
+					className:
+						'w-full rounded-2xl bg-red-600 px-4 py-3 text-sm font-semibold text-white transition active:scale-[0.98]'
+				}
+			]
+		},
+		scelta: {
+			title: 'Volonta del paziente',
+			actions: [
+				{
+					label: 'Donatore',
+					next: 'prelievo',
+					className:
+						'w-full rounded-2xl bg-green-100 px-4 py-4 text-left text-sm font-semibold text-green-950 transition hover:bg-green-200'
+				},
+				{
+					label: 'Non donatore',
+					next: 'stop',
+					className:
+						'w-full rounded-2xl bg-red-100 px-4 py-4 text-left text-sm font-semibold text-red-950 transition hover:bg-red-200'
+				},
+				{
+					label: 'Nessuna dichiarazione',
+					next: 'familiari',
+					className:
+						'w-full rounded-2xl bg-zinc-100 px-4 py-4 text-left text-sm font-semibold text-zinc-900 transition hover:bg-zinc-200'
+				}
+			]
+		},
+		familiari: {
+			icon: '⚖️',
+			title: 'Familiari',
+			description: 'Coniuge - Figli - Genitori',
+			actions: [
+				{
+					label: 'Autorizzano',
+					next: 'prelievo',
+					className:
+						'w-full rounded-2xl bg-green-600 px-4 py-3 text-sm font-semibold text-white transition active:scale-[0.98]'
+				},
+				{
+					label: 'Rifiutano',
+					next: 'stop',
+					className:
+						'w-full rounded-2xl bg-zinc-300 px-4 py-3 text-sm font-semibold text-zinc-950 transition active:scale-[0.98]'
+				}
+			]
+		},
+		stop: {
+			icon: '⛔',
+			title: 'Processo interrotto',
+			titleClass: 'text-red-600',
+			actions: [
+				{
+					label: 'Ricomincia',
+					next: 'diagnosi',
+					className:
+						'w-full rounded-2xl bg-zinc-950 px-4 py-3 text-sm font-semibold text-white transition active:scale-[0.98]'
+				}
+			]
+		},
+		prelievo: {
+			icon: '❤️',
+			title: 'Prelievo organi',
+			description: 'Puo salvare fino a 8 vite',
+			titleClass: 'text-red-600',
+			actions: [
+				{
+					label: 'Ricomincia',
+					next: 'diagnosi',
+					className:
+						'w-full rounded-2xl bg-zinc-950 px-4 py-3 text-sm font-semibold text-white transition active:scale-[0.98]'
+				}
+			]
+		}
+	};
+
+	const setNode = (next: Node) => {
+		node = next;
+	};
+
+	const iconBadgeClass =
+		'mx-auto flex size-16 items-center justify-center rounded-full bg-red-50 text-4xl shadow-sm ring-1 ring-red-100';
 </script>
 
-<!-- SFONDO TRASPARENTE -->
-<div class="w-full h-[100dvh] flex items-center justify-center">
-
-	<!-- CARD -->
+<div class="flex min-h-dvh w-full items-center justify-center px-4 py-6">
 	<div
-		class="w-[360px] max-w-[90vw] rounded-3xl p-6 text-center space-y-6
-		bg-white/80 backdrop-blur-md shadow-xl relative overflow-hidden"
+		class="relative w-full max-w-sm overflow-hidden rounded-[2rem] border border-white/60 bg-white/85 p-6 text-center shadow-xl shadow-zinc-950/10 backdrop-blur-md sm:p-7"
 	>
+		{#key node}
+			{@const step = steps[node]}
 
-		{#if node === 'diagnosi'}
-			<div in:fly={{ y: 20, duration: 200, easing: cubicOut }} class="space-y-4">
-				<div class="text-5xl">🧠</div>
-				<h2 class="text-xl font-bold">Diagnosi di morte</h2>
-				<p class="text-gray-500 text-sm">Accertata con criteri neurologici</p>
+			<section in:fly={{ y: 20, duration: 220, easing: cubicOut }} class="space-y-4">
+				{#if step.icon}
+					<div class={iconBadgeClass}>{step.icon}</div>
+				{/if}
 
-				<button
-					on:click={() => go('osservazione')}
-					class="w-full py-3 rounded-xl bg-red-600 text-white active:scale-95 transition"
-				>
-					Continua
-				</button>
-			</div>
-		{/if}
+				<div class="space-y-2">
+					<h2 class={`text-xl font-bold tracking-tight text-zinc-950 ${step.titleClass ?? ''}`}>
+						{step.title}
+					</h2>
 
-		{#if node === 'osservazione'}
-			<div in:fly={{ y: 20, duration: 200, easing: cubicOut }} class="space-y-4">
-				<div class="text-5xl">⏱️</div>
-				<h2 class="text-xl font-bold">Osservazione</h2>
-				<p class="text-gray-500 text-sm">Periodo di conferma</p>
+					{#if step.description}
+						<p class="text-sm leading-relaxed text-zinc-500">{step.description}</p>
+					{/if}
+				</div>
 
-				<button
-					on:click={() => go('comunicazione')}
-					class="w-full py-3 rounded-xl bg-red-600 text-white active:scale-95 transition"
-				>
-					Avanti
-				</button>
-			</div>
-		{/if}
-
-		{#if node === 'comunicazione'}
-			<div in:fly={{ y: 20, duration: 200, easing: cubicOut }} class="space-y-4">
-				<div class="text-5xl">👨‍👩‍👧</div>
-				<h2 class="text-xl font-bold">Comunicazione</h2>
-				<p class="text-gray-500 text-sm">Ai familiari</p>
-
-				<button
-					on:click={() => go('scelta')}
-					class="w-full py-3 rounded-xl bg-red-600 text-white active:scale-95 transition"
-				>
-					Continua
-				</button>
-			</div>
-		{/if}
-
-		{#if node === 'scelta'}
-			<div in:fly={{ y: 20, duration: 200, easing: cubicOut }} class="space-y-3">
-				<h2 class="text-xl font-bold">Volontà del paziente</h2>
-
-				<button
-					on:click={() => go('prelievo')}
-					class="w-full p-4 rounded-xl bg-green-100 hover:bg-green-200 transition text-left"
-				>
-					✔ Donatore
-				</button>
-
-				<button
-					on:click={() => go('stop')}
-					class="w-full p-4 rounded-xl bg-red-100 hover:bg-red-200 transition text-left"
-				>
-					✖ Non donatore
-				</button>
-
-				<button
-					on:click={() => go('familiari')}
-					class="w-full p-4 rounded-xl bg-gray-100 hover:bg-gray-200 transition text-left"
-				>
-					? Nessuna dichiarazione
-				</button>
-			</div>
-		{/if}
-
-		{#if node === 'familiari'}
-			<div in:fly={{ y: 20, duration: 200, easing: cubicOut }} class="space-y-4">
-				<div class="text-5xl">⚖️</div>
-				<h2 class="text-xl font-bold">Familiari</h2>
-
-				<p class="text-sm text-gray-500">
-					Coniuge • Figli • Genitori
-				</p>
-
-				<button
-					on:click={() => go('prelievo')}
-					class="w-full py-3 rounded-xl bg-green-500 text-white"
-				>
-					Autorizzano
-				</button>
-
-				<button
-					on:click={() => go('stop')}
-					class="w-full py-3 rounded-xl bg-gray-300"
-				>
-					Rifiutano
-				</button>
-			</div>
-		{/if}
-
-		{#if node === 'stop'}
-			<div in:fly={{ y: 20, duration: 200, easing: cubicOut }} class="space-y-4">
-				<div class="text-5xl">⛔</div>
-				<h2 class="text-xl font-bold text-red-600">Processo interrotto</h2>
-
-				<button
-					on:click={() => go('diagnosi')}
-					class="w-full py-3 rounded-xl bg-black text-white"
-				>
-					Ricomincia
-				</button>
-			</div>
-		{/if}
-
-		{#if node === 'prelievo'}
-			<div in:fly={{ y: 20, duration: 200, easing: cubicOut }} class="space-y-4">
-				<div class="text-5xl">❤️</div>
-				<h2 class="text-xl font-bold text-red-600">Prelievo organi</h2>
-				<p class="text-gray-500 text-sm">Può salvare fino a 8 vite</p>
-
-				<button
-					on:click={() => go('diagnosi')}
-					class="w-full py-3 rounded-xl bg-black text-white"
-				>
-					Ricomincia
-				</button>
-			</div>
-		{/if}
-
+				<div class="space-y-3">
+					{#each step.actions as action}
+						<button type="button" onclick={() => setNode(action.next)} class={action.className}>
+							{action.label}
+						</button>
+					{/each}
+				</div>
+			</section>
+		{/key}
 	</div>
 </div>
