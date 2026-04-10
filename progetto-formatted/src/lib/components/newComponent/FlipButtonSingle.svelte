@@ -27,7 +27,7 @@
 </div>
  
   <button
-    class="absolute inset-0 w-full h-full cursor-pointer border-0 bg-transparent p-0 transform-gpu [will-change:transform] [transform-style:preserve-3d] transition-transform duration-[600ms] [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] select-none active:scale-[0.97]"
+    class="absolute inset-0 w-full h-full cursor-pointer border-0 p-0 transform-gpu [will-change:transform] [transform-style:preserve-3d] transition-transform duration-[600ms] [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] select-none active:scale-[0.97]"
     style="transform: {flipped ? 'rotateX(180deg)' : 'rotateX(0deg)'}"
     onclick={toggle}
 >
@@ -43,17 +43,11 @@
       style="
         opacity: {flipped ? 0 : 1};
         visibility: {flipped ? 'hidden' : 'visible'};
-        background:
-          radial-gradient(circle at center, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.18) 38%, rgba(255,255,255,0.36) 72%, rgba(255,255,255,0.52) 100%),
-          linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.08) 100%);
-        backdrop-filter: blur(22px) saturate(145%) brightness(1.03);
-        -webkit-backdrop-filter: blur(22px) saturate(145%) brightness(1.03);
-        border: 1px solid rgba(255,255,255,0.58);
-        box-shadow:
-          0 0 0 1px rgba(255,255,255,0.14) inset,
-          0 1px 0 0 rgba(255,255,255,0.45) inset,
-          0 12px 30px rgba(94, 109, 135, 0.10),
-          0 3px 10px rgba(94, 109, 135, 0.08);
+        background-color: rgba(255, 255, 255, 0.25);
+        color: white;
+        -webkit-backdrop-filter: blur(24px) saturate(150%) brightness(1.02);
+        border: 3px solid rgba(255, 255, 255, 0.28);
+        box-shadow: 0 0.75cqw 1.2cqw rgba(0, 0, 0, 0.18);
       "
 >
       {avanti}
@@ -71,17 +65,11 @@
       style="
         opacity: {flipped ? 1 : 0};
         visibility: {flipped ? 'visible' : 'hidden'};
-        background:
-          radial-gradient(circle at center, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.16) 36%, rgba(255,255,255,0.32) 70%, rgba(255,255,255,0.48) 100%),
-          linear-gradient(180deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.06) 100%);
-        backdrop-filter: blur(24px) saturate(150%) brightness(1.02);
+        background-color: rgba(255, 255, 255, 0.25);
+        color: white;
         -webkit-backdrop-filter: blur(24px) saturate(150%) brightness(1.02);
-        border: 1px solid rgba(255,255,255,0.52);
-        box-shadow:
-          0 0 0 1px rgba(255,255,255,0.12) inset,
-          0 1px 0 0 rgba(255,255,255,0.38) inset,
-          0 14px 32px rgba(94, 109, 135, 0.12),
-          0 3px 12px rgba(94, 109, 135, 0.08);
+        border: 3px solid rgba(255, 255, 255, 0.28);
+        box-shadow: 0 0.75cqw 1.2cqw rgba(0, 0, 0, 0.18);
       "
 >
       {dietro}
