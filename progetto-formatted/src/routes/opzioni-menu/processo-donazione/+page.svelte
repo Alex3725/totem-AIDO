@@ -11,8 +11,4 @@
 	<div class="flex h-[80%] w-full flex-col items-center justify-center p-4">
 		<ProcessoDonazione/>
 	</div>
-
-	<div class="flex h-[10%] w-full flex-col items-center justify-center gap-4 p-3">
-		<PulsanteContent titolo="Scopri subito!" route="/opzioni-menu/processo-scelta/mappa" />
-	</div>
 </div>

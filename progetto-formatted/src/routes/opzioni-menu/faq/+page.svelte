@@ -4,7 +4,7 @@
 <div
 	class="flex h-full w-full select-none flex-col items-center rounded-[1.45cqw] bg-[#d40000] px-[2.75cqw] pb-[2.2cqh] pt-[2.8cqh] text-center text-white"
 >
-	<div class="flex h-[14%] w-full items-center justify-center font-black">
+	<div class="flex h-[20%] w-full items-center justify-center font-black">
 		<h1 class="text-[5rem] leading-none text-white">FAQ</h1>
 	</div>
 	<div class="flex w-full flex-1 items-center justify-center px-[1cqw] py-[0.5cqh]">

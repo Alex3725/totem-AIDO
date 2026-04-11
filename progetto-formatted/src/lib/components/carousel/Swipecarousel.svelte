@@ -22,6 +22,9 @@
  let isDragging = $state(false);
  let isAnimating = $state(false);
  let skipTransition = $state(false); // instant reset after navigation
+let pendingGhostForDissolve: MenuOption | null = $state(null);
+let dissolveGhostOption: MenuOption | null = $state(null);
+let dissolveGhostVisible = $state(false);
 
  // ─── DOM reference ────────────────────────────────────────────────────
  let wrapperEl: HTMLDivElement;
@@ -58,6 +61,18 @@ const loopedNextOption = $derived<MenuOption | null>(
 
  // ─── After every SvelteKit navigation: snap track back to center ──────
  afterNavigate(() => {
+  if (pendingGhostForDissolve) {
+   dissolveGhostOption = pendingGhostForDissolve;
+   dissolveGhostVisible = true;
+   requestAnimationFrame(() => {
+    dissolveGhostVisible = false;
+   });
+   setTimeout(() => {
+    dissolveGhostOption = null;
+   }, 340);
+   pendingGhostForDissolve = null;
+  }
+
   // Disable transition so the reset is instant (no visible snap)
   skipTransition = true;
   offset = 0;
@@ -141,7 +156,10 @@ const loopedNextOption = $derived<MenuOption | null>(
   // Wait for the CSS transition to finish, then actually navigate
   setTimeout(() => {
    const option = direction === 'prev' ? loopedPrevOption : loopedNextOption;
-   if (option) goto(`/opzioni-menu/${option.slug}`);
+     if (option) {
+      pendingGhostForDissolve = option;
+      goto(`/opzioni-menu/${option.slug}`);
+     }
   }, 280);
  }
 
@@ -172,6 +190,16 @@ const loopedNextOption = $derived<MenuOption | null>(
  The wrapper itself NEVER moves — only the inner track does.
 -->
 <div class="relative h-full w-full" bind:this={wrapperEl}>
+ {#if dissolveGhostOption}
+  <div
+  class={`pointer-events-none absolute inset-0 z-7 transition-[opacity,filter] duration-500 ease-out ${
+    dissolveGhostVisible ? 'opacity-100 blur-0' : 'opacity-0 blur-[0.9cqw]'
+   }`}
+  >
+   <GhostSlide option={dissolveGhostOption} />
+  </div>
+ {/if}
+
  <!--
   ▲ OVERLAY ARROWS
   Positioned absolute within this wrapper.

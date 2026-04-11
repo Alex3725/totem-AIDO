@@ -13,8 +13,8 @@
 	       rounded-[1.45cqw] bg-[#d40000] px-[2.75cqw] pb-[2.2cqh] pt-[2.8cqh]
 	       text-center text-white">
 
-    <div class=" w-full h-[20%] flex items-center justify-center font-black  ">
-        <h1 class=" text-[5rem] text-white ">{option.title}</h1>
+	<div class=" w-full h-[20%] flex items-center justify-center font-black  ">
+		<h1 class=" text-[5rem] leading-none text-white ">{option.title}</h1>
     </div>
 
     <div class=" w-full h-[60%] p-4 flex flex-col items-center justify-center gap-4 bg-white/30 rounded-[1.45cqw]">
