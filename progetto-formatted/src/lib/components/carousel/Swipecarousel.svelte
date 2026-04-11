@@ -1,6 +1,5 @@
 <script lang="ts">
- import { afterNavigate, goto } from '$app/navigation';
- import { resolve } from '$app/paths';
+ import { afterNavigate } from '$app/navigation';
  import type { Snippet } from 'svelte';
  import { menuOptions } from '$lib/data/menu-options';
  import type { MenuOption } from '$lib/data/menu-options';
@@ -161,7 +160,7 @@ const loopedNextOption = $derived<MenuOption | null>(
    const option = direction === 'prev' ? loopedPrevOption : loopedNextOption;
      if (option) {
       pendingGhostForDissolve = option;
-      goto(resolve(`/opzioni-menu/${option.slug}`));
+      window.location.assign(`/opzioni-menu/${option.slug}`);
      }
   }, 280);
  }

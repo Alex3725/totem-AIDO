@@ -1,9 +1,4 @@
-export type MenuOptionSlug =
-	| 'faq'
-	| 'diventa-donatore'
-	| 'processo-donazione'
-	| 'processo-scelta'
-	| 'scopri';
+export type MenuOptionSlug = string;
 
 export interface MenuOption {
 	slug: MenuOptionSlug;
@@ -14,7 +9,7 @@ export interface MenuOption {
 	examplePath: string;
 }
 
-export const menuOptions: MenuOption[] = [
+export const fixedMenuOptions: MenuOption[] = [
 	{
 		slug: 'faq',
 		title: 'FAQ',
@@ -58,12 +53,52 @@ export const menuOptions: MenuOption[] = [
 	}
 ];
 
+const discoveredTopLevelPages = import.meta.glob('/src/routes/opzioni-menu/*/+page.svelte');
+
+const excludedAutoSlugs = new Set<string>([
+	...fixedMenuOptions.map((option) => option.slug),
+	'chat-assistenza'
+]);
+
+function slugToTitle(slug: string): string {
+	return slug
+		.split('-')
+		.filter(Boolean)
+		.map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+		.join(' ');
+}
+
+function buildAutoMenuOptions(): MenuOption[] {
+	const slugs = Object.keys(discoveredTopLevelPages)
+		.map((path) => {
+			const match = path.match(/^\/src\/routes\/opzioni-menu\/([^/]+)\/\+page\.svelte$/);
+			return match?.[1] ?? null;
+		})
+		.filter((slug): slug is string => slug !== null)
+		.filter((slug) => !excludedAutoSlugs.has(slug))
+		.sort((a, b) => a.localeCompare(b, 'it'));
+
+	return slugs.map((slug) => ({
+		slug,
+		title: slugToTitle(slug),
+		description: `Sezione ${slugToTitle(slug)}.`,
+		ctaLabel: 'Apri',
+		sourceFile: `${slug}.html`,
+		examplePath: `/esempio/${slug}`
+	}));
+}
+
+export const menuOptions: MenuOption[] = [...fixedMenuOptions, ...buildAutoMenuOptions()];
+
 export function getMenuOptionBySlug(slug: string): MenuOption | undefined {
 	return menuOptions.find((option) => option.slug === slug);
 }
 
 export function getAdjacentMenuOption(slug: MenuOptionSlug, offset: -1 | 1): MenuOption {
 	const index = menuOptions.findIndex((option) => option.slug === slug);
+	if (index < 0) {
+		return menuOptions[0];
+	}
 	const targetIndex = (index + offset + menuOptions.length) % menuOptions.length;
 	return menuOptions[targetIndex];
 }
