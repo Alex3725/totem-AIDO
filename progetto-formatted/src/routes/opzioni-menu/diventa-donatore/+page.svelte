@@ -4,9 +4,11 @@
 	const goToStore = (route: string) => goto(route);
 </script>
 
-<div class="relative flex h-full w-full select-none flex-col items-center overflow-hidden
+<div class="flex h-full w-full">
+	<div class="h-full w-[1.15cqw] bg-white"></div>
+	<div class="relative flex h-full flex-1 select-none flex-col items-center overflow-hidden
             rounded-[1.45cqw] bg-[#d40000] px-[2.75cqw] pb-[2.2cqh] pt-[2.8cqh]
-            text-center text-white">
+			text-center text-white">
 
 	<!-- Rumore di sfondo decorativo -->
 	<div
@@ -79,4 +81,6 @@
 		</div>
 
 	</div>
+	</div>
+	<div class="h-full w-[1.15cqw] bg-white"></div>
 </div>

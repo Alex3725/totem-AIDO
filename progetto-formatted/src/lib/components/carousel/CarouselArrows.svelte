@@ -15,8 +15,8 @@
   disabled?: boolean;
  } = $props();
 
- let prevPressed = false;
- let nextPressed = false;
+ let prevPressed = $state(false);
+ let nextPressed = $state(false);
 
  function handlePrevClick() {
   if (disabled) return;
@@ -54,7 +54,7 @@
   onclick={handlePrevClick}
   {disabled}
   aria-label="Vai a {prevOption.title}"
-  class="absolute left-2 top-1/2 z-20 flex
+        class="absolute left-[1.2cqw] top-1/2 z-20 flex
          h-12 w-12
          sm:h-14 sm:w-14
          md:h-16 md:w-16
@@ -77,7 +77,7 @@
   onclick={handleNextClick}
   {disabled}
   aria-label="Vai a {nextOption.title}"
-  class="absolute right-2 top-1/2 z-20 flex
+        class="absolute right-[1.2cqw] top-1/2 z-20 flex
          h-12 w-12
          sm:h-14 sm:w-14
          md:h-16 md:w-16

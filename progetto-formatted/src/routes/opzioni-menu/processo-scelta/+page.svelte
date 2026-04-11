@@ -5,9 +5,11 @@
 </script>
 
 
-<div class="flex h-full w-full select-none flex-col items-center
-	       rounded-[1.45cqw] bg-[#d40000] px-[2.75cqw] pb-[2.2cqh] pt-[2.8cqh]
-	       text-center text-white">
+<div class="flex h-full w-full">
+    <div class="h-full w-[1.15cqw] bg-white"></div>
+    <div class="flex h-full flex-1 select-none flex-col items-center
+           rounded-[1.45cqw] bg-[#d40000] px-[2.75cqw] pb-[2.2cqh] pt-[2.8cqh]
+           text-center text-white">
 
     <div class=" w-full h-[20%] flex items-center justify-center font-black ">
         <h1 class=" text-[5rem] text-white ">Processo di scelta</h1>
@@ -22,4 +24,6 @@
     <div class="w-full h-[20%] flex flex-col items-center justify-center gap-4 p-3">
         <PulsanteContent titolo="Consulta la mappa ATS" route="/opzioni-menu/processo-scelta/mappa" />
     </div>
+	</div>
+	<div class="h-full w-[1.15cqw] bg-white"></div>
 </div>

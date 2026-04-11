@@ -238,19 +238,19 @@ const loopedNextOption = $derived<MenuOption | null>(
    onpointercancel={onPointerCancel}
   >
    <!-- ① Ghost Previous (off-screen left) -->
-   <div class="h-full flex-none" style="width: 33.333%">
+  <div class="h-full flex-none" style="width: 33.333%">
     {#if loopedPrevOption}
      <GhostSlide option={loopedPrevOption} />
     {/if}
    </div>
 
    <!-- ② Real page content (always centred at rest) -->
-   <div class="h-full flex-none" style="width: 33.333%">
+  <div class="h-full flex-none" style="width: 33.333%">
     {@render children()}
    </div>
 
    <!-- ③ Ghost Next (off-screen right) -->
-   <div class="h-full flex-none" style="width: 33.333%">
+  <div class="h-full flex-none" style="width: 33.333%">
     {#if loopedNextOption}
      <GhostSlide option={loopedNextOption} />
     {/if}

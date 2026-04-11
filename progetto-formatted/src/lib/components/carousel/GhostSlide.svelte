@@ -9,7 +9,9 @@
 	e simula il caricamento del contenuto con uno skeleton animato.
 	aria-hidden: i lettori di schermo ignorano le slide fuori schermo.
 -->
-<div class="flex h-full w-full select-none flex-col items-center
+<div class="flex h-full w-full">
+	<div class="h-full w-[0.95cqw] bg-white"></div>
+	<div class="flex h-full flex-1 select-none flex-col items-center
 	       rounded-[1.45cqw] bg-[#d40000] px-[2.75cqw] pb-[2.2cqh] pt-[2.8cqh]
 	       text-center text-white">
 
@@ -24,4 +26,6 @@
 	<div class="w-full h-[20%] flex flex-col items-center justify-center gap-4 p-3 bg-white/30 rounded-b-[1.45cqw]">
         
     </div>
+	</div>
+	<div class="h-full w-[0.95cqw] bg-white"></div>
 </div>

@@ -1,10 +1,12 @@
 
 
-<div
-	class="relative flex h-full w-full flex-col items-center overflow-hidden rounded-[1.45cqw]
+<div class="flex h-full w-full">
+	<div class="h-full w-[1.15cqw] bg-white"></div>
+	<div
+		class="relative flex h-full flex-1 flex-col items-center overflow-hidden rounded-[1.45cqw]
             bg-[#d40000] px-[2.75cqw] pt-[2.8cqh] pb-[2.2cqh] text-center
-            text-white select-none"
->
+	            text-white select-none"
+	>
 	<!-- Rumore di sfondo decorativo -->
 	<div
 		class="pointer-events-none absolute inset-0 opacity-[0.04] mix-blend-overlay"
@@ -39,4 +41,6 @@
 			</div>
 		</div>
 	</div>
+	</div>
+	<div class="h-full w-[1.15cqw] bg-white"></div>
 </div>
