@@ -32,7 +32,7 @@
 	<div class="flex h-[20%] w-full items-center justify-center font-black invisible">
 		<h1 class="text-[5rem] leading-none text-white">FAQ</h1>
 	</div>
-	<div class="flex w-full flex-1 flex-col items-center justify-center gap-[0.8cqh] px-[1cqw] py-[0.5cqh]">
+	<div class="flex w-full h-[80%]flex-1 flex-col items-center justify-center gap-[0.8cqh] px-[1cqw] py-[0.5cqh]">
 	    {#each faqItems as item (item.question)}
 			<DropDownFaq question={item.question} answer={item.answer} />
 		{/each}

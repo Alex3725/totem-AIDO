@@ -184,7 +184,7 @@
 	<div class="flex h-[20%] w-full flex-col items-center justify-center p-3">
 		<PulsanteContent
 			titolo={scopriOption?.ctaLabel ?? 'Scopri subito!'}
-			route="/opzioni-menu/scopri/provaChildren"
+			route="/opzioni-menu/scopri/pagina-content"
 		/>
 	</div>
 </div>

@@ -17,7 +17,7 @@
 	<!-- Titolo -->
 	<div class="flex h-[20%] w-full items-center justify-center">
 		<h1 class="text-[5rem] font-black leading-none tracking-tight text-white drop-shadow-md">
-			Diventa donatore
+			Diventa Donatore
 		</h1>
 	</div>
 

@@ -1,5 +1,4 @@
 <script lang="ts">
-	import PulsanteContent from '$lib/components/newComponent/PulsanteContent.svelte';
 	import ProcessoDonazione from '$lib/components/newComponent/ProcessoDonazione.svelte';
 </script>
 
@@ -8,7 +7,7 @@
 		<h1 class="text-[5rem]">Processo di donazione</h1>
 	</div>
 
-	<div class="flex h-[80%] w-full flex-col items-center justify-center p-4">
+	<div class="flex h-[80%] w-full flex-col items-center justify-center p-[1.2cqw]">
 		<ProcessoDonazione/>
 	</div>
 </div>

@@ -174,7 +174,7 @@ const isChatAssistancePage = $derived(
               w-[9cqw] h-[9cqw] min-w-[3.4rem] min-h-[3.4rem]
               rounded-full bg-[#d40000]
               shadow-[0_0.35cqw_0.9cqw_rgba(0,0,0,0.18)]
-              rounded-t-[1.45cqw]"
+              rounded-[1.45cqw]"
        aria-label="Torna indietro"
       >
        <img

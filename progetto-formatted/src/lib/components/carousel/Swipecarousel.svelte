@@ -1,5 +1,6 @@
 <script lang="ts">
  import { afterNavigate, goto } from '$app/navigation';
+ import { resolve } from '$app/paths';
  import type { Snippet } from 'svelte';
  import { menuOptions } from '$lib/data/menu-options';
  import type { MenuOption } from '$lib/data/menu-options';
@@ -38,6 +39,8 @@ let dissolveGhostVisible = $state(false);
  const DRAG_THRESHOLD = 0.28; // fraction of width to trigger navigation
  const VELOCITY_THRESHOLD = 0.45; // px/ms for flick navigation
  const EDGE_RESISTANCE = 0.12; // elasticity when no adjacent page exists
+const GHOST_DISSOLVE_DELAY_MS = 140;
+const GHOST_DISSOLVE_DURATION_MS = 900;
 
 // ─── Looping support ----------------------------------------------------
 const loopedPrevOption = $derived<MenuOption | null>(
@@ -64,12 +67,12 @@ const loopedNextOption = $derived<MenuOption | null>(
   if (pendingGhostForDissolve) {
    dissolveGhostOption = pendingGhostForDissolve;
    dissolveGhostVisible = true;
-   requestAnimationFrame(() => {
+   setTimeout(() => {
     dissolveGhostVisible = false;
-   });
+   }, GHOST_DISSOLVE_DELAY_MS);
    setTimeout(() => {
     dissolveGhostOption = null;
-   }, 340);
+   }, GHOST_DISSOLVE_DELAY_MS + GHOST_DISSOLVE_DURATION_MS);
    pendingGhostForDissolve = null;
   }
 
@@ -158,7 +161,7 @@ const loopedNextOption = $derived<MenuOption | null>(
    const option = direction === 'prev' ? loopedPrevOption : loopedNextOption;
      if (option) {
       pendingGhostForDissolve = option;
-      goto(`/opzioni-menu/${option.slug}`);
+      goto(resolve(`/opzioni-menu/${option.slug}`));
      }
   }, 280);
  }
@@ -192,8 +195,8 @@ const loopedNextOption = $derived<MenuOption | null>(
 <div class="relative h-full w-full" bind:this={wrapperEl}>
  {#if dissolveGhostOption}
   <div
-  class={`pointer-events-none absolute inset-0 z-7 transition-[opacity,filter] duration-500 ease-out ${
-    dissolveGhostVisible ? 'opacity-100 blur-0' : 'opacity-0 blur-[0.9cqw]'
+  class={`pointer-events-none absolute inset-0 z-7 transition-[opacity,filter] duration-900 ease-in-out ${
+    dissolveGhostVisible ? 'opacity-100 blur-0' : 'opacity-0 blur-[1.35cqw]'
    }`}
   >
    <GhostSlide option={dissolveGhostOption} />
@@ -225,7 +228,7 @@ const loopedNextOption = $derived<MenuOption | null>(
    Pointer events are attached here so the full surface is draggable.
   -->
   <div
-   class="flex h-full touch-pan-y select-none"
+    class="flex h-full touch-pan-y select-none"
    style={trackStyle}
    draggable="false"
    role="presentation"
