@@ -19,6 +19,6 @@
 		</div>
 	</div>
 	<div class="flex h-[14%] w-full flex-col items-center justify-center p-3">
-		<PulsanteContent titolo="Scopri subito!" route="/opzioni-menu/faq/provaChildren" />
+		<PulsanteContent titolo="Scopri subito!" route="/opzioni-menu/faq/paginaContent" />
 	</div>
 </div>
