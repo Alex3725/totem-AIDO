@@ -1,23 +1,31 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { menuOptions, type MenuOptionSlug } from '$lib/data/menu-options';
 	import { menuDotsSlug } from '$lib/stores/menu-dots.store';
 
 	let {
-		onNavigate = () => {}
+		onNavigate = (event: Event, slug: MenuOptionSlug) => {
+			event.preventDefault();
+			// eslint-disable-next-line svelte/no-navigation-without-resolve
+			void goto(`/opzioni-menu/${slug}`, {
+				noScroll: true,
+				keepFocus: true
+			});
+		}
 	}: {
 		onNavigate?: (event: Event, slug: MenuOptionSlug) => void | Promise<void>;
 	} = $props();
 </script>
 
 <div class="dots" aria-label="Navigazione carosello">
-	{#each menuOptions as option}
-		<a
-			href={`/opzioni-menu/${option.slug}`}
+	{#each menuOptions as option (option.slug)}
+		<button
+			type="button"
 			class="dot {$menuDotsSlug === option.slug ? 'active' : ''}"
 			aria-label={`Vai a ${option.title}`}
 			aria-current={$menuDotsSlug === option.slug ? 'page' : undefined}
 			onclick={(event) => onNavigate(event, option.slug)}
-		></a>
+		></button>
 	{/each}
 </div>
 

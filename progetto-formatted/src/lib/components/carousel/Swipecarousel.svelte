@@ -1,5 +1,7 @@
 <script lang="ts">
  import { afterNavigate } from '$app/navigation';
+ import { goto } from '$app/navigation';
+ import { onDestroy } from 'svelte';
  import type { Snippet } from 'svelte';
  import { menuOptions } from '$lib/data/menu-options';
  import type { MenuOption } from '$lib/data/menu-options';
@@ -25,6 +27,10 @@
 let pendingGhostForDissolve: MenuOption | null = $state(null);
 let dissolveGhostOption: MenuOption | null = $state(null);
 let dissolveGhostVisible = $state(false);
+let isNavigationPending = $state(false);
+let isBoostDragging = $state(false);
+let transitionDurationMs = $state(320);
+let activeDirection: 'prev' | 'next' | 'none' = $state('none');
 
  // ─── DOM reference ────────────────────────────────────────────────────
  let wrapperEl: HTMLDivElement;
@@ -40,6 +46,43 @@ let dissolveGhostVisible = $state(false);
  const EDGE_RESISTANCE = 0.12; // elasticity when no adjacent page exists
 const GHOST_DISSOLVE_DELAY_MS = 140;
 const GHOST_DISSOLVE_DURATION_MS = 900;
+const BASE_DURATION_MS = 320;
+const BOOST_LIGHT_DURATION_MS = 220;
+const BOOST_STRONG_DURATION_MS = 160;
+
+let snapBackTimeoutId: ReturnType<typeof setTimeout> | null = null;
+let navigateTimeoutId: ReturnType<typeof setTimeout> | null = null;
+let dissolveStartTimeoutId: ReturnType<typeof setTimeout> | null = null;
+let dissolveClearTimeoutId: ReturnType<typeof setTimeout> | null = null;
+
+function clearTimeoutSafe(timeoutId: ReturnType<typeof setTimeout> | null) {
+ if (timeoutId !== null) {
+  clearTimeout(timeoutId);
+ }
+}
+
+function clearTransientTimers() {
+ clearTimeoutSafe(snapBackTimeoutId);
+ clearTimeoutSafe(navigateTimeoutId);
+ clearTimeoutSafe(dissolveStartTimeoutId);
+ clearTimeoutSafe(dissolveClearTimeoutId);
+
+ snapBackTimeoutId = null;
+ navigateTimeoutId = null;
+ dissolveStartTimeoutId = null;
+ dissolveClearTimeoutId = null;
+}
+
+function computeBoostDuration(delta: number, elapsedMs: number): number {
+ const velocity = Math.abs(delta) / Math.max(elapsedMs, 1);
+ const distanceScore = Math.min(Math.abs(delta) / Math.max(containerWidth * 0.45, 1), 1);
+ const velocityScore = Math.min(velocity / 1.1, 1);
+ const score = Math.max(distanceScore, velocityScore);
+
+ if (score >= 0.72) return BOOST_STRONG_DURATION_MS;
+ if (score >= 0.28) return BOOST_LIGHT_DURATION_MS;
+ return BASE_DURATION_MS;
+}
 
 // ─── Looping support ----------------------------------------------------
 const loopedPrevOption = $derived<MenuOption | null>(
@@ -66,14 +109,25 @@ const loopedNextOption = $derived<MenuOption | null>(
   if (pendingGhostForDissolve) {
    dissolveGhostOption = pendingGhostForDissolve;
    dissolveGhostVisible = true;
-   setTimeout(() => {
+    clearTimeoutSafe(dissolveStartTimeoutId);
+    clearTimeoutSafe(dissolveClearTimeoutId);
+    dissolveStartTimeoutId = setTimeout(() => {
     dissolveGhostVisible = false;
    }, GHOST_DISSOLVE_DELAY_MS);
-   setTimeout(() => {
+    dissolveClearTimeoutId = setTimeout(() => {
     dissolveGhostOption = null;
    }, GHOST_DISSOLVE_DELAY_MS + GHOST_DISSOLVE_DURATION_MS);
    pendingGhostForDissolve = null;
   }
+
+    isNavigationPending = false;
+    isBoostDragging = false;
+    activeDirection = 'none';
+    transitionDurationMs = BASE_DURATION_MS;
+    clearTimeoutSafe(snapBackTimeoutId);
+    clearTimeoutSafe(navigateTimeoutId);
+    snapBackTimeoutId = null;
+    navigateTimeoutId = null;
 
   // Disable transition so the reset is instant (no visible snap)
   skipTransition = true;
@@ -90,7 +144,15 @@ const loopedNextOption = $derived<MenuOption | null>(
  // ─── Pointer event handlers ───────────────────────────────────────────
 
  function onPointerDown(e: PointerEvent) {
-  if (isAnimating) return;
+  if (isAnimating && isNavigationPending) {
+   isBoostDragging = true;
+   pStartX = e.clientX;
+   pStartTime = performance.now();
+   (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+   return;
+  }
+
+  if (isAnimating || isNavigationPending) return;
   isDragging = true;
   pStartX = e.clientX;
   pStartTime = performance.now();
@@ -99,6 +161,19 @@ const loopedNextOption = $derived<MenuOption | null>(
  }
 
  function onPointerMove(e: PointerEvent) {
+  if (isBoostDragging && isAnimating && isNavigationPending) {
+   const delta = e.clientX - pStartX;
+   if (delta === 0 || activeDirection === 'none') return;
+
+   const dragDirection: 'prev' | 'next' = delta > 0 ? 'prev' : 'next';
+
+   if (dragDirection === activeDirection) {
+    transitionDurationMs = computeBoostDuration(delta, performance.now() - pStartTime);
+   }
+
+   return;
+  }
+
   if (!isDragging) return;
   const delta = e.clientX - pStartX;
 
@@ -113,6 +188,11 @@ const loopedNextOption = $derived<MenuOption | null>(
  }
 
  function onPointerUp(e: PointerEvent) {
+  if (isBoostDragging) {
+   isBoostDragging = false;
+   return;
+  }
+
   if (!isDragging) return;
   isDragging = false;
 
@@ -130,40 +210,74 @@ const loopedNextOption = $derived<MenuOption | null>(
    triggerNavigation('next');
   } else {
    // Snap back to centre with spring animation
+    clearTimeoutSafe(snapBackTimeoutId);
    isAnimating = true;
    offset = 0;
-   setTimeout(() => (isAnimating = false), 360);
+    snapBackTimeoutId = setTimeout(() => {
+     if (!isNavigationPending) {
+      isAnimating = false;
+     }
+    }, 360);
   }
  }
 
  function onPointerCancel() {
+  if (isBoostDragging) {
+   isBoostDragging = false;
+   return;
+  }
+
   if (!isDragging) return;
   // Abort drag — snap back instantly
   isDragging = false;
+  clearTimeoutSafe(snapBackTimeoutId);
   isAnimating = true;
   offset = 0;
-  setTimeout(() => (isAnimating = false), 360);
+  snapBackTimeoutId = setTimeout(() => {
+   if (!isNavigationPending) {
+    isAnimating = false;
+   }
+  }, 360);
  }
 
  // ─── Navigation: animate track → call goto() → afterNavigate resets ──
 
  function triggerNavigation(direction: 'prev' | 'next') {
-  if (isAnimating) return;
+  if (isAnimating || isNavigationPending) return;
+  clearTimeoutSafe(snapBackTimeoutId);
   isAnimating = true;
+  isNavigationPending = true;
+  activeDirection = direction;
+  transitionDurationMs = BASE_DURATION_MS;
   isDragging = false;
+
+  // If user swipes again right after a route reset, force transition back on.
+  skipTransition = false;
 
   // Slide track to fully reveal the ghost slide
   offset = direction === 'prev' ? containerWidth : -containerWidth;
 
   // Wait for the CSS transition to finish, then actually navigate
-  setTimeout(() => {
+  clearTimeoutSafe(navigateTimeoutId);
+  navigateTimeoutId = setTimeout(() => {
    const option = direction === 'prev' ? loopedPrevOption : loopedNextOption;
      if (option) {
       pendingGhostForDissolve = option;
-      window.location.assign(`/opzioni-menu/${option.slug}`);
+      // eslint-disable-next-line svelte/no-navigation-without-resolve
+      void goto(`/opzioni-menu/${option.slug}`, {
+       noScroll: true,
+       keepFocus: true
+      });
+     } else {
+      isNavigationPending = false;
+      isAnimating = false;
      }
   }, 280);
  }
+
+onDestroy(() => {
+ clearTransientTimers();
+});
 
  // ─── Derived CSS ──────────────────────────────────────────────────────
 
@@ -171,7 +285,7 @@ const loopedNextOption = $derived<MenuOption | null>(
   // No transition while finger is down or reset is instant
   isDragging || skipTransition
    ? 'none'
-   : 'transform 0.32s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+   : `transform ${transitionDurationMs}ms cubic-bezier(0.25, 0.46, 0.45, 0.94)`
  );
 
  /**
