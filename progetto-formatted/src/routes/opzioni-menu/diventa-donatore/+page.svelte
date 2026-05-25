@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 
-	const goToStore = (route: string) => goto(route);
+	const goToStore = async (route: string) => await goto(route);
 </script>
 
 <div class="flex h-full w-full">
@@ -48,11 +48,11 @@
 				<button
 					type="button"
 					aria-label="Apri QR code Google Play"
-					onclick={() => goToStore('/opzioni-menu/diventa-donatore/play-store')}
+					onclick={async () => await goToStore('/opzioni-menu/diventa-donatore/play-store')}
 					class="flex w-1/2 cursor-pointer items-center justify-center rounded-[2cqw]
-					       border border-white/25 bg-white/10 p-[1.1cqw]
-					       shadow-[0_1cqw_2.2cqw_rgba(0,0,0,0.25)] backdrop-blur-sm
-					       transition-all duration-150 active:scale-95 active:opacity-80"
+						   border border-white/25 bg-white/10 p-[1.1cqw]
+						   shadow-[0_1cqw_2.2cqw_rgba(0,0,0,0.25)] backdrop-blur-sm
+						   transition-all duration-150 active:scale-95 active:opacity-80"
 				>
 					<img
 						src="/img/GooglePlayButton.png"
@@ -64,11 +64,11 @@
 				<button
 					type="button"
 					aria-label="Apri QR code App Store"
-					onclick={() => goToStore('/opzioni-menu/diventa-donatore/apple-store')}
+					onclick={async () => await goToStore('/opzioni-menu/diventa-donatore/apple-store')}
 					class="flex w-1/2 cursor-pointer items-center justify-center rounded-[2cqw]
-					       border border-white/25 bg-white/10 p-[1.1cqw]
-					       shadow-[0_1cqw_2.2cqw_rgba(0,0,0,0.25)] backdrop-blur-sm
-					       transition-all duration-150 active:scale-95 active:opacity-80"
+						   border border-white/25 bg-white/10 p-[1.1cqw]
+						   shadow-[0_1cqw_2.2cqw_rgba(0,0,0,0.25)] backdrop-blur-sm
+						   transition-all duration-150 active:scale-95 active:opacity-80"
 				>
 					<img
 						src="/img/AppStoreButton.png"

@@ -120,11 +120,13 @@
 </script>
 
 <div
-	class="relative h-full w-full overflow-hidden {isIdleTheme()
-		? 'bg-gradient-to-br from-slate-500/60 via-slate-500/40 to-slate-400/30'
-		: 'bg-gradient-to-br from-red-700 via-red-600 to-orange-500'}"
-	ontouchstart={handleTouchStart}
-	ontouchend={handleTouchEnd}
+    class="relative h-full w-full overflow-hidden {isIdleTheme()
+        ? 'bg-gradient-to-br from-slate-500/60 via-slate-500/40 to-slate-400/30'
+        : 'bg-gradient-to-br from-red-700 via-red-600 to-orange-500'}"
+    role="region"
+    aria-label="Carousel principale"
+    ontouchstart={handleTouchStart}
+    ontouchend={handleTouchEnd}
 >
 	<div class="pointer-events-none absolute inset-0">
 		<div
@@ -233,7 +235,7 @@
 				? 'border-slate-300/70 bg-white/50'
 				: 'border-white/25 bg-black/20'}"
 		>
-			{#each pages as _, index}
+			{#each pages as page, index (page.id)}
 				<button
 					onclick={() => goToPage(index)}
 					class="h-2.5 rounded-full transition-all {index === currentIndex

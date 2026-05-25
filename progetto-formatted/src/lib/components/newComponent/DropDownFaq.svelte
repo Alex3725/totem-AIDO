@@ -1,6 +1,6 @@
 <script lang="ts">
   import { slide } from 'svelte/transition';
-  import n   { faqOpenQuestion } from '$lib/stores/faq-open.store';
+  import { faqOpenQuestion } from '$lib/stores/faq-open.store';
 
   let { question, answer }: { question: string; answer: string } = $props();
 

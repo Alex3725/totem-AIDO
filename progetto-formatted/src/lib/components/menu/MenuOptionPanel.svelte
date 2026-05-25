@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import type { MenuOption } from '$lib/data/menu-options';
 	import MenuOptionMedia from '$lib/components/menu/MenuOptionMedia.svelte';
+	import { resolve } from 'path';
 
 	let {
 		option,
@@ -184,9 +185,16 @@
 
 		{#if option.slug === 'scopri'}
 			<section id="orbit-carousel" class="menu-orbit-carousel" aria-roledescription="carousel" aria-label="Carousel orbitale AIDO">
-				<div class="menu-orbit-stage" bind:this={orbitRoot} ontouchstart={handleOrbitTouchStart} ontouchend={handleOrbitTouchEnd}>
+				<div
+						class="menu-orbit-stage"
+						bind:this={orbitRoot}
+						role="region"
+						aria-label="Carousel orbitale AIDO"
+						ontouchstart={handleOrbitTouchStart}
+						ontouchend={handleOrbitTouchEnd}
+					>
 					<div class="menu-orbit-track">
-						{#each orbitItems as item}
+						{#each orbitItems as item (item.title)}
 							<article class="menu-orbit-card">
 								<span class="menu-orbit-tag">{item.tag}</span>
 								<h3>{item.title}</h3>
@@ -344,4 +352,78 @@
 	.menu-orbit-btn:active {
 		transform: scale(0.96);
 	}
+
+	.menu-orbit-carousel {
+		width: 100%;
+		max-width: 100%;
+		padding: 0;
+		background: transparent;
+		border: 0;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.menu-orbit-stage {
+		position: relative;
+		width: min(96%, 74cqw);
+		height: 31cqh;
+		margin-inline: auto;
+		touch-action: pan-y;
+	}
+
+	.menu-orbit-track {
+		position: relative;
+		width: 100%;
+		height: 100%;
+	}
+
+	.menu-orbit-card {
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		width: clamp(11.2rem, 20cqw, 14rem);
+		min-height: 22cqh;
+		padding: 1.35cqh 1cqw 1.25cqh;
+		border-radius: 1.55cqw;
+		background: #fff9f0;
+		border: 1px solid rgba(233, 196, 143, 0.95);
+		box-shadow: 0 0.9cqw 1.5cqw rgba(61, 42, 16, 0.2);
+		transition: transform 0.6s ease, opacity 0.6s ease;
+		transform: translate(-50%, -50%);
+		text-align: center;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+
+	.menu-orbit-tag {
+		display: inline-flex;
+		padding: 0.28cqh 0.62cqw;
+		border-radius: 999px;
+		font-size: 1.35cqw;
+		font-weight: 800;
+		text-transform: uppercase;
+		background: rgba(179, 76, 30, 0.14);
+		color: #7a3214;
+		align-self: center;
+	}
+
+	.menu-orbit-card h3 {
+		margin: 0.8cqh 0 0.55cqh;
+		font-size: 2cqw;
+		line-height: 1.15;
+		color: #3d2a10;
+	}
+
+	.menu-orbit-card p {
+		margin: 0;
+		font-size: 1.42cqw;
+		line-height: 1.32;
+		font-weight: 700;
+		color: #5f4632;
+		max-width: 100%;
+	}
+
+
 </style>

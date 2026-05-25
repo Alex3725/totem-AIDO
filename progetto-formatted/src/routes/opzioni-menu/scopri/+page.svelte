@@ -166,12 +166,14 @@
 		>
 			<div
 				class="menu-orbit-stage"
+				role="group"
+				aria-label="Carousel orbitale"
 				bind:this={orbitRoot}
 				ontouchstart={handleOrbitTouchStart}
 				ontouchend={handleOrbitTouchEnd}
-			>
+				>
 				<div class="menu-orbit-track">
-					{#each orbitItems as item}
+					{#each orbitItems as item (item.title)}
 						<article class="menu-orbit-card">
 							<span class="menu-orbit-tag">{item.tag}</span>
 							<h3>{item.title}</h3>
