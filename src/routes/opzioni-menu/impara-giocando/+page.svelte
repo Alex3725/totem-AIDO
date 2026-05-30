@@ -1,0 +1,37 @@
+<script lang="ts">
+
+	import PulsanteContent from '$lib/components/newComponent/PulsanteContent.svelte';
+
+
+
+</script>
+
+<div class="flex h-full w-full">
+	<div class="h-full w-[1.15cqw] bg-white"></div>
+	<div
+		class="flex h-full flex-1 select-none flex-col items-center rounded-[1.45cqw] bg-[#d40000] px-[2.75cqw] pb-[2.2cqh] pt-[2.8cqh] text-center text-white"
+	>
+	<div class="flex h-[20%] w-full items-center justify-center font-black">
+		<h1 class="text-[5rem] leading-none text-white">Impara Giocando</h1>
+	</div>
+
+	<div class="flex w-full flex-1 flex-col items-center justify-center px-[1.2cqw] py-[0.8cqh]">
+		<section
+			class="menu-orbit-carousel"
+			aria-label="Carousel scopri"
+			aria-roledescription="carousel"
+		>
+			
+		</section>
+	</div>
+
+	<div class="flex h-[20%] w-full flex-col items-center justify-center p-3">
+		<PulsanteContent
+			titolo="Gioca"
+			route="/opzioni-menu/impara-giocando/gioca"
+		/>
+	</div>
+	</div>
+	<div class="h-full w-[1.15cqw] bg-white"></div>
+</div>
+
