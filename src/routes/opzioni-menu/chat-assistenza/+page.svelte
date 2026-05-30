@@ -14,8 +14,8 @@
 	></div>
 
 	<!-- Titolo -->
-	<div class="flex h-[20%] w-full items-center justify-center">
-		<h1 class="text-[5rem] leading-none font-black tracking-tight text-white drop-shadow-md">
+	<div class="flex h-[20%] w-full items-center justify-center px-[1.1cqw] font-black">
+		<h1 class="text-[clamp(2rem,5.2cqw,4.2rem)] leading-[0.95] tracking-tight text-balance text-white">
 			Chatta Con Donatello
 		</h1>
 	</div>
