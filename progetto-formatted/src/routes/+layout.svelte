@@ -90,7 +90,7 @@ const isChatAssistancePage = $derived(
       [background:linear-gradient(120deg,#a90000_0%,#713257_48%,#3a64ad_100%)] @container-[size]"
  >
   <div
-   class="w-full h-full overflow-hidden rounded-[2.2cqw] border-[max(2.6px,0.48cqw)] border-solid border-[#8db9ff]
+   class="w-full h-full overflow-hidden rounded-[2.2cqw] border-[max(9px,0.55cqw)] border-solid border-[#438afc]
         bg-white p-[1.25cqw] flex flex-col min-h-0 gap-[1.25cqh]"
   >
    <!-- ═══════════════════════════
