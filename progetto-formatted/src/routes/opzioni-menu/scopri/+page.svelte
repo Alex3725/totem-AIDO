@@ -154,8 +154,8 @@
 	<div
 		class="flex h-full flex-1 select-none flex-col items-center rounded-[1.45cqw] bg-[#d40000] px-[2.75cqw] pb-[2.2cqh] pt-[2.8cqh] text-center text-white"
 	>
-	<div class="flex h-[20%] w-full items-center justify-center font-black">
-		<h1 class="text-[5rem] leading-none text-white">Scopri</h1>
+	<div class="flex h-[20%] w-full items-center justify-center px-[1.1cqw] font-black">
+		<h1 class="text-[clamp(2rem,5.2cqw,4.2rem)] leading-[0.95] tracking-tight text-balance text-white">Scopri</h1>
 	</div>
 
 	<div class="flex w-full flex-1 flex-col items-center justify-center px-[1.2cqw] py-[0.8cqh]">

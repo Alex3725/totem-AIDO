@@ -9,9 +9,9 @@
 </script>
 
 <button
-    class=" rounded-[1.2cqw] bg-white px-[4.25cqw] py-[1.6cqh]
-           text-[4.7cqw] font-black leading-none text-[#121212]
-           shadow-[0_0.55cqw_0.75cqw_rgba(0,0,0,0.38)] flex items-center "
+    class="max-w-full rounded-[1.2cqw] bg-white px-[clamp(0.85rem,3.25cqw,4.25cqw)] py-[clamp(0.45rem,1.2cqh,1.6cqh)]
+           text-[clamp(1rem,3.2cqw,4.7cqw)] font-black leading-tight text-[#121212]
+           shadow-[0_0.55cqw_0.75cqw_rgba(0,0,0,0.38)] flex items-center justify-center text-center"
   onclick={handleClick}
 >
   {titolo}

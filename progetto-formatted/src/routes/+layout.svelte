@@ -83,18 +83,15 @@ const isChatAssistancePage = $derived(
 </script>
 
 <main
- class="min-h-dvh flex items-center justify-center p-0
-        [background:linear-gradient(120deg,#a90000_0%,#713257_48%,#3a64ad_100%)]"
+ class="min-h-dvh flex items-center justify-center p-0 bg-[#222]"
 >
  <section
-  class="w-[min(94vw,calc(94dvh*9/16))] h-[min(94dvh,calc(94vw*16/9))]
-         rounded-[2.1cqw] p-[0.95cqw] bg-[#5b7cbd] @container-[size]
-         landscape:w-[min(84vw,calc(84dvh*3/2))] landscape:h-[min(84dvh,calc(84vw*2/3))]
-         landscape:rounded-[4vmin] landscape:p-[1.05vmin]"
+  class="w-[min(100vw,56.25dvh)] aspect-9/16 overflow-auto p-[0.95cqw]
+      [background:linear-gradient(120deg,#a90000_0%,#713257_48%,#3a64ad_100%)] @container-[size]"
  >
   <div
-   class="w-full h-full rounded-[2.2cqw] border-[max(2px,0.35cqw)] border-solid border-[#8db9ff]
-          bg-white p-[1.25cqw] flex flex-col min-h-0 gap-[1.25cqh]"
+   class="w-full h-full overflow-hidden rounded-[2.2cqw] border-[max(2.6px,0.48cqw)] border-solid border-[#8db9ff]
+        bg-white p-[1.25cqw] flex flex-col min-h-0 gap-[1.25cqh]"
   >
    <!-- ═══════════════════════════
         HEADER — tre colonne allineate
@@ -173,8 +170,7 @@ const isChatAssistancePage = $derived(
        class="inline-flex items-center justify-center
               w-[9cqw] h-[9cqw] min-w-[3.4rem] min-h-[3.4rem]
               rounded-full bg-[#d40000]
-              shadow-[0_0.35cqw_0.9cqw_rgba(0,0,0,0.18)]
-              rounded-[1.45cqw]"
+          shadow-[0_0.35cqw_0.9cqw_rgba(0,0,0,0.18)]"
        aria-label="Torna indietro"
       >
        <img
